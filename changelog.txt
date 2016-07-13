@@ -1,0 +1,11 @@
+Version 5.0:
+
+- The add-on was rewritten from the scratch to enhance its performance, and generally to make things more easier.
+- Added several new options in the Themes Manager dialogue including: 
+  - The ability to run the add-on in 3D mode or Mono Mode.
+  - The ability to  make NVDA ignore object role when announcing focus
+  - The ability to control the volume of the add-on, either by setting the volume directly, or set it to follow the synthesizer volume.
+- Audio themes now shows information about their authors, and authors can write a brief summary to describe their audio themes. Those information will be shown in the themes manager dialogue.
+- Easier way to edit the current audio theme.
+- Fewer steps and streamlined  process to create a new audio theme.
+- The add-on can be considered a wrapper   over the Unspoken add-on which is being developed by Austin Hicks and Bryan Smart. The majority of my development went into the dialogues and audioThemeHandler modules.

@@ -1,0 +1,3 @@
+Help is needed in the following parts:
+- Write better documentation, with an expended section on how to create a new audio theme.
+- Better sounds for the default theme.
