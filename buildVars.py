@@ -23,7 +23,7 @@ addon_info = {
 	# Author(s)
 	"addon-author" : u"Musharraf Omer<ibnomer2011@hotmail.com>",
 	# URL for the add-on documentation support
-	"addon-url" : None
+	"addon-url" : "http://mush42.github.io/audio-themes/"
 }
 
 
