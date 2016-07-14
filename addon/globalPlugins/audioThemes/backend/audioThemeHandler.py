@@ -173,7 +173,3 @@ def loadInfoFile(infoFile):
 def writeInfoFile(infoDict, infoFilePath):
 	with open(infoFilePath, "wb") as f:
 		json.dump(infoDict, f)
-
-
-import api
-api.t = themeRoles

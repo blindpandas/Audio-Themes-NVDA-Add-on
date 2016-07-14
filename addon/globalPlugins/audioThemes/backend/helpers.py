@@ -42,7 +42,7 @@ def clamp(my_value, min_value, max_value):
 
 def playFile(filePath, async=True):
 	if not async:
-		winsound.PlaySound(filePath, winsound.SND_NODEFAULT)
+		return winsound.PlaySound(filePath, winsound.SND_NODEFAULT)
 	winsound.PlaySound(filePath, winsound.SND_ASYNC|winsound.SND_NODEFAULT)
 
 def setupConfig():
@@ -53,7 +53,6 @@ def setupConfig():
 	validated=conf.validate(Validator(), copy=True)
 	if validated:
 		conf.write()
-
 
 def activate(dg):
 	frame = gui.mainFrame
@@ -99,6 +98,7 @@ def showFileDialog(parent, message, ext, extHint):
 		wildcard=("{hint}(*.{ext})"+"|*.{ext}").format(hint= extHint, ext=ext),
 		style=wx.FD_OPEN)
 	if fd.ShowModal()!=wx.ID_OK:
+		fd.Destroy()
 		return
 	path = fd.GetPath()
 	fd.Destroy()
