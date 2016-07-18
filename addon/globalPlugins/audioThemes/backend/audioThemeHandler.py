@@ -24,6 +24,7 @@ NVDA_getSpeechTextForProperties = speech.getSpeechTextForProperties
 SIMULATION = libaudioverse.Simulation(block_size = 1024)
 MIXER = mixer.Mixer(SIMULATION, 1)
 INFO_FILE_NAME = "info.json"
+SUPPORTED_FILE_TYPES = [".wav", ".ogg"]
 
 class SpecialProps(IntEnum):
 	protective = 2500
@@ -68,8 +69,8 @@ class AudioTheme(object):
 		if not self.directory:
 			return
 		for fileName in os.listdir(self.directory):
-			path = os.path.join(self.directory ,fileName)
-			if os.path.isfile(path) and path.endswith("wav"):
+			path = os.path.join(self.directory, fileName)
+			if os.path.isfile(path) and os.path.splitext(path)[-1] in SUPPORTED_FILE_TYPES:
 				key = int(os.path.splitext(fileName)[0])
 				if key in themeRoles:
 					self.loadFile(key, path)
