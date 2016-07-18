@@ -41,7 +41,7 @@ class NewSoundDialog(gui.SettingsDialog):
 		btnSizer = wx.BoxSizer(wx.HORIZONTAL)
 		browseId = wx.NewId()
 		# Translators: The label of the buttons to browse to an audio file.
-		browseBtn = wx.Button(self, browseId, _("&Browse to a wave file"))
+		browseBtn = wx.Button(self, browseId, _("&Browse to an audio file"))
 		previewId = wx.NewId()
 		# Translators: The label of the button to preview/play the selected audio file.
 		self.previewBtn = wx.Button(self, previewId, _("&Preview"))

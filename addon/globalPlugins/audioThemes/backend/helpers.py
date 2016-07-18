@@ -93,9 +93,16 @@ def compute_volume(volume=0):
 	return volume
 
 def showFileDialog(parent, message, ext, extHint):
+	wildcard = ""
+	if not isinstance(ext, basestring):
+		# Asume a list.
+		for e, h in zip(ext, extHint):
+			wildcard+= "{hint}(*.{ext})|*.{ext}|".format(hint= h, ext=e)
+	else:
+		wildcard="{hint}(*.{ext})|*.{ext}".format(hint= extHint, ext=ext)
 	fd=wx.FileDialog(parent,
 		message=message,
-		wildcard=("{hint}(*.{ext})"+"|*.{ext}").format(hint= extHint, ext=ext),
+		wildcard=(wildcard),
 		style=wx.FD_OPEN)
 	if fd.ShowModal()!=wx.ID_OK:
 		fd.Destroy()
