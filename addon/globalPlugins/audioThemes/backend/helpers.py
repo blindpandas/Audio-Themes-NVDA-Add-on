@@ -40,10 +40,19 @@ def setCfgVal(key, val):
 def clamp(my_value, min_value, max_value):
 	return max(min(my_value, max_value), min_value)
 
-def playFile(filePath, async=True):
-	if not async:
-		return winsound.PlaySound(filePath, winsound.SND_NODEFAULT)
-	winsound.PlaySound(filePath, winsound.SND_ASYNC|winsound.SND_NODEFAULT)
+def playTarget(target, fromFile=False):
+	if not fromFile:
+		target.disconnect(0)
+		target.position = 0.0
+		target.connect_simulation(0)
+		return
+	from .audioThemeHandler import libaudioverse, SIMULATION
+	filePath = os.path.abspath(target)
+	fileNode = libaudioverse.BufferNode(SIMULATION)
+	buffer = libaudioverse.Buffer(SIMULATION)
+	buffer.load_from_file(filePath)
+	fileNode.buffer = buffer
+	fileNode.connect_simulation(0)
 
 def setupConfig():
 	global defaults, conf

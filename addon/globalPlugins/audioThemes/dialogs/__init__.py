@@ -61,20 +61,24 @@ class NewSoundDialog(gui.SettingsDialog):
 	def onBrowseClick(self, evt):
 		self.newSoundPath = helpers.showFileDialog(self,
 		  # Translators: The title of a dialog asking the user to select an audio file.
-		  _("Select Audio File"), "wav",
+		  _("Select Audio File"), ["ogg", "wav"], [
 		  # Translators: The file type to be shown in a dialog used to browse for audio files.
-		  _("wave sounds"))
+		  _("Ogg audio files"),
+		  # Translators: The file type to be shown in a dialog used to browse for audio files.
+		  _("Wave audio files")
+		])
 		if self.newSoundPath:
 			self.previewBtn.Enable()
 
 	def onPreviewClick(self, evt):
 		if self.newSoundPath:
-			helpers.playFile(self.newSoundPath)
+			helpers.playTarget(self.newSoundPath, fromFile=True)
 
 	def onOk(self, evt):
 		if self.newSoundPath :
-			role = self.roleList[self.roleListCombo.GetSelection()]
-			copyingFile = os.path.join(self.copyingPath, "%d.wav" %role[0])
+			role = self.roleList[self.roleListCombo.GetSelection()][0]
+			ext = os.path.splitext(self.newSoundPath)[-1]
+			copyingFile = os.path.join(self.copyingPath, "%d%s" %(role, ext))
 			try:
 				shutil.copy(self.newSoundPath, copyingFile)
 			except IOError :
@@ -136,9 +140,13 @@ class BaseEditorDialog(wx.Dialog):
 
 	def onChangeClick(self, event):
 		selectionIndex = self.listBox.GetSelection()
-		if  selectionIndex == wx.NOT_FOUND:
-			return
-		newSnd = helpers.showFileDialog(self, _("Select Audio File"), "wav", _("wave sounds"))
+		if  selectionIndex == wx.NOT_FOUND: return
+		newSnd = helpers.showFileDialog(self, _("Select Audio File"), ["ogg", "wav"], [
+		  # Translators: A label of a file type in open file dialog.
+		  _("Ogg audio files"),
+		  # Translators: A label of a file type in open file dialog.
+		  _("Wave audio files")
+		])
 		if not newSnd:
 			return
 		oldSnd = self.getFileFromIndex(selectionIndex)
@@ -150,6 +158,7 @@ class BaseEditorDialog(wx.Dialog):
 			  _("Can not copy the file"),
 			  # Translators: The title of a message box indicating an error.
 			  _("Error"))
+		self.audioTheme.load()
 
 	def onRemoveClick(self, event):
 		if (self.listBox.GetSelection() == wx.NOT_FOUND):
@@ -196,8 +205,9 @@ class BaseEditorDialog(wx.Dialog):
 		attrToInvoke  = "Disable"if selection==wx.NOT_FOUND else "Enable"
 		for b in [self.changeBtn, self.removeBtn]:
 			getattr(b, attrToInvoke)()
-		soundFile = os.path.join(self.audioTheme.directory, "%d.wav" %self.keys[selection])
-		if os.path.exists(soundFile): helpers.playFile(soundFile)
+		role = self.keys[selection]
+		soundObj = self.audioTheme.soundobjects[role]
+		helpers.playTarget(soundObj)
 
 	def refresh(self):
 		self.listBox.Clear()
@@ -213,4 +223,8 @@ class BaseEditorDialog(wx.Dialog):
 		return _("Audio Theme Editor")
 
 	def getFileFromIndex(self, index):
-		return os.path.join(self.audioTheme.directory, "%d.wav" %self.keys[index])
+		expected = [os.path.join(self.audioTheme.directory, "%d%s" %(self.keys[index], ext)) for ext in audioThemeHandler.SUPPORTED_FILE_TYPES]
+		if os.path.exists(expected[0]):
+			return expected[0]
+		else:
+			return expected[1]
