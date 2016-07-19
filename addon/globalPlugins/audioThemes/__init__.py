@@ -48,22 +48,34 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		#Create GUI 
 		self.themesMenu = wx.Menu()
 		self.manage_themes_item = self.themesMenu.Append(wx.ID_ANY, 
-		# Translators: the label of the menu item to open the audio themes manager dialog.
-		_("&Manage audio themes..."), 
-		# Translators: the tooltip text of the menu item that opens audio themes manager dialog
-		_("Manage themes")
+		  # Translators: the label of the menu item
+		  # Translators: that open the audio themes manager dialog.
+		  _("&Manage audio themes..."), 
+		  # Translators: the tooltip text of the menu item
+		  # Translators: that opens audio themes manager dialog
+		  _("Manage themes")
 		)
-		self.edit_theme_item = self.themesMenu.Append(wx.ID_ANY, 
-		# Translators: The label of the menu item that opens the audio themes editor dialog
-		_("&Edit the active audio theme..."), 
-		# Translators: The tooltip of the menu item that opens the audio themes editor dialog
-		_("Edit the current theme"))
-		self.create_theme_item = self.themesMenu.Append(wx.ID_ANY, 
-		# Translators: the label of the menu item to open the audio themes Creater dialog.
-		_("&Create a new audio theme..."), 
-		# Translators: the tooltip text of the menu item that opens audio themes creater dialog
-		_("Create a new audio theme")
-		)
+		# Create IDs for these menu items to be remove if in secure screen.
+		editId = wx.NewId()
+		self.edit_theme_item = self.themesMenu.Append(editId, 
+		  # Translators: The label of the menu item
+		  # Translators: that opens the audio themes editor dialog
+		  _("&Edit the active audio theme..."), 
+		  # Translators: The tooltip of the menu item
+		  # Translators: that opens the audio themes editor dialog
+		  _("Edit the current theme"))
+		createId = wx.NewId()
+		self.create_theme_item = self.themesMenu.Append(createId, 
+		  # Translators: the label of the menu item to open
+		  # Translators: the audio themes Creater dialog.
+		  _("&Create a new audio theme..."), 
+		  # Translators: the tooltip text of the menu item
+		  # Translators: that opens audio themes creater dialog
+		  _("Create a new audio theme"))
+		if globalVars.appArgs.secure:
+			# Remove the vonrable items.
+			self.themesMenu.Remove(editId)
+			self.themesMenu.Remove(createId)
 		self.submenu_item = gui.mainFrame.sysTrayIcon.menu.InsertMenu(2, wx.ID_ANY, 
 		  # Translators: The label for this add-on's  menu
 		  _("&Audio Themes"), 

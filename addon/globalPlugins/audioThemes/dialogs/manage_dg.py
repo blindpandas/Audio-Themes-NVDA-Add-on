@@ -10,6 +10,7 @@ import shutil
 import zipfile
 
 import gui
+import globalVars
 import speech
 import ui
 
@@ -65,17 +66,18 @@ class ManagerDialog(wx.Dialog):
 		useThemeID= wx.NewId()
 		# Translators: The label of the button to set the selected theme as a user's active theme.
 		self.useTheme = wx.Button(self, useThemeID, _("&Use Selected"))
-		buttonsSizer.Add(self.useTheme)
 		removeThemeID = wx.NewId()
 		# Translators: The label of the buttons to remove the selected theme from installed themes list.
 		self.removeTheme = wx.Button(self, removeThemeID, _("&Remove Selected"))
-		buttonsSizer.Add(self.removeTheme)
 		addThemeID = wx.NewId()
 		# Translators: The label of the button to add a new theme to user's themes.
 		addTheme = wx.Button(self, addThemeID, _("&Add New"))
-		buttonsSizer.Add(addTheme)
 		# Translators: The text of a button to close a dialog.
 		cancelButton = wx.Button(self, wx.ID_CANCEL, _("&Close"))
+		if globalVars.appArgs.secure:
+			buttonsSizer.Add(self.useTheme)
+		else:
+			buttonsSizer.AddMany([(self.useTheme), (self.removeTheme), (addTheme)])
 		buttonsSizer.Add(cancelButton)
 		mainSizer.Add(buttonsSizer)
 		self.SetSizer(mainSizer)
