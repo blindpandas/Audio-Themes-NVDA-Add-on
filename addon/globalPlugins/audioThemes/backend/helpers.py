@@ -6,36 +6,28 @@
 import os
 import wx
 import zipfile
-import winsound
-import configobj
 
 import winKernel
+import config
 import speech
 import gui
 import globalVars
 import NVDAObjects
 
-from cStringIO import StringIO
-from validate import Validator
-from logHandler import log
-
-conf = None
-
-defaults = StringIO("""#Audio Themes add-on Configuration File.
-	using = string(default="Default")
-	threeD = boolean(default=True)
-	speakRole = boolean(default=False)
-	useSynthVolume = boolean(default=False)
-	volume = integer(default=75)
-#End of configuration File.
-""")
+# Configuration spec
+defaults = {
+	"using": 'string(default="Default")',
+	"threeD": "boolean(default=True)",
+	"speakRole": "boolean(default=False)",
+	"useSynthVolume": "boolean(default=False)",
+	"volume": "integer(default=75)"
+}
 
 def getCfgVal(key):
-	return conf[key]
+	return config.conf["audioThemes"][key]
 
 def setCfgVal(key, val):
-	conf[key] = val
-	conf.write()
+	config.conf["audioThemes"][key] = val
 
 def clamp(my_value, min_value, max_value):
 	return max(min(my_value, max_value), min_value)
@@ -55,13 +47,8 @@ def playTarget(target, fromFile=False):
 	fileNode.connect_simulation(0)
 
 def setupConfig():
-	global defaults, conf
-	confspec=configobj.ConfigObj(defaults, list_values=False, encoding="UTF-8")
-	confspec.newlines="\r\n"
-	conf = configobj.ConfigObj(infile = os.path.join(globalVars.appArgs.configPath, 'Themes.ini'), create_empty = True, configspec=confspec, stringify=True)
-	validated=conf.validate(Validator(), copy=True)
-	if validated:
-		conf.write()
+	config.conf.spec["audioThemes"] = defaults
+
 
 def activate(dg):
 	frame = gui.mainFrame
