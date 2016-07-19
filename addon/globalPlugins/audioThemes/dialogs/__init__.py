@@ -149,8 +149,13 @@ class BaseEditorDialog(wx.Dialog):
 		])
 		if not newSnd:
 			return
+		oldFile = self.getFileFromIndex(selectionIndex)
 		ext = os.path.splitext(newSnd)[-1]
 		targetFile = os.path.join(self.audioTheme.directory, "%d%s" %(self.keys[selectionIndex], ext))
+		try:
+			os.remove(oldFile)
+		except:
+			pass
 		try:
 			shutil.copy(newSnd, targetFile)
 		except IOError :
