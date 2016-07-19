@@ -146,8 +146,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		curtime = time.time()
 		if curtime-self._last_played_time < 0.1 and obj is self._last_played_object:
 			return
-		self._last_played_object = obj
-		self._last_played_time = curtime
 		order = self.getOrder(obj)
 		# if the object has a snd property, then play directly!
 		if getattr(obj, "snd", None):
@@ -160,6 +158,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			obj.snd = obj.role
 		if not obj.snd in soundpack:
 			return
+		self._last_played_object = obj
+		self._last_played_time = curtime
 		if helpers.getCfgVal("threeD"):
 			self.play(obj, soundpack, _3d=True)
 		else:
