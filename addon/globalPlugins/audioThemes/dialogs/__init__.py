@@ -154,9 +154,6 @@ class BaseEditorDialog(wx.Dialog):
 		targetFile = os.path.join(self.audioTheme.directory, "%d%s" %(self.keys[selectionIndex], ext))
 		try:
 			os.remove(oldFile)
-		except:
-			pass
-		try:
 			shutil.copy(newSnd, targetFile)
 		except IOError :
 			gui.messageBox(
