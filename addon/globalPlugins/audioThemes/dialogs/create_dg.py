@@ -111,4 +111,5 @@ class CreaterDialog(gui.SettingsDialog):
 		}
 		super(CreaterDialog, self).onOk(evt)
 		dg = CreateNewDialog(parent=gui.mainFrame, infoDict=infoDict)
+		dg.CenterOnScreen()
 		dg.Show()

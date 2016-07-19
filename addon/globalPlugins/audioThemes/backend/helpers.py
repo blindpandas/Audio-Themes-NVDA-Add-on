@@ -56,6 +56,7 @@ def activate(dg):
 		return
 	frame.prePopup()
 	d = dg(frame)
+	d.CenterOnScreen()
 	d.Show()
 	frame.postPopup()
 
