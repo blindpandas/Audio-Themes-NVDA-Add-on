@@ -2,7 +2,7 @@ r"""
 * This add-on creates a virtual audio display that plays sounds when focusing or navigating objects, the audio will be played in a location that corresponds to the object's location in the visual display.
 * it also enables the user to activate, install, remove, edit, create, and distribute audio theme packages.
 * Started as an indipendant project, this addon evolved to be an enhanced version of the 'Unspoken' addon by Bryan Smart (bryansmart@bryansmart.com) and Austin Hicks (camlorn38@gmail.com).
-* The development of this addon is happening on GitHub <https://github.com/mush42/audio-themes-nvda-addon/>
+* The development of this addon is happening on GitHub <http://github.com/mush42/Audio-Themes-NVDA-Add-on>
 * Crafted by Musharraf Omer <ibnomer2011@hotmail.com> using code published by  others from the NVDA community.
 * Licensed under the GNU General Public License.
 """ 
