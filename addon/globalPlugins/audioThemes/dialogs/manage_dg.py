@@ -80,7 +80,6 @@ class ManagerDialog(wx.Dialog):
 		mainSizer.Add(buttonsSizer)
 		self.SetSizer(mainSizer)
 		mainSizer.Fit(self)
-		self.themesList.Bind(wx.EVT_LIST_ITEM_FOCUSED, self.onListItemSelected)
 		self.Bind( wx.EVT_BUTTON, self.onUseClick, id=useThemeID)
 		self.Bind( wx.EVT_BUTTON, self.onRemoveClick, id=removeThemeID)
 		self.Bind( wx.EVT_BUTTON, self.onAddClick, id=addThemeID)
@@ -125,10 +124,6 @@ class ManagerDialog(wx.Dialog):
 	def onVolumeChange(self, evt):
 		sliderVal = self.volumeSlider.GetValue()
 		helpers.setCfgVal("volume", sliderVal)
-
-	def onListItemSelected(self, evt):
-		selected = self.themesList.GetFirstSelected()
-		self.enableOrDisableBasedOnSelection(selected)
 
 	def enableOrDisableBasedOnState(self):
 		controls = [
