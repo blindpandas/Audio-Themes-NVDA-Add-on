@@ -205,6 +205,8 @@ class ManagerDialog(wx.Dialog):
 			else:
 				btn.Disable()
 		for theme in installedThemes:
+			if theme.name == helpers.getCfgVal("using"):
+				theme.name = _("{themeName} (active)").format(themeName=theme.name)
 			self.themesList.Append((theme.name, theme.author, theme.summary))
 			self.currentThemes.append(theme)
 		self.themesList.Select(0)
