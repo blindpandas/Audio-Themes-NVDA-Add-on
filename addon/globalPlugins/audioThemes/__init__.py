@@ -190,8 +190,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		angle_y = helpers.clamp(angle_y, -90.0, 90.0)
 		#In theory, this can be made faster if we remember which is last, but that shouldn't matter here
 		with SIMULATION:
-			for i, j in soundPack.iteritems():
-				j.disconnect(0)
+			soundPack[self._last_played_object.role].disconnect(0)
 			soundPack[snd].connect(0, self.hrtf_panner, 0)	
 			soundPack[snd].position = 0.0
 			self.hrtf_panner.azimuth = angle_x
