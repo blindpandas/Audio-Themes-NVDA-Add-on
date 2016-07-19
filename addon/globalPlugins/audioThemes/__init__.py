@@ -65,9 +65,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		_("Create a new audio theme")
 		)
 		self.submenu_item = gui.mainFrame.sysTrayIcon.menu.InsertMenu(2, wx.ID_ANY, 
-		# Translators: The label for this add-on's  menu
-		_("&Audio Themes"), 
-		self.themesMenu)
+		  # Translators: The label for this add-on's  menu
+		  _("&Audio Themes"), 
+		  self.themesMenu)
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, lambda evt: helpers.activate(ManagerDialog), self.manage_themes_item)
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onEditorDialog, self.edit_theme_item)
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, lambda e: helpers.activate(CreaterDialog), self.create_theme_item)
