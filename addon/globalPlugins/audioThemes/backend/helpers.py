@@ -40,10 +40,19 @@ def setCfgVal(key, val):
 def clamp(my_value, min_value, max_value):
 	return max(min(my_value, max_value), min_value)
 
-def playFile(filePath, async=True):
-	if not async:
-		return winsound.PlaySound(filePath, winsound.SND_NODEFAULT)
-	winsound.PlaySound(filePath, winsound.SND_ASYNC|winsound.SND_NODEFAULT)
+def playTarget(target, fromFile=False):
+	if not fromFile:
+		target.disconnect(0)
+		target.position = 0.0
+		target.connect_simulation(0)
+		return
+	from .audioThemeHandler import libaudioverse, SIMULATION
+	filePath = os.path.abspath(target)
+	fileNode = libaudioverse.BufferNode(SIMULATION)
+	buffer = libaudioverse.Buffer(SIMULATION)
+	buffer.load_from_file(filePath)
+	fileNode.buffer = buffer
+	fileNode.connect_simulation(0)
 
 def setupConfig():
 	global defaults, conf
@@ -93,9 +102,16 @@ def compute_volume(volume=0):
 	return volume
 
 def showFileDialog(parent, message, ext, extHint):
+	wildcard = ""
+	if not isinstance(ext, basestring):
+		# Asume a list.
+		for e, h in zip(ext, extHint):
+			wildcard+= "{hint}(*.{ext})|*.{ext}|".format(hint= h, ext=e)
+	else:
+		wildcard="{hint}(*.{ext})|*.{ext}".format(hint= extHint, ext=ext)
 	fd=wx.FileDialog(parent,
 		message=message,
-		wildcard=("{hint}(*.{ext})"+"|*.{ext}").format(hint= extHint, ext=ext),
+		wildcard=(wildcard),
 		style=wx.FD_OPEN)
 	if fd.ShowModal()!=wx.ID_OK:
 		fd.Destroy()
