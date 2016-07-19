@@ -113,15 +113,8 @@ def getInstalled(updated=False):
 	for folder in os.listdir(themesInstallDir):
 		expected = os.path.join(themesInstallDir, folder)
 		infoFile = os.path.join(expected, INFO_FILE_NAME)
-		if os.path.isdir(expected):
-			if os.path.exists(infoFile):
-				info = loadInfoFile(infoFile)
-			else:
-				info = {
-				  # Translators: The default message in the audio themes manager dialog which will be shown when no author was set for the audio theme.
-				  "author": _("Not Set"),
-				  # Translators: The default message in the audio themes manager dialog which will be shown when no description was set for the audio theme.
-				  "summary": _("No description.")}
+		if os.path.isdir(expected) and os.path.exists(infoFile):
+			info = loadInfoFile(infoFile)
 			_installedThemes.append(AudioTheme(name=folder.decode("mbcs"), infoDict=info))
 	#create a dummy audio theme.
 	dummyTheme = AudioTheme(
@@ -135,7 +128,6 @@ def getInstalled(updated=False):
 		"summary": _("Silences the audable output")})
 	dummyTheme.directory = None
 	_installedThemes.append(dummyTheme)
-	_installedThemes = _installedThemes
 	initialize()
 	return _installedThemes
 

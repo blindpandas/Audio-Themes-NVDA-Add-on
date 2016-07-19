@@ -205,6 +205,11 @@ class ManagerDialog(wx.Dialog):
 			else:
 				btn.Disable()
 		for theme in installedThemes:
+			if theme.name=="Default":
+					# Translators: The name of the default audio theme.
+					theme.name = _("Default")
+					# Translators: The summary of the default theme.
+					theme.summary = _("The default audio theme package.")
 			if theme.name == helpers.getCfgVal("using"):
 				theme.name = _("{themeName} (active)").format(themeName=theme.name)
 			self.themesList.Append((theme.name, theme.author, theme.summary))
