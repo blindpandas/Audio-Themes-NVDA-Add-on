@@ -71,14 +71,12 @@ class ManagerDialog(wx.Dialog):
 		self.removeTheme = wx.Button(self, removeThemeID, _("&Remove Selected"))
 		addThemeID = wx.NewId()
 		# Translators: The label of the button to add a new theme to user's themes.
-		addTheme = wx.Button(self, addThemeID, _("&Add New"))
+		self.addTheme = wx.Button(self, addThemeID, _("&Add New"))
 		# Translators: The text of a button to close a dialog.
 		cancelButton = wx.Button(self, wx.ID_CANCEL, _("&Close"))
-		if globalVars.appArgs.secure:
-			buttonsSizer.Add(self.useTheme)
-		else:
-			buttonsSizer.AddMany([(self.useTheme), (self.removeTheme), (addTheme)])
-		buttonsSizer.Add(cancelButton)
+		buttonsSizer.AddMany([
+		  (self.useTheme), (self.removeTheme),
+		  (self.addTheme), (cancelButton)])
 		mainSizer.Add(buttonsSizer)
 		self.SetSizer(mainSizer)
 		mainSizer.Fit(self)
@@ -95,6 +93,7 @@ class ManagerDialog(wx.Dialog):
 		self.finishSetup()
 
 	def finishSetup(self):
+		self.enableOrDisableBasedOnSelection(self.themesList.GetFirstSelected())
 		self.useTheme.SetDefault()
 		self.play3DCb.SetValue(helpers.getCfgVal("threeD"))
 		self.speakRoleCb.SetValue(helpers.getCfgVal("speakRole"))
@@ -129,13 +128,20 @@ class ManagerDialog(wx.Dialog):
 
 	def onListItemSelected(self, evt):
 		selected = self.themesList.GetFirstSelected()
-		controls = [self.removeTheme, self.play3DCb, self.speakRoleCb, self.useSynthVolumeCb, self.volumeSlider]
-		isInDisable = selected == len(self.currentThemes)-1
-		for c in controls:
-				if isInDisable:
-					c.Disable()
-				else:
-					c.Enable()
+		self.enableOrDisableBasedOnSelection(selected)
+
+	def enableOrDisableBasedOnSelection(self, selected=0):
+		controls = [
+		  self.removeTheme, self.play3DCb,
+		  self.speakRoleCb, self.useSynthVolumeCb, self.volumeSlider]
+		needsDisabling = selected == len(self.currentThemes)-1
+		if needsDisabling:
+			[c.Disable() for c in controls]
+		else:
+			[c.Enable() for c in controls]
+		if globalVars.appArgs.secure:
+			self.removeTheme.Disable()
+			self.addTheme.Disable()
 
 	def onUseClick(self, event):
 		selected = self.themesList.GetFirstSelected()
