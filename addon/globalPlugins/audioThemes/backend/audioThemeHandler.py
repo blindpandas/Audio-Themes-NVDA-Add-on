@@ -24,6 +24,7 @@ NVDA_getSpeechTextForProperties = speech.getSpeechTextForProperties
 SIMULATION = libaudioverse.Simulation(block_size = 1024)
 MIXER = mixer.Mixer(SIMULATION, 1)
 INFO_FILE_NAME = "info.json"
+SUPPORTED_FILE_TYPES = [".wav", ".ogg"]
 
 class SpecialProps(IntEnum):
 	protective = 2500
@@ -68,8 +69,8 @@ class AudioTheme(object):
 		if not self.directory:
 			return
 		for fileName in os.listdir(self.directory):
-			path = os.path.join(self.directory ,fileName)
-			if os.path.isfile(path) and path.endswith("wav"):
+			path = os.path.join(self.directory, fileName)
+			if os.path.isfile(path) and os.path.splitext(path)[-1] in SUPPORTED_FILE_TYPES:
 				key = int(os.path.splitext(fileName)[0])
 				if key in themeRoles:
 					self.loadFile(key, path)
@@ -162,7 +163,7 @@ def hook_getSpeechTextForProperties(reason=controlTypes.REASON_QUERY, *args, **k
 	role = kwargs.get('role', None)
 	sounds = getattr(findThemeWithProp("isActive", True), "soundobjects", None)
 	if role and sounds:
-		if 'role' in kwargs and role in sounds:
+		if 'role' in kwargs and role in sounds and not role in [controlTypes.ROLE_TREEVIEWITEM,controlTypes.ROLE_LISTITEM]:
 			del kwargs['role']
 	return NVDA_getSpeechTextForProperties(reason, *args, **kwargs)
 
