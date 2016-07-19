@@ -93,7 +93,7 @@ class ManagerDialog(wx.Dialog):
 		self.finishSetup()
 
 	def finishSetup(self):
-		self.enableOrDisableBasedOnSelection(self.themesList.GetFirstSelected())
+		self.enableOrDisableBasedOnState()
 		self.useTheme.SetDefault()
 		self.play3DCb.SetValue(helpers.getCfgVal("threeD"))
 		self.speakRoleCb.SetValue(helpers.getCfgVal("speakRole"))
@@ -130,11 +130,11 @@ class ManagerDialog(wx.Dialog):
 		selected = self.themesList.GetFirstSelected()
 		self.enableOrDisableBasedOnSelection(selected)
 
-	def enableOrDisableBasedOnSelection(self, selected=0):
+	def enableOrDisableBasedOnState(self):
 		controls = [
 		  self.removeTheme, self.play3DCb,
 		  self.speakRoleCb, self.useSynthVolumeCb, self.volumeSlider]
-		needsDisabling = selected == len(self.currentThemes)-1
+		needsDisabling = not helpers.getCfgVal("using")
 		if needsDisabling:
 			[c.Disable() for c in controls]
 		else:
@@ -151,6 +151,7 @@ class ManagerDialog(wx.Dialog):
 			selectedTheme.name = ""
 		helpers.setCfgVal("using", self.currentThemes[selected].name)
 		selectedTheme.activate()
+		self.enableOrDisableBasedOnState()
 
 	def onRemoveClick(self, event):
 		selected = self.themesList.GetFirstSelected()
@@ -182,6 +183,7 @@ class ManagerDialog(wx.Dialog):
 			# Translators: the title of the message telling that the deletion was faild
 			_("Error"))
 		self.refresh()
+		self.enableOrDisableBasedOnState()
 
 	def onAddClick(self, event):
 		filename = helpers.showFileDialog(self,
