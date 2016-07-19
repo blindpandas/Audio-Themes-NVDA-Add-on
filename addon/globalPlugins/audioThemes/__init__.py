@@ -126,9 +126,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		nextHandler()
 
 	def playObject(self, obj):
-		self._playObject(obj)
-
-	def _playObject(self, obj):
 		# aboart early!
 		if not helpers.getCfgVal("using"): return
 		activeTheme = audioThemeHandler.findThemeWithProp("isActive", True)
