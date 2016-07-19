@@ -149,9 +149,10 @@ class BaseEditorDialog(wx.Dialog):
 		])
 		if not newSnd:
 			return
-		oldSnd = self.getFileFromIndex(selectionIndex)
+		ext = os.path.splitext(newSnd)[-1]
+		targetFile = os.path.join(self.audioTheme.directory, "%d%s" %(self.keys[selectionIndex], ext))
 		try:
-			shutil.copy(newSnd, oldSnd)
+			shutil.copy(newSnd, targetFile)
 		except IOError :
 			gui.messageBox(
 			  # Translators: Message box shown to the user when the copying fails.
