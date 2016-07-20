@@ -80,6 +80,7 @@ class ManagerDialog(wx.Dialog):
 		mainSizer.Add(buttonsSizer)
 		self.SetSizer(mainSizer)
 		mainSizer.Fit(self)
+		self.themesList.Bind(wx.EVT_LIST_ITEM_FOCUSED, self.onSelectionChange)
 		self.Bind( wx.EVT_BUTTON, self.onUseClick, id=useThemeID)
 		self.Bind( wx.EVT_BUTTON, self.onRemoveClick, id=removeThemeID)
 		self.Bind( wx.EVT_BUTTON, self.onAddClick, id=addThemeID)
@@ -99,6 +100,13 @@ class ManagerDialog(wx.Dialog):
 		self.volumeSlider.SetValue(helpers.getCfgVal("volume"))
 		if helpers.getCfgVal("useSynthVolume"):
 			self.volumeSlider.Disable()
+
+	def onSelectionChange(self, evt):
+		selected = self.themesList.GetFirstSelected()
+		if selected == len(self.currentThemes)-1:
+			self.removeTheme.Disable()
+		else:
+			self.removeTheme.Enable()
 
 	def onPlay3DCbCheck(self, evt):
 		cbVal = self.play3DCb.GetValue()
