@@ -27,7 +27,7 @@ INFO_FILE_NAME = "info.json"
 SUPPORTED_FILE_TYPES = [".wav", ".ogg"]
 
 class SpecialProps(IntEnum):
-	protective = 2500
+	protected = 2500
 	first = 2501
 	last = 2502
 	notify = 2503
@@ -36,7 +36,7 @@ class SpecialProps(IntEnum):
 themeRoles = copy.deepcopy(controlTypes.roleLabels)
 themeRoles.update({
   # Translators: The label of the sound which will be played when focusing a protected edit control.
-  SpecialProps.protective: _("Password Edit Fields"),
+  SpecialProps.protected: _("Protected Editable Controls"),
   # Translators: The label of the sound which will be played when focusing the first item in a list.
   SpecialProps.first: _("First Item"),
   # Translators: The label of the sound which will be played when focusing the last item in a list.
