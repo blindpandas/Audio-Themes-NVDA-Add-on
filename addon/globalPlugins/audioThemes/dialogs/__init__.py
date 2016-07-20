@@ -61,12 +61,7 @@ class NewSoundDialog(gui.SettingsDialog):
 	def onBrowseClick(self, evt):
 		self.newSoundPath = helpers.showFileDialog(self,
 		  # Translators: The title of a dialog asking the user to select an audio file.
-		  _("Select Audio File"), ["ogg", "wav"], [
-		  # Translators: The file type to be shown in a dialog used to browse for audio files.
-		  _("Ogg audio files"),
-		  # Translators: The file type to be shown in a dialog used to browse for audio files.
-		  _("Wave audio files")
-		])
+		  _("Select Audio File"), audioThemeHandler.SUPPORTED_FILE_TYPES.keys(), audioThemeHandler.SUPPORTED_FILE_TYPES.values())
 		if self.newSoundPath:
 			self.previewBtn.Enable()
 
@@ -141,12 +136,7 @@ class BaseEditorDialog(wx.Dialog):
 	def onChangeClick(self, event):
 		selectionIndex = self.listBox.GetSelection()
 		if  selectionIndex == wx.NOT_FOUND: return
-		newSnd = helpers.showFileDialog(self, _("Select Audio File"), ["ogg", "wav"], [
-		  # Translators: A label of a file type in open file dialog.
-		  _("Ogg audio files"),
-		  # Translators: A label of a file type in open file dialog.
-		  _("Wave audio files")
-		])
+		newSnd = helpers.showFileDialog(self, _("Select Audio File"), audioThemeHandler.SUPPORTED_FILE_TYPES.keys(), audioThemeHandler.SUPPORTED_FILE_TYPES.values())
 		if not newSnd:
 			return
 		oldFile = self.getFileFromIndex(selectionIndex)
