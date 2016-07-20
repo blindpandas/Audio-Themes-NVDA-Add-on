@@ -151,6 +151,7 @@ class ManagerDialog(wx.Dialog):
 		selected = self.themesList.GetFirstSelected()
 		if selected<0: return
 		selectedTheme = self.currentThemes[selected]
+		if selectedTheme.isActive: return
 		if selectedTheme == self.currentThemes[-1]:
 			selectedTheme.name = ""
 		helpers.setCfgVal("using", self.currentThemes[selected].name)
