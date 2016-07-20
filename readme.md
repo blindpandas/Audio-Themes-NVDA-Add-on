@@ -21,15 +21,15 @@ You can access these functions from the add-on's menu which is found in the main
 
 ### Editing The Active Audio Theme:
 - When you click on the 'Edit the active audio theme' option, a dialogue will open with a list containing all the sounds contained in the currently active theme. From this dialogue you can:
-- Change Selected: Selecting a sound from the list and clicking this button, will  open a standard open file dialogue, select a wave file from your file system to replace the selected sound, and click OK to complete the process.
+- Change Selected: Selecting a sound from the list and clicking this button, will  open a standard open file dialogue, select an ogg or wave audio file from your file system to replace the selected sound, and click OK to complete the process.
 - Remove Selected: This will remove the selected sound from the theme, click 'Yes' to confirm the removal process, and the selected sound will be removed.
-- Add New Sound: When clicking this button a new dialogue will be shown. From the first combo box in the newly opened dialogue select the object type you want to assign the sound to it, for example (button, link, tab, menu and so on), then click the 'Browse to a wave file' button to select the sound you want to assign for the previously selected object type. Optionally you can click the preview   button to preview the sound, and finally clicking the OK button will apply the changes and assign the selected sound to the selected object. 
+- Add New Sound: When clicking this button a new dialogue will be shown. From the first combo box in the newly opened dialogue select the object type you want to assign the sound to it, for example (button, link, tab, menu and so on), then click the 'Browse to an audio file' button to select the sound you want to assign for the previously selected object type. Optionally you can click the preview   button to preview the sound, and finally clicking the OK button will apply the changes and assign the selected sound to the selected object. 
 - Close: Will  exit the dialogue without performing any action.
 
 
 ### Creating A New Audio Theme
 - If you have a good sound production skills you can apply them here and create an audio theme of your own, rather than editing an existing one. To do this you can follow these steps.
-- Collect your audio files in one place, and rename them to whatever make sense to you. For example when I was creating the default audio theme for this add-on, I grouped sounds according to interaction patterns, for example, the combo box, the drop down button, and the split button can all have the same sound, while the Check box, The toggle button, and the menu check item can have the same sound.
+- Collect your audio files in one place, they must be in ogg or wave format, and rename them to what ever make sense to you. For example when I was creating the default audio theme for this add-on, I grouped sounds according to interaction patterns, for example, the combo box, the drop down button, and the split button can all have the same sound, while the Check box, The toggle button, and the menu check item can have the same sound.
 - From the add-on menu click 'Create a new audio theme'
 - A dialogue will be opened asking you for some information about your new audio theme, including:
 *	Theme Name : The name of your theme which will be shown in the audio themes manager. This must be a valid windows folder name.
