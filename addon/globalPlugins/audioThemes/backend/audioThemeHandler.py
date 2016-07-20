@@ -8,6 +8,7 @@ import shutil
 import gc
 import copy
 import json
+from collections import OrderedDict
 
 import speech
 import controlTypes
@@ -24,12 +25,12 @@ NVDA_getSpeechTextForProperties = speech.getSpeechTextForProperties
 SIMULATION = libaudioverse.Simulation(block_size = 1024)
 MIXER = mixer.Mixer(SIMULATION, 1)
 INFO_FILE_NAME = "info.json"
-SUPPORTED_FILE_TYPES = {
-  # Translators: The file type to be shown in a dialog used to browse for audio files.
-  "ogg": _("Ogg audio files"),
-  # Translators: The file type to be shown in a dialog used to browse for audio files.
-  "wav": _("Wave audio files")
-}
+SUPPORTED_FILE_TYPES = OrderedDict()
+# Translators: The file type to be shown in a dialog used to browse for audio files.
+SUPPORTED_FILE_TYPES["ogg"]= _("Ogg audio files")
+# Translators: The file type to be shown in a dialog used to browse for audio files.
+SUPPORTED_FILE_TYPES["wav"] = _("Wave audio files")
+
 
 class SpecialProps(IntEnum):
 	protected = 2500
