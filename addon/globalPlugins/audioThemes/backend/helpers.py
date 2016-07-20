@@ -19,8 +19,8 @@ defaults = {
 	"using": 'string(default="Default")',
 	"threeD": "boolean(default=True)",
 	"speakRole": "boolean(default=False)",
-	"useSynthVolume": "boolean(default=False)",
-	"volume": "integer(default=75)"
+	"useSynthVolume": "boolean(default=True)",
+	"volume": "integer(default=100)"
 }
 
 def getCfgVal(key):
