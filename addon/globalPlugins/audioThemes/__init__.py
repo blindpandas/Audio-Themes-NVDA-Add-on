@@ -158,12 +158,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			obj.snd = obj.role
 		if not obj.snd in soundpack:
 			return
-		self._last_played_object = obj
-		self._last_played_time = curtime
 		if helpers.getCfgVal("threeD"):
 			self.play(obj, soundpack, _3d=True)
 		else:
 			self.play(obj, soundpack, _3d=False)
+		self._last_played_object = obj
+		self._last_played_time = curtime
 
 	def play(self, obj, soundPack, _3d):
 		snd = obj.snd
@@ -190,7 +190,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		angle_y = helpers.clamp(angle_y, -90.0, 90.0)
 		#In theory, this can be made faster if we remember which is last, but that shouldn't matter here
 		with SIMULATION:
-			soundPack[self._last_played_object.role].disconnect(0)
+			if self._last_played_object.role in soundPack: soundPack[self._last_played_object.role].disconnect(0)
 			soundPack[snd].connect(0, self.hrtf_panner, 0)	
 			soundPack[snd].position = 0.0
 			self.hrtf_panner.azimuth = angle_x
