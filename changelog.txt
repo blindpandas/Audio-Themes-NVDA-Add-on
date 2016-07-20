@@ -1,3 +1,14 @@
+Version 5.1:
+
+Changes:
+- Major security and performance enhancements
+- Added support for ogg audio format.
+- The add-on is now aware of if NVDA is running in a secure mode and changes its options accordingly.
+- All the dialogs are now correctly centered in the screen.
+- The themes options (such as: Play in 3D mode and use synth volume) will no longer be enabled if the Disable audio themes option is activated.
+- Minor bug fixes.
+
+
 Version 5.0:
 
 - The add-on was rewritten from the scratch to enhance its performance, and generally to make things more easier.
