@@ -92,7 +92,6 @@ class ManagerDialog(wx.Dialog):
 		self.finishSetup()
 
 	def finishSetup(self):
-		self.enableOrDisableBasedOnState()
 		self.useTheme.SetDefault()
 		self.play3DCb.SetValue(helpers.getCfgVal("threeD"))
 		self.speakRoleCb.SetValue(helpers.getCfgVal("speakRole"))
@@ -146,7 +145,7 @@ class ManagerDialog(wx.Dialog):
 			selectedTheme.name = ""
 		helpers.setCfgVal("using", self.currentThemes[selected].name)
 		selectedTheme.activate()
-		self.enableOrDisableBasedOnState()
+		self.refresh()
 
 	def onRemoveClick(self, event):
 		selected = self.themesList.GetFirstSelected()
@@ -178,7 +177,6 @@ class ManagerDialog(wx.Dialog):
 			# Translators: the title of the message telling that the deletion was faild
 			_("Error"))
 		self.refresh()
-		self.enableOrDisableBasedOnState()
 
 	def onAddClick(self, event):
 		filename = helpers.showFileDialog(self,
@@ -195,12 +193,8 @@ class ManagerDialog(wx.Dialog):
 		self.themesList.DeleteAllItems()
 		self.currentThemes = []
 		installedThemes = audioThemeHandler.getInstalled(updated=True)
-		buttons = [self.useTheme, self.removeTheme]
-		for btn in buttons:
-			if installedThemes:
-				btn.Enable()
-			else:
-				btn.Disable()
+		# Translators: Message shown when this audio theme is active.
+		if not helpers.getCfgVal("using"): installedThemes[-1].name = _("{themeName} (active)").format(themeName=installedThemes[-1].name)
 		for theme in installedThemes:
 			if theme.name=="Default":
 					# Translators: The name of the default audio theme.
@@ -208,8 +202,10 @@ class ManagerDialog(wx.Dialog):
 					# Translators: The summary of the default theme.
 					theme.summary = _("The default audio theme package.")
 			if theme.name == helpers.getCfgVal("using"):
+				# Translators: Message shown when this audio theme is active.
 				theme.name = _("{themeName} (active)").format(themeName=theme.name)
 			self.themesList.Append((theme.name, theme.author, theme.summary))
 			self.currentThemes.append(theme)
 		self.themesList.Select(0)
 		self.themesList.SetItemState(0, wx.LIST_STATE_FOCUSED,wx.LIST_STATE_FOCUSED)
+		self.enableOrDisableBasedOnState()
