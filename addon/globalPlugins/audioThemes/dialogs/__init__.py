@@ -216,7 +216,7 @@ class BaseEditorDialog(wx.Dialog):
 		return _("Audio Theme Editor")
 
 	def getFileFromIndex(self, index):
-		expected = [os.path.join(self.audioTheme.directory, "%d%s" %(self.keys[index], ext)) for ext in audioThemeHandler.SUPPORTED_FILE_TYPES]
+		expected = [os.path.join(self.audioTheme.directory, "%d.%s" %(self.keys[index], ext)) for ext in audioThemeHandler.SUPPORTED_FILE_TYPES.keys()]
 		if os.path.exists(expected[0]):
 			return expected[0]
 		else:
