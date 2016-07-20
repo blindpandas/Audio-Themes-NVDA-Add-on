@@ -89,6 +89,7 @@ class ManagerDialog(wx.Dialog):
 		self.Bind( wx.EVT_CHECKBOX, self.onUseSynthVolumeCb, self.useSynthVolumeCb)
 		self.volumeSlider.Bind(wx.EVT_SLIDER, self.onVolumeChange)
 		self.currentThemes = []
+		self.activeIndex = 0
 		self.refresh()
 		self.finishSetup()
 
@@ -103,6 +104,7 @@ class ManagerDialog(wx.Dialog):
 
 	def onSelectionChange(self, evt):
 		selected = self.themesList.GetFirstSelected()
+		self.activeIndex = selected
 		if selected == len(self.currentThemes)-1:
 			self.removeTheme.Disable()
 		else:
@@ -152,7 +154,6 @@ class ManagerDialog(wx.Dialog):
 		if selectedTheme == self.currentThemes[-1]:
 			selectedTheme.name = ""
 		helpers.setCfgVal("using", self.currentThemes[selected].name)
-		selectedTheme.activate()
 		self.refresh()
 
 	def onRemoveClick(self, event):
@@ -199,21 +200,27 @@ class ManagerDialog(wx.Dialog):
 
 	def refresh(self):
 		self.themesList.DeleteAllItems()
+		self.enableOrDisableBasedOnState()
 		self.currentThemes = []
 		installedThemes = audioThemeHandler.getInstalled(updated=True)
-		# Translators: Message shown when this audio theme is active.
-		if not helpers.getCfgVal("using"): installedThemes[-1].name = _("{themeName} (active)").format(themeName=installedThemes[-1].name)
+		# Call this explicitly to activate configured theme/
+		audioThemeHandler.initialize()
 		for theme in installedThemes:
 			if theme.name=="Default":
 					# Translators: The name of the default audio theme.
 					theme.name = _("Default")
 					# Translators: The summary of the default theme.
 					theme.summary = _("The default audio theme package.")
-			if theme.name == helpers.getCfgVal("using"):
+			if theme.isActive:
 				# Translators: Message shown when this audio theme is active.
 				theme.name = _("{themeName} (active)").format(themeName=theme.name)
 			self.themesList.Append((theme.name, theme.author, theme.summary))
 			self.currentThemes.append(theme)
-		self.themesList.Select(0)
-		self.themesList.SetItemState(0, wx.LIST_STATE_FOCUSED,wx.LIST_STATE_FOCUSED)
-		self.enableOrDisableBasedOnState()
+		installedLen = len(installedThemes)
+		if installedLen:
+			if self.activeIndex>installedLen-1:
+				self.activeIndex = installedLen-1
+			elif self.activeIndex<0:
+				self.activeIndex = 0
+		self.themesList.Select(self.activeIndex)
+		self.themesList.SetItemState(self.activeIndex, wx.LIST_STATE_FOCUSED,wx.LIST_STATE_FOCUSED)

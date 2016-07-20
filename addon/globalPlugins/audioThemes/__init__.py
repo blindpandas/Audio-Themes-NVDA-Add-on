@@ -93,14 +93,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			speech.getSpeechTextForProperties = audioThemeHandler.hook_getSpeechTextForProperties
 
 	def onEditorDialog(self, evt):
-		if not helpers.getCfgVal("using"):
-			gui.messageBox(
-			  # Translators: The text in a message box telling the user to activate an audio theme before being able to start the themes editor. 
-			  _("There is no active audio theme. Please activate an audio theme first."),
-			  # Translators: The title of the message Box indicating an error.
-			  _("Error"))
-			return
-		helpers.activate(EditorDialog)
+		activeTheme = audioThemeHandler.findThemeWithProp("isActive", True)
+		if activeTheme:
+			if not activeTheme.directory:
+				gui.messageBox(
+				# Translators: The text in a message box telling the user to activate an audio theme before being able to start the themes editor. 
+				_("There is no active audio theme. Please activate an audio theme first."),
+				# Translators: The title of the message Box indicating an error.
+				_("Error"))
+				return
+			helpers.activate(EditorDialog)
 
 	def terminate(self):
 		if not self.submenu_item: return

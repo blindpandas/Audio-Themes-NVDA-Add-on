@@ -130,7 +130,8 @@ class BaseEditorDialog(wx.Dialog):
 		self.EscapeId = wx.ID_CLOSE
 		self.audioTheme = self.getAudioTheme()
 		self.Title = self.makeTitle()
-		audioThemeHandler.findThemeWithProp("isActive", True).deactivate()
+		self.lastActiveTheme = audioThemeHandler.findThemeWithProp("isActive", True)
+		self.lastActiveTheme.deactivate()
 		self.refresh()
 
 	def onChangeClick(self, event):
@@ -183,7 +184,7 @@ class BaseEditorDialog(wx.Dialog):
 		self.refresh()
 
 	def onClose(self, evt):
-		self.Destroy()
+		self.lastActiveTheme.activate()
 		tempDir = getattr(self, "baseTemp", None)
 		if tempDir:
 			try:
@@ -191,7 +192,7 @@ class BaseEditorDialog(wx.Dialog):
 				os.remove(tempDir)
 			except:
 				pass
-		audioThemeHandler.initialize()
+		self.Destroy()
 
 	def OnSelectionChange(self, evt):
 		selection = self.listBox.GetSelection()

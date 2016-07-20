@@ -12,7 +12,7 @@ from ..backend import audioThemeHandler
 class EditorDialog(BaseEditorDialog):
 
 	def getAudioTheme(self):
-		return audioThemeHandler.findThemeWithProp("name", helpers.getCfgVal("using"))
+		return audioThemeHandler.findThemeWithProp("isActive", True)
 
 	def makeTitle(self):
 		return _("Editing {themeName}, The Active Audio Theme").format(themeName=self.audioTheme.name)

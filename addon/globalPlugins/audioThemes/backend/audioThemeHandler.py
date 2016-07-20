@@ -134,7 +134,6 @@ def getInstalled(updated=False):
 		"summary": _("Silences the audable output")})
 	dummyTheme.directory = None
 	_installedThemes.append(dummyTheme)
-	initialize()
 	return _installedThemes
 
 def installAudioThemePackage(packagePath):
