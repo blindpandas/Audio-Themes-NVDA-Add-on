@@ -130,14 +130,19 @@ class ManagerDialog(wx.Dialog):
 		helpers.setCfgVal("volume", sliderVal)
 
 	def enableOrDisableBasedOnState(self):
-		controls = [
-		  self.removeTheme, self.play3DCb,
-		  self.speakRoleCb, self.useSynthVolumeCb, self.volumeSlider]
 		needsDisabling = not helpers.getCfgVal("using")
 		if needsDisabling:
-			[c.Disable() for c in controls]
+			[c.Disable() for c in (self.removeTheme,
+			self.play3DCb, self.speakRoleCb,
+			self.useSynthVolumeCb, self.volumeSlider
+		)]
 		else:
-			[c.Enable() for c in controls]
+			[c.Enable() for c in (
+			self.removeTheme, self.play3DCb,
+			self.speakRoleCb, self.useSynthVolumeCb
+			)]
+			if not helpers.getCfgVal("useSynthVolume"):
+				self.volumeSlider.Enable()
 		selected = self.themesList.GetFirstSelected()
 		self.activeIndex = selected
 		if selected == len(self.currentThemes)-1:
