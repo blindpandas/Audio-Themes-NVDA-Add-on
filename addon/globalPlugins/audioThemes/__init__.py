@@ -111,6 +111,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		except wx.PyDeadObjectError:
 			pass
 
+	def script_speakObject(self, gesture):
+		obj = NVDAObjects.api.getFocusObject()
+		self.playObject(obj)
+		speech.speakObject(obj)
+
 	def event_gainFocus(self, obj, nextHandler):
 		self.playObject(obj)
 		nextHandler()
@@ -209,3 +214,4 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		elif (obj.next is None) or (obj.next.role != chrole):
 			return SpecialProps.last
 
+	__gestures = {"kb:nvda+tab": "speakObject"}
