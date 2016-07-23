@@ -126,7 +126,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		nextHandler()
 
 	def event_show(self, obj, nextHandler):
-		if obj.role == controlTypes.ROLE_HELPBALLOON or isinstance(obj, NVDAObjects.UIA.Toast):
+		if obj.role == controlTypes.ROLE_HELPBALLOON:
 			obj.snd = SpecialProps.notify
 			self.playObject(obj)
 		nextHandler()
