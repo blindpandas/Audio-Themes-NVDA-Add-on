@@ -103,6 +103,7 @@ class ManagerDialog(wx.Dialog):
 			self.volumeSlider.Disable()
 
 	def onSelectionChange(self, evt):
+		self.activeIndex = self.themesList.GetFirstSelected()
 		self.enableOrDisableBasedOnState()
 
 	def onPlay3DCbCheck(self, evt):
@@ -144,7 +145,6 @@ class ManagerDialog(wx.Dialog):
 			if not helpers.getCfgVal("useSynthVolume"):
 				self.volumeSlider.Enable()
 		selected = self.themesList.GetFirstSelected()
-		self.activeIndex = selected
 		if selected == len(self.currentThemes)-1:
 			self.removeTheme.Disable()
 		else:
