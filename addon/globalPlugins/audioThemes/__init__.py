@@ -12,10 +12,12 @@ import wx
 
 import globalPluginHandler
 import appModuleHandler
+import scriptHandler
 import NVDAObjects
 import gui
 import speech
 import controlTypes
+import globalCommands
 import globalVars
 
 from .dialogs.manage_dg import ManagerDialog
@@ -112,9 +114,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			pass
 
 	def script_speakObject(self, gesture):
-		obj = NVDAObjects.api.getFocusObject()
-		self.playObject(obj)
-		speech.speakObject(obj)
+		if scriptHandler.getLastScriptRepeatCount() == 0:
+			self.playObject(NVDAObjects.api.getFocusObject())
+		globalCommands.commands.script_reportCurrentFocus(gesture)
+	script_speakObject.__doc__ = globalCommands.GlobalCommands.script_reportCurrentFocus.__doc__
 
 	def event_gainFocus(self, obj, nextHandler):
 		self.playObject(obj)
