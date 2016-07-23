@@ -103,12 +103,7 @@ class ManagerDialog(wx.Dialog):
 			self.volumeSlider.Disable()
 
 	def onSelectionChange(self, evt):
-		selected = self.themesList.GetFirstSelected()
-		self.activeIndex = selected
-		if selected == len(self.currentThemes)-1:
-			self.removeTheme.Disable()
-		else:
-			self.removeTheme.Enable()
+		self.enableOrDisableBasedOnState()
 
 	def onPlay3DCbCheck(self, evt):
 		cbVal = self.play3DCb.GetValue()
@@ -143,6 +138,12 @@ class ManagerDialog(wx.Dialog):
 			[c.Disable() for c in controls]
 		else:
 			[c.Enable() for c in controls]
+		selected = self.themesList.GetFirstSelected()
+		self.activeIndex = selected
+		if selected == len(self.currentThemes)-1:
+			self.removeTheme.Disable()
+		else:
+			self.removeTheme.Enable()
 		if globalVars.appArgs.secure:
 			self.removeTheme.Disable()
 			self.addTheme.Disable()
