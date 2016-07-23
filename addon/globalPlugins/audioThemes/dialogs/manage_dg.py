@@ -207,15 +207,17 @@ class ManagerDialog(wx.Dialog):
 		# Call this explicitly to activate configured theme/
 		audioThemeHandler.initialize()
 		for theme in installedThemes:
-			if theme.name=="Default":
+			name = theme.name
+			desc = theme.summary
+			if name=="Default":
 					# Translators: The name of the default audio theme.
-					theme.name = _("Default")
+					name = _("Default")
 					# Translators: The summary of the default theme.
-					theme.summary = _("The default audio theme package.")
+					desc = _("The default audio theme package.")
 			if theme.isActive:
 				# Translators: Message shown when this audio theme is active.
-				theme.name = _("{themeName} (active)").format(themeName=theme.name)
-			self.themesList.Append((theme.name, theme.author, theme.summary))
+				name = _("{themeName} (active)").format(themeName=theme.name)
+			self.themesList.Append((name, theme.author, desc))
 			self.currentThemes.append(theme)
 		installedLen = len(installedThemes)
 		if installedLen:
