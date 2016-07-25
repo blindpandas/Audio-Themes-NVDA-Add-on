@@ -28,6 +28,7 @@ from .backend import helpers
 from .backend import audioThemeHandler
 from .backend.audioThemeHandler import SIMULATION, MIXER, SpecialProps, libaudioverse
 
+
 import addonHandler
 addonHandler.initTranslation()
 

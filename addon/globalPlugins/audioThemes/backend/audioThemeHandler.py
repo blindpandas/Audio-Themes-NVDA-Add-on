@@ -39,6 +39,16 @@ class SpecialProps(IntEnum):
 	notify = 2503
 	loaded = 2504
 
+
+# nvda Issue #6203
+label = controlTypes.roleLabels[controlTypes.ROLE_CHECKMENUITEM]
+controlTypes.ROLE_CHECKMENUITEM = 60
+controlTypes.roleLabels[controlTypes.ROLE_CHECKMENUITEM] = label
+try:
+	controlTypes.roleLabels.pop((60,))
+except KeyError:
+	pass
+
 themeRoles = copy.deepcopy(controlTypes.roleLabels)
 themeRoles.update({
   # Translators: The label of the sound which will be played when focusing a protected edit control.
