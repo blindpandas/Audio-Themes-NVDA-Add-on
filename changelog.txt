@@ -1,4 +1,10 @@
 Version 5.1:
+- Audible indication of the object when pressing nvda plus tab
+- Addressing nvaccess/nvda#6203
+- Several bug fixes to the audio themes manager dialog.
+
+
+Version 5.1-beta:
 
 Changes:
 - Major security and performance enhancements

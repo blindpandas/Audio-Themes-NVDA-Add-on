@@ -19,7 +19,7 @@ addon_info = {
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
 	"addon_description" : _("""This add-on creates a virtual audio display that plays sounds when focusing or navigating objects, the audio will be played in a location that corresponds to the object's location in the visual display. The add-on also enables you to activate, install, remove, edit, create, and distribute audio theme packages."""),
 	# version
-	"addon_version" : "5.1-beta",
+	"addon_version" : "5.1",
 	# Author(s)
 	"addon_author" : u"Musharraf Omer<ibnomer2011@hotmail.com>",
 	# URL for the add-on documentation support
