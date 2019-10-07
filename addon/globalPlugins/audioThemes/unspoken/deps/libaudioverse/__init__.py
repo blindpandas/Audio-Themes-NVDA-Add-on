@@ -15,17 +15,20 @@ import six.moves
 import glob
 import os.path
 
+
 def find_datafiles():
     import platform
-    if platform.system() != 'Windows':
+
+    if platform.system() != "Windows":
         return []
-    dlls = glob.glob(os.path.join(__path__[0], '*.dll'))
-    return [('libaudioverse', dlls)]
+    dlls = glob.glob(os.path.join(__path__[0], "*.dll"))
+    return [("libaudioverse", dlls)]
 
 
-#Everything below here might need the important enums, namely Lav_OBJECT_TYPES:
+# Everything below here might need the important enums, namely Lav_OBJECT_TYPES:
 class BiquadTypes(enum.IntEnum):
     """Indicates a biquad filter type, used with the :class:`BiquadNode` and in a few other places."""
+
     lowpass = 0
     """Indicates a lowpass filter."""
     highpass = 1
@@ -44,9 +47,12 @@ class BiquadTypes(enum.IntEnum):
     """Indicates a highshelf filter."""
     identity = 8
     """This filter does nothing."""
+
+
 class DistanceModels(enum.IntEnum):
     """used in the 3D components of this library.
 Indicates how sound should become quieter as objects move away from the listener."""
+
     delegate = 0
     """Delegate to another node, if we can.  Otherwise, fall back to ``Lav_DISTANCE_MODEL_LINEAR``."""
     linear = 1
@@ -55,9 +61,12 @@ Indicates how sound should become quieter as objects move away from the listener
     """Sounds fall off as ``1/distance``."""
     inverse_square = 3
     """Sounds fall off as ``1/min(distance, maxDistance)^2``."""
+
+
 class PanningStrategies(enum.IntEnum):
     """Indicates a strategy to use for panning.
 This is mostly for the :class:`MultipannerNode` and the 3D components of this library."""
+
     delegate = 0
     """Delegate the decision. Used for 3D sources.  If there is nowhere to delegate to, assumes ``Lav_PANNING_STRATEGY_STEREO``."""
     hrtf = 1
@@ -70,16 +79,22 @@ This is mostly for the :class:`MultipannerNode` and the 3D components of this li
     """Indicates 5.1 surround sound panning."""
     surround71 = 5
     """Indicates 7.1 surround sound panning."""
+
+
 class FdnFilterTypes(enum.IntEnum):
     """Possible filter types for a feedback delay network's feedback path."""
+
     disabled = 0
     """Don't insert filters on the feedback path."""
     lowpass = 1
     """Insert lowpass filters on the FDN's feedback path."""
     highpass = 2
     """Insert highpass filters on the FDN's feedback path."""
+
+
 class BiquadTypes(enum.IntEnum):
     """Indicates a biquad filter type, used with the :class:`BiquadNode` and in a few other places."""
+
     lowpass = 0
     """Indicates a lowpass filter."""
     highpass = 1
@@ -98,24 +113,33 @@ class BiquadTypes(enum.IntEnum):
     """Indicates a highshelf filter."""
     identity = 8
     """This filter does nothing."""
+
+
 class ChannelInterpretations(enum.IntEnum):
     """Specifies how to treat inputs to this node for upmixing and downmixing."""
+
     discrete = 0
     """If channel counts mismatch, don't apply mixing matrices. Either drop or fill with zeros as appropriate."""
     speakers = 1
     """Apply mixing matrices if needed."""
+
+
 class NodeStates(enum.IntEnum):
     """used to indicate the state of a node.
 This is the value of the node's state property and determins how the node is processed."""
+
     paused = 0
     """This node is paused."""
     playing = 1
     """This node advances if other nodes need audio from it."""
     always_playing = 2
     """This node advances always."""
+
+
 class PanningStrategies(enum.IntEnum):
     """Indicates a strategy to use for panning.
 This is mostly for the :class:`MultipannerNode` and the 3D components of this library."""
+
     delegate = 0
     """Delegate the decision. Used for 3D sources.  If there is nowhere to delegate to, assumes ``Lav_PANNING_STRATEGY_STEREO``."""
     hrtf = 1
@@ -128,17 +152,23 @@ This is mostly for the :class:`MultipannerNode` and the 3D components of this li
     """Indicates 5.1 surround sound panning."""
     surround71 = 5
     """Indicates 7.1 surround sound panning."""
+
+
 class NoiseTypes(enum.IntEnum):
     """Specifies types of noise."""
+
     white = 0
     """gaussian white noise."""
     pink = 1
     """Pink noise.  Pink noise falls off at 3 DB per octave."""
     brown = 2
     """Brown noise.  Brown noise decreases at 6 DB per octave."""
+
+
 class DistanceModels(enum.IntEnum):
     """used in the 3D components of this library.
 Indicates how sound should become quieter as objects move away from the listener."""
+
     delegate = 0
     """Delegate to another node, if we can.  Otherwise, fall back to ``Lav_DISTANCE_MODEL_LINEAR``."""
     linear = 1
@@ -147,9 +177,12 @@ Indicates how sound should become quieter as objects move away from the listener
     """Sounds fall off as ``1/distance``."""
     inverse_square = 3
     """Sounds fall off as ``1/min(distance, maxDistance)^2``."""
+
+
 class PanningStrategies(enum.IntEnum):
     """Indicates a strategy to use for panning.
 This is mostly for the :class:`MultipannerNode` and the 3D components of this library."""
+
     delegate = 0
     """Delegate the decision. Used for 3D sources.  If there is nowhere to delegate to, assumes ``Lav_PANNING_STRATEGY_STEREO``."""
     hrtf = 1
@@ -162,8 +195,11 @@ This is mostly for the :class:`MultipannerNode` and the 3D components of this li
     """Indicates 5.1 surround sound panning."""
     surround71 = 5
     """Indicates 7.1 surround sound panning."""
+
+
 class LoggingLevels(enum.IntEnum):
     """Possible levels for logging."""
+
     critical = 10
     """Logs critical messages such as failures to initialize and error conditions."""
     info = 20
@@ -172,8 +208,11 @@ class LoggingLevels(enum.IntEnum):
     """Logs everything possible."""
     off = 40
     """No log messages will be generated."""
+
+
 class PropertyTypes(enum.IntEnum):
     """Indicates the type of a property."""
+
     int = 0
     """Property holds a 32-bit integer."""
     float = 1
@@ -192,110 +231,112 @@ class PropertyTypes(enum.IntEnum):
     """Property is an array of ints."""
     buffer = 8
     """Property holds a handle to a buffer."""
-class ObjectTypes(enum.IntEnum):
-    
-    simulation = 0
-    
-    buffer = 1
-    
-    generic_node = 2
-    
-    environment_node = 3
-    
-    source_node = 4
-    
-    hrtf_node = 5
-    
-    sine_node = 6
-    
-    hard_limiter_node = 7
-    
-    crossfading_delay_node = 8
-    
-    dopplering_delay_node = 9
-    
-    amplitude_panner_node = 10
-    
-    push_node = 11
-    
-    biquad_node = 12
-    
-    pull_node = 13
-    
-    graph_listener_node = 14
-    
-    custom_node = 15
-    
-    ringmod_node = 16
-    
-    multipanner_node = 17
-    
-    feedback_delay_network_node = 18
-    
-    additive_square_node = 19
-    
-    additive_triangle_node = 20
-    
-    additive_saw_node = 21
-    
-    noise_node = 22
-    
-    iir_node = 23
-    
-    gain_node = 24
-    
-    channel_splitter_node = 25
-    
-    channel_merger_node = 26
-    
-    buffer_node = 27
-    
-    buffer_timeline_node = 28
-    
-    recorder_node = 29
-    
-    convolver_node = 30
-    
-    fft_convolver_node = 31
-    
-    three_band_eq_node = 32
-    
-    filtered_delay_node = 33
-    
-    crossfader_node = 34
-    
-    one_pole_filter_node = 35
-    
-    first_order_filter_node = 36
-    
-    allpass_node = 37
-    
-    nested_allpass_network_node = 38
-    
-    fdn_reverb_node = 39
-    
-    blit_node = 40
-    
-    dc_blocker_node = 41
-    
-    leaky_integrator_node = 42
-    
-    file_streamer_node = 43
-    
 
-#registry of classes to be resurrected if we see a handle and don't already have one.
+
+class ObjectTypes(enum.IntEnum):
+
+    simulation = 0
+
+    buffer = 1
+
+    generic_node = 2
+
+    environment_node = 3
+
+    source_node = 4
+
+    hrtf_node = 5
+
+    sine_node = 6
+
+    hard_limiter_node = 7
+
+    crossfading_delay_node = 8
+
+    dopplering_delay_node = 9
+
+    amplitude_panner_node = 10
+
+    push_node = 11
+
+    biquad_node = 12
+
+    pull_node = 13
+
+    graph_listener_node = 14
+
+    custom_node = 15
+
+    ringmod_node = 16
+
+    multipanner_node = 17
+
+    feedback_delay_network_node = 18
+
+    additive_square_node = 19
+
+    additive_triangle_node = 20
+
+    additive_saw_node = 21
+
+    noise_node = 22
+
+    iir_node = 23
+
+    gain_node = 24
+
+    channel_splitter_node = 25
+
+    channel_merger_node = 26
+
+    buffer_node = 27
+
+    buffer_timeline_node = 28
+
+    recorder_node = 29
+
+    convolver_node = 30
+
+    fft_convolver_node = 31
+
+    three_band_eq_node = 32
+
+    filtered_delay_node = 33
+
+    crossfader_node = 34
+
+    one_pole_filter_node = 35
+
+    first_order_filter_node = 36
+
+    allpass_node = 37
+
+    nested_allpass_network_node = 38
+
+    fdn_reverb_node = 39
+
+    blit_node = 40
+
+    dc_blocker_node = 41
+
+    leaky_integrator_node = 42
+
+    file_streamer_node = 43
+
+
+# registry of classes to be resurrected if we see a handle and don't already have one.
 _types_to_classes = dict()
 
-#Instances that already exist.
+# Instances that already exist.
 _weak_handle_lookup = weakref.WeakValueDictionary()
-#Holds a mapping of handles to states.
+# Holds a mapping of handles to states.
 _object_states = dict()
-#This has to be recursive.
-#We could be in the middle of an operation that causes resurrection and/or initialization.
-#Then the gc collects a _HandleBox, a refcount goes to 0, and we see _handle_destroyed in the same thread.
+# This has to be recursive.
+# We could be in the middle of an operation that causes resurrection and/or initialization.
+# Then the gc collects a _HandleBox, a refcount goes to 0, and we see _handle_destroyed in the same thread.
 _object_states_lock = threading.RLock()
 
-#magically resurrect an object from a handle.
+# magically resurrect an object from a handle.
 def _resurrect(handle):
     obj = _weak_handle_lookup.get(handle, None)
     if obj is None:
@@ -305,23 +346,27 @@ def _resurrect(handle):
     _weak_handle_lookup[handle] = obj
     return obj
 
-#This is the callback for handle destruction.
-#This can only be called after both sides have no more references to the object in question.
+
+# This is the callback for handle destruction.
+# This can only be called after both sides have no more references to the object in question.
 def _handle_destroyed(handle):
     with _object_states_lock:
         if handle in _object_states:
-            #If we gc here and the user is using the simulation as a context manager, then
-            #We block until they finish.
-            #If they do anything that needs the lock we're holding, lock inversion.
-            #This variable holds the dict until after the function ends.
-            #Note that this is an integer, not a _HandleBox
+            # If we gc here and the user is using the simulation as a context manager, then
+            # We block until they finish.
+            # If they do anything that needs the lock we're holding, lock inversion.
+            # This variable holds the dict until after the function ends.
+            # Note that this is an integer, not a _HandleBox
             ensure_gc_later = _object_states[handle]
             del _object_states[handle]
 
-_handle_destroyed_callback=_libaudioverse.LavHandleDestroyedCallback(_handle_destroyed)
+
+_handle_destroyed_callback = _libaudioverse.LavHandleDestroyedCallback(
+    _handle_destroyed
+)
 _libaudioverse.Lav_setHandleDestroyedCallback(_handle_destroyed_callback)
 
-#build and register all the error classes.
+# build and register all the error classes.
 class GenericError(Exception):
     r"""Base for all libaudioverse errors."""
 
@@ -329,112 +374,204 @@ class GenericError(Exception):
         self.file = _lav.error_get_file()
         self.line = _lav.error_get_line()
         self.message = _lav.error_get_message()
-        super(GenericError, self).__init__("{} ({}:{})".format(self.message, self.file, self.line))
+        super(GenericError, self).__init__(
+            "{} ({}:{})".format(self.message, self.file, self.line)
+        )
+
 
 class UnknownError(GenericError):
     r"""Something went wrong.  This error indicates that we couldn't figure out what."""
     pass
+
+
 _lav.bindings_register_exception(_libaudioverse.Lav_ERROR_UNKNOWN, UnknownError)
+
 
 class TypeMismatchError(GenericError):
     r"""Indicates an attempt to manipulate a property through a function that does not work with that property's type."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_TYPE_MISMATCH, TypeMismatchError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_TYPE_MISMATCH, TypeMismatchError
+)
+
 
 class InvalidPropertyError(GenericError):
     r"""An attempt to access a property which does not exist on the specified node."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_INVALID_PROPERTY, InvalidPropertyError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_INVALID_PROPERTY, InvalidPropertyError
+)
+
 
 class NullPointerError(GenericError):
     r"""You passed a null pointer into Libaudioverse in a context where null pointers are not allowed."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_NULL_POINTER, NullPointerError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_NULL_POINTER, NullPointerError
+)
+
 
 class MemoryError(GenericError):
     r"""Libaudioverse triedd to allocate a pointer, but could not."""
     pass
+
+
 _lav.bindings_register_exception(_libaudioverse.Lav_ERROR_MEMORY, MemoryError)
+
 
 class InvalidPointerError(GenericError):
     r"""Attempt to free a pointer that Libaudioverse doesn't know about."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_INVALID_POINTER, InvalidPointerError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_INVALID_POINTER, InvalidPointerError
+)
+
 
 class InvalidHandleError(GenericError):
     r"""A value passed in as a handle is not currently a handle which is valid."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_INVALID_HANDLE, InvalidHandleError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_INVALID_HANDLE, InvalidHandleError
+)
+
 
 class RangeError(GenericError):
     r"""A function parameter is not within a valid range.  This could be setting property values outside their range, accessing inputs and outputs that do not exist, or any of a variety of other range error conditions."""
     pass
+
+
 _lav.bindings_register_exception(_libaudioverse.Lav_ERROR_RANGE, RangeError)
+
 
 class CannotInitAudioError(GenericError):
     r"""The audio subsystem could not be initialized."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_CANNOT_INIT_AUDIO, CannotInitAudioError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_CANNOT_INIT_AUDIO, CannotInitAudioError
+)
+
 
 class NoSuchDeviceError(GenericError):
     r"""Attempt to use an I/O device that doesn't exist.  In addition to being caused by your code, this can happen if the user unplugs the device."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_NO_SUCH_DEVICE, NoSuchDeviceError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_NO_SUCH_DEVICE, NoSuchDeviceError
+)
+
 
 class FileError(GenericError):
     r"""Represents a miscelaneous file error."""
     pass
+
+
 _lav.bindings_register_exception(_libaudioverse.Lav_ERROR_FILE, FileError)
+
 
 class FileNotFoundError(GenericError):
     r"""Libaudioverse could not find a specified file."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_FILE_NOT_FOUND, FileNotFoundError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_FILE_NOT_FOUND, FileNotFoundError
+)
+
 
 class HrtfInvalidError(GenericError):
     r"""An attempt to use an invalid HRTF database."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_HRTF_INVALID, HrtfInvalidError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_HRTF_INVALID, HrtfInvalidError
+)
+
 
 class CannotCrossSimulationsError(GenericError):
     r"""An attempt was made to relate two objects from different simulations. This could be assigning to buffer properties, connecting nodes, or any other such condition."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_CANNOT_CROSS_SIMULATIONS, CannotCrossSimulationsError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_CANNOT_CROSS_SIMULATIONS, CannotCrossSimulationsError
+)
+
 
 class CausesCycleError(GenericError):
     r"""The requested operation would cause a cycle in the graph of nodes that need processing."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_CAUSES_CYCLE, CausesCycleError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_CAUSES_CYCLE, CausesCycleError
+)
+
 
 class PropertyIsReadOnlyError(GenericError):
     r"""Attempt to set a read-only property."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_PROPERTY_IS_READ_ONLY, PropertyIsReadOnlyError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_PROPERTY_IS_READ_ONLY, PropertyIsReadOnlyError
+)
+
 
 class OverlappingAutomatorsError(GenericError):
     r"""An attempt to schedule an automator within the duration of another."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_OVERLAPPING_AUTOMATORS, OverlappingAutomatorsError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_OVERLAPPING_AUTOMATORS, OverlappingAutomatorsError
+)
+
 
 class CannotConnectToPropertyError(GenericError):
     r"""Attempt to connect a node to a property which cannot be automated."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_CANNOT_CONNECT_TO_PROPERTY, CannotConnectToPropertyError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_CANNOT_CONNECT_TO_PROPERTY, CannotConnectToPropertyError
+)
+
 
 class BufferInUseError(GenericError):
     r"""Indicates an attempt to modify a buffer while something is reading its data."""
     pass
-_lav.bindings_register_exception(_libaudioverse.Lav_ERROR_BUFFER_IN_USE, BufferInUseError)
+
+
+_lav.bindings_register_exception(
+    _libaudioverse.Lav_ERROR_BUFFER_IN_USE, BufferInUseError
+)
+
 
 class InternalError(GenericError):
     r"""If you see this error, it's a bug."""
     pass
+
+
 _lav.bindings_register_exception(_libaudioverse.Lav_ERROR_INTERNAL, InternalError)
 
 
-#logging infrastructure
+# logging infrastructure
 def _logging_callback(level, message):
-    l=logging.getLogger("libaudioverse")
+    l = logging.getLogger("libaudioverse")
     if level == LoggingLevels.critical:
         l.critical(message)
     elif level == LoggingLevels.info:
@@ -442,13 +579,16 @@ def _logging_callback(level, message):
     elif level == LoggingLevels.debug:
         l.debug(message)
 
+
 _logging_callback_ctypes = _libaudioverse.LavLoggingCallback(_logging_callback)
 _lav.set_logging_callback(_logging_callback_ctypes)
 _lav.set_logging_level(int(LoggingLevels.debug))
 
-#library initialization and termination.
+# library initialization and termination.
 
 _initialized = False
+
+
 def initialize():
     r"""Corresponds to Lav_initialize, plus binding specific setup.
     
@@ -456,6 +596,7 @@ def initialize():
     global _initialized
     _lav.initialize()
     _initialized = True
+
 
 def shutdown():
     r"""Corresponds to Lav_shutdown.
@@ -466,20 +607,29 @@ def shutdown():
     _initialized = False
     _lav.shutdown()
 
-class _CallbackWrapper(object):
 
-    def __init__(self, for_object, cb, additional_args, additional_kwargs, remove_from_set = None):
+class _CallbackWrapper(object):
+    def __init__(
+        self, for_object, cb, additional_args, additional_kwargs, remove_from_set=None
+    ):
         self.additional_args = additional_args if additional_args is not None else ()
-        self.additional_kwargs = additional_kwargs if additional_kwargs is not None else dict()
+        self.additional_kwargs = (
+            additional_kwargs if additional_kwargs is not None else dict()
+        )
         self.cb = cb
         self.object_handle = for_object.handle.handle
         self.remove_from_set = remove_from_set
 
     def __call__(self, *args):
-        needed_args = (_resurrect(_lav._HandleBox(self.object_handle)), )+args[1:-1]+self.additional_args #be sure to eliminate userdata, which is always the last argument.
+        needed_args = (
+            (_resurrect(_lav._HandleBox(self.object_handle)),)
+            + args[1:-1]
+            + self.additional_args
+        )  # be sure to eliminate userdata, which is always the last argument.
         retval = self.cb(*needed_args, **self.additional_kwargs)
         if self.remove_from_set:
             self.remove_from_set.remove(self)
+
 
 class DeviceInfo(object):
     r"""Represents info on a audio device.
@@ -494,32 +644,38 @@ class DeviceInfo(object):
         self.name = name
         self.identifier = identifier
 
+
 def enumerate_devices():
     r"""Returns a list of DeviceInfo representing the devices on the system."""
     max_index = _lav.device_get_count()
     infos = []
     for i in six.moves.range(max_index):
-        info = DeviceInfo(identifier = _lav.device_get_identifier_string(i),
-        channels = _lav.device_get_channels(i),
-        name = _lav.device_get_name(i))
+        info = DeviceInfo(
+            identifier=_lav.device_get_identifier_string(i),
+            channels=_lav.device_get_channels(i),
+            name=_lav.device_get_name(i),
+        )
         infos.append(info)
     return infos
 
+
 @functools.total_ordering
 class _HandleComparer(object):
-
     def __eq__(self, other):
-        if not isinstance(other, _HandleComparer): return False
+        if not isinstance(other, _HandleComparer):
+            return False
         return self.handle == other.handle
 
     def __lt__(self, other):
-        #Things that aren't subclasses are less than us.
-        if not isinstance(other, _HandleComparer): return True
+        # Things that aren't subclasses are less than us.
+        if not isinstance(other, _HandleComparer):
+            return True
         return self.handle < other.handle
 
     def __hash__(self):
-        #We need to return the handle itself.  The box could be unique.
+        # We need to return the handle itself.  The box could be unique.
         return self.handle.handle
+
 
 class Simulation(_HandleComparer):
     r"""Represents a running simulation.  All libaudioverse nodes must be passed a simulation at creation time and cannot migrate between them.  Furthermore, it is an error to try to connect objects from different simulations.
@@ -528,7 +684,7 @@ Instances of this class are context managers.  Using the with statement on an in
 
 For full details of this class, see the Libaudioverse manual."""
 
-    def __init__(self, sample_rate = 44100, block_size = 1024):
+    def __init__(self, sample_rate=44100, block_size=1024):
         r"""Creates a simulation."""
         handle = _lav.create_simulation(sample_rate, block_size)
         self.init_with_handle(handle)
@@ -538,14 +694,14 @@ For full details of this class, see the Libaudioverse manual."""
         with _object_states_lock:
             if handle.handle not in _object_states:
                 _object_states[handle.handle] = dict()
-                _object_states[handle.handle]['lock'] = threading.Lock()
-                _object_states[handle.handle]['block_callback'] = None
-                _object_states[handle.handle]['scheduled_callbacks'] = set()
+                _object_states[handle.handle]["lock"] = threading.Lock()
+                _object_states[handle.handle]["block_callback"] = None
+                _object_states[handle.handle]["scheduled_callbacks"] = set()
             self._state = _object_states[handle.handle]
             self.handle = handle
-            self._lock = self._state['lock']
+            self._lock = self._state["lock"]
 
-    def set_output_device(self, identifier = "default", channels=2):
+    def set_output_device(self, identifier="default", channels=2):
         r"""Sets the output device.
         Use -1 for default system audio. 0 and greater are specific audio devices.
         To enumerate devices, use enumerate_devices."""
@@ -555,22 +711,24 @@ For full details of this class, see the Libaudioverse manual."""
         r"""Clears the output device, stopping audio and allowing use of get_block again."""
         _lav.simulation_clear_output_device(self)
 
-    def get_block(self, channels, may_apply_mixing_matrix = True):
+    def get_block(self, channels, may_apply_mixing_matrix=True):
         r"""Returns a block of data.
         
         This function wraps Lav_getBlock.  Note that calling this on a simulation configured to output audio is an error.
         
         If may_apply_mixing_matrix is True, audio will be automatically converted to the output channel type.  If it is false, channels are either dropped or padded with zeros."""
         with self._lock:
-            length = _lav.simulation_get_block_size(self.handle)*channels
-            buff = (ctypes.c_float*length)()
-            #circumvent automatic conversion of iterables.
+            length = _lav.simulation_get_block_size(self.handle) * channels
+            buff = (ctypes.c_float * length)()
+            # circumvent automatic conversion of iterables.
             buff_ptr = ctypes.POINTER(ctypes.c_float)()
             buff_ptr.contents = buff
-            _lav.simulation_get_block(self.handle, channels, may_apply_mixing_matrix, buff_ptr)
+            _lav.simulation_get_block(
+                self.handle, channels, may_apply_mixing_matrix, buff_ptr
+            )
             return list(buff)
 
-    #context manager support.
+    # context manager support.
     def __enter__(self):
         r"""Lock the simulation."""
         _lav.simulation_lock(self.handle)
@@ -579,7 +737,9 @@ For full details of this class, see the Libaudioverse manual."""
         r"""Unlock the simulation."""
         _lav.simulation_unlock(self.handle)
 
-    def set_block_callback(self, callback, additional_args=None, additional_kwargs=None):
+    def set_block_callback(
+        self, callback, additional_args=None, additional_kwargs=None
+    ):
         r"""Set a callback to be called every block.
         
         This callback is called as though inside a with block, and takes two positional argguments: the simulation and the simulations' time.
@@ -587,37 +747,51 @@ For full details of this class, see the Libaudioverse manual."""
         Wraps lav_simulationSetBlockCallback."""
         with self._lock:
             if callback is not None:
-                wrapper = _CallbackWrapper(self, callback, additional_args, additional_kwargs)
-                ctypes_callback=_libaudioverse.LavTimeCallback(wrapper)
+                wrapper = _CallbackWrapper(
+                    self, callback, additional_args, additional_kwargs
+                )
+                ctypes_callback = _libaudioverse.LavTimeCallback(wrapper)
                 _lav.simulation_set_block_callback(self, ctypes_callback, None)
-                self._state['block_callback'] = (callback, wrapper, ctypes_callback)
+                self._state["block_callback"] = (callback, wrapper, ctypes_callback)
             else:
                 _lav.simulation_set_block_callback(self, None)
-                self._state['block_callback'] = None
+                self._state["block_callback"] = None
 
     def get_block_callback(self):
         r"""The Python bindings provide the ability to retrieve callback objects.  This function retrieves the set block callback, if any."""
         with self._lock:
-            return self._state['block_callback'][0]
+            return self._state["block_callback"][0]
 
-    def call_in(self, when, callback, extra_args = None, extra_kwargs = None, in_audio_thread = False):
+    def call_in(
+        self, when, callback, extra_args=None, extra_kwargs=None, in_audio_thread=False
+    ):
         r"""Schedule a fucntion to run in the future.
         
         If in_audio_thread is false, it is safe to call the Libaudioverse API.
         
         Wraps Lav_simulationCallIn."""
         with self._lock:
-            wrapped = _CallbackWrapper(self, callback, extra_args, extra_kwargs, self._state['scheduled_callbacks'])
+            wrapped = _CallbackWrapper(
+                self,
+                callback,
+                extra_args,
+                extra_kwargs,
+                self._state["scheduled_callbacks"],
+            )
             ct = _libaudioverse.LavTimeCallback(wrapped)
-            wrapped.ctypes = ct #Ugly, but works and everything else was worse than this at time of writing.
+            wrapped.ctypes = (
+                ct
+            )  # Ugly, but works and everything else was worse than this at time of writing.
             _lav.simulation_call_in(self.handle, when, in_audio_thread, ct, None)
-            self._state['scheduled_callbacks'].add(wrapped)
+            self._state["scheduled_callbacks"].add(wrapped)
 
     def write_file(self, path, channels, duration, may_apply_mixing_matrix=True):
         r"""Write blocks of data to a file.
         
         This function wraps Lav_simulationWriteFile."""
-        _lav.simulation_write_file(self, path, channels, duration, may_apply_mixing_matrix)
+        _lav.simulation_write_file(
+            self, path, channels, duration, may_apply_mixing_matrix
+        )
 
     @property
     def threads(self):
@@ -625,21 +799,22 @@ For full details of this class, see the Libaudioverse manual."""
         
         This wraps Lav_simulationGetThreads and Lav_simulationSetThreads."""
         return _lav.simulation_get_threads(self)
-        
+
     @threads.setter
     def threads(self, value):
         _lav.simulation_set_threads(self, value)
 
+
 _types_to_classes[ObjectTypes.simulation] = Simulation
 
-#Buffer objects.
+# Buffer objects.
 class Buffer(_HandleComparer):
     r"""An audio buffer.
 
 Use load_from_file to read a file or load_from_array to load an iterable."""
 
     def __init__(self, simulation):
-        handle=_lav.create_buffer(simulation)
+        handle = _lav.create_buffer(simulation)
         self.init_with_handle(handle)
         _weak_handle_lookup[self.handle] = self
 
@@ -647,10 +822,12 @@ Use load_from_file to read a file or load_from_array to load an iterable."""
         with _object_states_lock:
             if handle.handle not in _object_states:
                 _object_states[handle.handle] = dict()
-                _object_states[handle.handle]['lock'] = threading.Lock()
-                _object_states[handle.handle]['simulation'] = _resurrect(_lav.buffer_get_simulation(handle))
-            self._state=_object_states[handle.handle]
-            self._lock = self._state['lock']
+                _object_states[handle.handle]["lock"] = threading.Lock()
+                _object_states[handle.handle]["simulation"] = _resurrect(
+                    _lav.buffer_get_simulation(handle)
+                )
+            self._state = _object_states[handle.handle]
+            self._lock = self._state["lock"]
             self.handle = handle
 
     def load_from_file(self, path):
@@ -684,9 +861,11 @@ Use load_from_file to read a file or load_from_array to load an iterable."""
         Wraps Lav_bufferNormalize."""
         _lav.buffer_normalize(self)
 
+
 _types_to_classes[ObjectTypes.buffer] = Buffer
 
-#the following classes implement properties:
+# the following classes implement properties:
+
 
 class LibaudioverseProperty(object):
     r"""Proxy to Libaudioverse properties.
@@ -696,7 +875,7 @@ class LibaudioverseProperty(object):
     def __init__(self, handle, slot, getter, setter):
         self._handle = handle
         self._slot = slot
-        self._getter=getter
+        self._getter = getter
         self._setter = setter
 
     @property
@@ -718,24 +897,37 @@ class LibaudioverseProperty(object):
     def __repr__(self):
         return "<{} {}>".format(self.__class__.__name__, self.value)
 
+
 class BooleanProperty(LibaudioverseProperty):
     r"""Represents a boolean property.
     
     Note that boolean properties show up as int properties when their type is queried.
     This class adds extra marshalling to make sure that boolean properties show up as booleans on the Python side, as the C API does not distinguish between boolean properties and int properties with range [0, 1]."""
-    
+
     def __init__(self, handle, slot):
-        super(BooleanProperty, self).__init__(handle = handle, slot = slot, getter =_lav.node_get_int_property, setter = _lav.node_set_int_property)
+        super(BooleanProperty, self).__init__(
+            handle=handle,
+            slot=slot,
+            getter=_lav.node_get_int_property,
+            setter=_lav.node_set_int_property,
+        )
 
     @LibaudioverseProperty.value.getter
     def value(self):
         return bool(self._getter(self._handle, self._slot))
 
+
 class IntProperty(LibaudioverseProperty):
     r"""Proxy to an integer property."""
 
     def __init__(self, handle, slot):
-        super(IntProperty, self).__init__(handle = handle, slot = slot, getter = _lav.node_get_int_property, setter = _lav.node_set_int_property)
+        super(IntProperty, self).__init__(
+            handle=handle,
+            slot=slot,
+            getter=_lav.node_get_int_property,
+            setter=_lav.node_set_int_property,
+        )
+
 
 class EnumProperty(LibaudioverseProperty):
     r"""Proxy to an integer property taking an enum.
@@ -744,7 +936,9 @@ This class is like IntProperty, but it will error if you try to yuse the wrong e
 In the C API, the distinction between these classes does not exist: both use Lav_nodeGetIntProperty and Lav_nodeSetIntProperty."""
 
     def __init__(self, handle, slot, enum):
-        super(EnumProperty, self).__init__(handle = handle, slot = slot, getter = None, setter = None)
+        super(EnumProperty, self).__init__(
+            handle=handle, slot=slot, getter=None, setter=None
+        )
         self._enum = enum
 
     @property
@@ -758,7 +952,10 @@ In the C API, the distinction between these classes does not exist: both use Lav
         _lav.node_set_int_property(self._handle, self._slot, int(val))
 
     def __repr__(self):
-        return "<{} {}.{}>".format(self.__class__.__name__, self._enum.__name__, self.value.name)
+        return "<{} {}.{}>".format(
+            self.__class__.__name__, self._enum.__name__, self.value.name
+        )
+
 
 class AutomatedProperty(LibaudioverseProperty):
     r"""A property that supports automation and node connection."""
@@ -778,7 +975,9 @@ class AutomatedProperty(LibaudioverseProperty):
         
         This function wraps Lav_automationEnvelope."""
         values_length = len(values)
-        _lav.automation_envelope(self._handle, self._slot, time, duration, values_length, values)
+        _lav.automation_envelope(
+            self._handle, self._slot, time, duration, values_length, values
+        )
 
     def set(self, time, value):
         r"""Sets the property's value to a specific value at a specific time.
@@ -792,31 +991,50 @@ class AutomatedProperty(LibaudioverseProperty):
         Wraps Lav_automationCancelAutomators."""
         _lav.automation_cancel_automators(self._handle, self._slot, time)
 
+
 class FloatProperty(AutomatedProperty):
     r"""Proxy to a float property."""
 
     def __init__(self, handle, slot):
-        super(FloatProperty, self).__init__(handle = handle, slot = slot, getter = _lav.node_get_float_property, setter = _lav.node_set_float_property)
+        super(FloatProperty, self).__init__(
+            handle=handle,
+            slot=slot,
+            getter=_lav.node_get_float_property,
+            setter=_lav.node_set_float_property,
+        )
+
 
 class DoubleProperty(LibaudioverseProperty):
     r"""Proxy to a double property."""
 
     def __init__(self, handle, slot):
-        super(DoubleProperty, self).__init__(handle = handle, slot = slot, getter = _lav.node_get_double_property, setter = _lav.node_set_double_property)
+        super(DoubleProperty, self).__init__(
+            handle=handle,
+            slot=slot,
+            getter=_lav.node_get_double_property,
+            setter=_lav.node_set_double_property,
+        )
+
 
 class StringProperty(LibaudioverseProperty):
     r"""Proxy to a string property."""
 
     def __init__(self, handle, slot):
-        super(StringProperty, self).__init__(handle = handle, slot = slot, getter = _lav.node_get_string_property, setter = _lav.node_set_string_property)
+        super(StringProperty, self).__init__(
+            handle=handle,
+            slot=slot,
+            getter=_lav.node_get_string_property,
+            setter=_lav.node_set_string_property,
+        )
+
 
 class BufferProperty(LibaudioverseProperty):
     r"""Proxy to a buffer property.
     
     It is safe to set this property to None."""
-    
+
     def __init__(self, handle, slot):
-        #no getter and setter. This is custom.
+        # no getter and setter. This is custom.
         self._handle = handle
         self._slot = slot
 
@@ -827,9 +1045,12 @@ class BufferProperty(LibaudioverseProperty):
     @value.setter
     def value(self, val):
         if val is None or isinstance(val, Buffer):
-            _lav.node_set_buffer_property(self._handle, self._slot, val if val is not None else 0)
+            _lav.node_set_buffer_property(
+                self._handle, self._slot, val if val is not None else 0
+            )
         else:
             raise ValueError("Expected a Buffer or None.")
+
 
 class VectorProperty(LibaudioverseProperty):
     r"""class to act as a base for  float3 and float6 properties.
@@ -837,10 +1058,12 @@ class VectorProperty(LibaudioverseProperty):
     This class knows how to marshal anything that is a collections.sized and will error if length constraints are not met."""
 
     def __init__(self, handle, slot, getter, setter, length):
-        super(VectorProperty, self).__init__(handle = handle, slot = slot, getter = getter, setter =setter)
+        super(VectorProperty, self).__init__(
+            handle=handle, slot=slot, getter=getter, setter=setter
+        )
         self._length = length
 
-    #Override setter:
+    # Override setter:
     @LibaudioverseProperty.value.setter
     def value(self, val):
         if not isinstance(val, collections.Sized):
@@ -849,28 +1072,43 @@ class VectorProperty(LibaudioverseProperty):
             raise ValueError("Expected a {}-element list".format(self._length))
         self._setter(self._handle, self._slot, *val)
 
+
 class Float3Property(VectorProperty):
     r"""Represents a float3 property."""
-    
+
     def __init__(self, handle, slot):
-        super(Float3Property, self).__init__(handle = handle, slot = slot, getter =_lav.node_get_float3_property, setter = _lav.node_set_float3_property, length = 3)
+        super(Float3Property, self).__init__(
+            handle=handle,
+            slot=slot,
+            getter=_lav.node_get_float3_property,
+            setter=_lav.node_set_float3_property,
+            length=3,
+        )
+
 
 class Float6Property(VectorProperty):
     r"""Represents a float6 property."""
-    
-    def __init__(self, handle, slot):
-        super(Float6Property, self).__init__(handle = handle, slot = slot, getter =_lav.node_get_float6_property, setter =_lav.node_set_float6_property, length = 6)
 
-#Array properties.
-#This is a base class because we have 2, but they have to lock their parent node.
+    def __init__(self, handle, slot):
+        super(Float6Property, self).__init__(
+            handle=handle,
+            slot=slot,
+            getter=_lav.node_get_float6_property,
+            setter=_lav.node_set_float6_property,
+            length=6,
+        )
+
+
+# Array properties.
+# This is a base class because we have 2, but they have to lock their parent node.
 class ArrayProperty(LibaudioverseProperty):
     r"""Base class for all array properties."""
 
     def __init__(self, handle, slot, reader, replacer, length, lock):
         self._handle = handle
         self._slot = slot
-        self._reader=reader
-        self._replacer=replacer
+        self._reader = reader
+        self._replacer = replacer
         self._length = length
         self._lock = lock
 
@@ -879,7 +1117,7 @@ class ArrayProperty(LibaudioverseProperty):
         r"""The array, as a tuple."""
         with self._lock:
             length = self._length(self._handle, self._slot)
-            accum = [None]*length
+            accum = [None] * length
             for i in six.moves.range(length):
                 accum[i] = self._reader(self._handle, self._slot, i)
         return tuple(accum)
@@ -888,24 +1126,37 @@ class ArrayProperty(LibaudioverseProperty):
     def value(self, val):
         self._replacer(self._handle, self._slot, len(val), val)
 
+
 class IntArrayProperty(ArrayProperty):
     r"""Represents an int array property."""
+
     def __init__(self, handle, slot, lock):
-        super(IntArrayProperty, self).__init__(handle = handle, slot = slot, lock = lock, reader = _lav.node_read_int_array_property,
-            replacer =_lav.node_replace_int_array_property, length = _lav.node_get_int_array_property_length)
+        super(IntArrayProperty, self).__init__(
+            handle=handle,
+            slot=slot,
+            lock=lock,
+            reader=_lav.node_read_int_array_property,
+            replacer=_lav.node_replace_int_array_property,
+            length=_lav.node_get_int_array_property_length,
+        )
+
 
 class FloatArrayProperty(ArrayProperty):
     r"""Represents a float array property."""
 
     def __init__(self, handle, slot, lock):
-        super(FloatArrayProperty, self).__init__(handle = handle, slot = slot, lock = lock,
-            reader =_lav.node_read_float_array_property,
-            replacer = _lav.node_replace_float_array_property,
-            length = _lav.node_get_float_array_property_length
+        super(FloatArrayProperty, self).__init__(
+            handle=handle,
+            slot=slot,
+            lock=lock,
+            reader=_lav.node_read_float_array_property,
+            replacer=_lav.node_replace_float_array_property,
+            length=_lav.node_get_float_array_property_length,
         )
 
-#This is the class hierarchy.
-#GenericNode is at the bottom, and we should never see one; and GenericObject should hold most implementation.
+
+# This is the class hierarchy.
+# GenericNode is at the bottom, and we should never see one; and GenericObject should hold most implementation.
 class GenericNode(_HandleComparer):
     r"""Base class for all Libaudioverse nodes.
     
@@ -921,29 +1172,49 @@ class GenericNode(_HandleComparer):
             if handle.handle not in _object_states:
                 _object_states[handle.handle] = dict()
                 self._state = _object_states[handle.handle]
-                self._state['simulation'] = _resurrect(_lav.node_get_simulation(self.handle))
-                self._state['callbacks'] = dict()
-                self._state['input_connection_count'] =_lav.node_get_input_connection_count(self)
-                self._state['output_connection_count'] = _lav.node_get_output_connection_count(self)
-                self._state['lock'] = threading.Lock()
-                self._state['properties'] = dict()
-                self._state['property_instances'] = dict()
-                self._state['properties']["add"] = _libaudioverse.Lav_NODE_ADD
-                self._state['properties']["channel_interpretation"] = _libaudioverse.Lav_NODE_CHANNEL_INTERPRETATION
-                self._state['properties']["mul"] = _libaudioverse.Lav_NODE_MUL
-                self._state['properties']["state"] = _libaudioverse.Lav_NODE_STATE
+                self._state["simulation"] = _resurrect(
+                    _lav.node_get_simulation(self.handle)
+                )
+                self._state["callbacks"] = dict()
+                self._state[
+                    "input_connection_count"
+                ] = _lav.node_get_input_connection_count(self)
+                self._state[
+                    "output_connection_count"
+                ] = _lav.node_get_output_connection_count(self)
+                self._state["lock"] = threading.Lock()
+                self._state["properties"] = dict()
+                self._state["property_instances"] = dict()
+                self._state["properties"]["add"] = _libaudioverse.Lav_NODE_ADD
+                self._state["properties"][
+                    "channel_interpretation"
+                ] = _libaudioverse.Lav_NODE_CHANNEL_INTERPRETATION
+                self._state["properties"]["mul"] = _libaudioverse.Lav_NODE_MUL
+                self._state["properties"]["state"] = _libaudioverse.Lav_NODE_STATE
             else:
-                self._state=_object_states[handle.handle]
-            self._lock = self._state['lock']
+                self._state = _object_states[handle.handle]
+            self._lock = self._state["lock"]
             self._property_instances = dict()
-            self._property_instances[_libaudioverse.Lav_NODE_ADD] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_NODE_ADD)
-            self._property_instances[_libaudioverse.Lav_NODE_CHANNEL_INTERPRETATION] = EnumProperty(handle = self.handle, slot = _libaudioverse.Lav_NODE_CHANNEL_INTERPRETATION, enum = ChannelInterpretations)
-            self._property_instances[_libaudioverse.Lav_NODE_MUL] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_NODE_MUL)
-            self._property_instances[_libaudioverse.Lav_NODE_STATE] = EnumProperty(handle = self.handle, slot = _libaudioverse.Lav_NODE_STATE, enum = NodeStates)
+            self._property_instances[_libaudioverse.Lav_NODE_ADD] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_NODE_ADD
+            )
+            self._property_instances[
+                _libaudioverse.Lav_NODE_CHANNEL_INTERPRETATION
+            ] = EnumProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_NODE_CHANNEL_INTERPRETATION,
+                enum=ChannelInterpretations,
+            )
+            self._property_instances[_libaudioverse.Lav_NODE_MUL] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_NODE_MUL
+            )
+            self._property_instances[_libaudioverse.Lav_NODE_STATE] = EnumProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_NODE_STATE, enum=NodeStates
+            )
 
     def get_property_names(self):
         r"""Get the names of all properties on this node."""
-        return self._state['properties'].keys()
+        return self._state["properties"].keys()
 
     def connect(self, output, node, input):
         r"""Connect the specified output of this node to the specified input of another node.
@@ -968,23 +1239,22 @@ class GenericNode(_HandleComparer):
         slot = property._slot
         _lav.node_connect_property(self, output, other, slot)
 
-    def disconnect(self, output, node = None, input = 0):
+    def disconnect(self, output, node=None, input=0):
         r"""Disconnect from other nodes.
         
         If node is None, all connections involving output are cleared.
         
         if node is not None, then we are disconnecting from a specific node and input combination."""
         if node is None:
-            node = 0 #Force this translation.
+            node = 0  # Force this translation.
         _lav.node_disconnect(self, output, node, input)
 
     def isolate(self):
         r"""Disconnect all outputs."""
         _lav.node_isolate(self)
 
-
     @property
-    def add(self):   
+    def add(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -994,11 +1264,10 @@ After mul is applied, we add the value to which this property is set to the node
 
     @add.setter
     def add(self, value):
-        self.add.value=value
-
+        self.add.value = value
 
     @property
-    def channel_interpretation(self):   
+    def channel_interpretation(self):
         """Type: int
 
 Range: :any:`ChannelInterpretations`
@@ -1014,11 +1283,10 @@ This property is almost never needed."""
 
     @channel_interpretation.setter
     def channel_interpretation(self, value):
-        self.channel_interpretation.value=value
-
+        self.channel_interpretation.value = value
 
     @property
-    def mul(self):   
+    def mul(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -1031,11 +1299,10 @@ Mul is applied before add."""
 
     @mul.setter
     def mul(self, value):
-        self.mul.value=value
-
+        self.mul.value = value
 
     @property
-    def state(self):   
+    def state(self):
         """Type: int
 
 Range: :any:`NodeStates`
@@ -1046,8 +1313,7 @@ The default is usually what you want."""
 
     @state.setter
     def state(self, value):
-        self.state.value=value
-
+        self.state.value = value
 
     def reset(self):
         r"""Perform the node-specific reset operation.
@@ -1055,7 +1321,9 @@ The default is usually what you want."""
         This directly wraps Lav_nodeReset."""
         _lav.node_reset(self)
 
+
 _types_to_classes[ObjectTypes.generic_node] = GenericNode
+
 
 class EnvironmentNode(GenericNode):
     r"""This is the entry point to the 3D simulation capabilities.
@@ -1065,52 +1333,103 @@ Environment nodes hold the information needed to pan sources, as well as acting 
 Note that the various properties for default values do not affect already created sources.
 It is best to configure these first.
 Any functionality to change a property on all sources needs to be implemented by the app, and is not offered by Libaudioverse."""
-    
+
     def __init__(self, simulation, hrtf_path):
-        super(EnvironmentNode, self).__init__(_lav.create_environment_node(simulation, hrtf_path))
+        super(EnvironmentNode, self).__init__(
+            _lav.create_environment_node(simulation, hrtf_path)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(EnvironmentNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["default_max_distance"] = _libaudioverse.Lav_ENVIRONMENT_DEFAULT_MAX_DISTANCE
-                self._state['properties']["default_reverb_distance"] = _libaudioverse.Lav_ENVIRONMENT_DEFAULT_REVERB_DISTANCE
-                self._state['properties']["default_size"] = _libaudioverse.Lav_ENVIRONMENT_DEFAULT_SIZE
-                self._state['properties']["distance_model"] = _libaudioverse.Lav_ENVIRONMENT_DISTANCE_MODEL
-                self._state['properties']["orientation"] = _libaudioverse.Lav_3D_ORIENTATION
-                self._state['properties']["output_channels"] = _libaudioverse.Lav_ENVIRONMENT_OUTPUT_CHANNELS
-                self._state['properties']["panning_strategy"] = _libaudioverse.Lav_ENVIRONMENT_PANNING_STRATEGY
-                self._state['properties']["position"] = _libaudioverse.Lav_3D_POSITION
-            self._property_instances[_libaudioverse.Lav_ENVIRONMENT_DEFAULT_MAX_DISTANCE] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_ENVIRONMENT_DEFAULT_MAX_DISTANCE)
-            self._property_instances[_libaudioverse.Lav_ENVIRONMENT_DEFAULT_REVERB_DISTANCE] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_ENVIRONMENT_DEFAULT_REVERB_DISTANCE)
-            self._property_instances[_libaudioverse.Lav_ENVIRONMENT_DEFAULT_SIZE] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_ENVIRONMENT_DEFAULT_SIZE)
-            self._property_instances[_libaudioverse.Lav_ENVIRONMENT_DISTANCE_MODEL] = EnumProperty(handle = self.handle, slot = _libaudioverse.Lav_ENVIRONMENT_DISTANCE_MODEL, enum = DistanceModels)
-            self._property_instances[_libaudioverse.Lav_3D_ORIENTATION] = Float6Property(handle = self.handle, slot = _libaudioverse.Lav_3D_ORIENTATION)
-            self._property_instances[_libaudioverse.Lav_ENVIRONMENT_OUTPUT_CHANNELS] = IntProperty(handle = self.handle, slot = _libaudioverse.Lav_ENVIRONMENT_OUTPUT_CHANNELS)
-            self._property_instances[_libaudioverse.Lav_ENVIRONMENT_PANNING_STRATEGY] = EnumProperty(handle = self.handle, slot = _libaudioverse.Lav_ENVIRONMENT_PANNING_STRATEGY, enum = PanningStrategies)
-            self._property_instances[_libaudioverse.Lav_3D_POSITION] = Float3Property(handle = self.handle, slot = _libaudioverse.Lav_3D_POSITION)
-
+                self._state["properties"][
+                    "default_max_distance"
+                ] = _libaudioverse.Lav_ENVIRONMENT_DEFAULT_MAX_DISTANCE
+                self._state["properties"][
+                    "default_reverb_distance"
+                ] = _libaudioverse.Lav_ENVIRONMENT_DEFAULT_REVERB_DISTANCE
+                self._state["properties"][
+                    "default_size"
+                ] = _libaudioverse.Lav_ENVIRONMENT_DEFAULT_SIZE
+                self._state["properties"][
+                    "distance_model"
+                ] = _libaudioverse.Lav_ENVIRONMENT_DISTANCE_MODEL
+                self._state["properties"][
+                    "orientation"
+                ] = _libaudioverse.Lav_3D_ORIENTATION
+                self._state["properties"][
+                    "output_channels"
+                ] = _libaudioverse.Lav_ENVIRONMENT_OUTPUT_CHANNELS
+                self._state["properties"][
+                    "panning_strategy"
+                ] = _libaudioverse.Lav_ENVIRONMENT_PANNING_STRATEGY
+                self._state["properties"]["position"] = _libaudioverse.Lav_3D_POSITION
+            self._property_instances[
+                _libaudioverse.Lav_ENVIRONMENT_DEFAULT_MAX_DISTANCE
+            ] = FloatProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_ENVIRONMENT_DEFAULT_MAX_DISTANCE,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_ENVIRONMENT_DEFAULT_REVERB_DISTANCE
+            ] = FloatProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_ENVIRONMENT_DEFAULT_REVERB_DISTANCE,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_ENVIRONMENT_DEFAULT_SIZE
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_ENVIRONMENT_DEFAULT_SIZE
+            )
+            self._property_instances[
+                _libaudioverse.Lav_ENVIRONMENT_DISTANCE_MODEL
+            ] = EnumProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_ENVIRONMENT_DISTANCE_MODEL,
+                enum=DistanceModels,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_3D_ORIENTATION
+            ] = Float6Property(
+                handle=self.handle, slot=_libaudioverse.Lav_3D_ORIENTATION
+            )
+            self._property_instances[
+                _libaudioverse.Lav_ENVIRONMENT_OUTPUT_CHANNELS
+            ] = IntProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_ENVIRONMENT_OUTPUT_CHANNELS
+            )
+            self._property_instances[
+                _libaudioverse.Lav_ENVIRONMENT_PANNING_STRATEGY
+            ] = EnumProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_ENVIRONMENT_PANNING_STRATEGY,
+                enum=PanningStrategies,
+            )
+            self._property_instances[_libaudioverse.Lav_3D_POSITION] = Float3Property(
+                handle=self.handle, slot=_libaudioverse.Lav_3D_POSITION
+            )
 
     @property
-    def default_max_distance(self):   
+    def default_max_distance(self):
         """Type: float
 
 Range: [0.0, INFINITY]
 Default value: 50.0
 The default max distance for new sources.
 The max distance of a source is the maximum distance at which that source will be audible."""
-        return self._property_instances[_libaudioverse.Lav_ENVIRONMENT_DEFAULT_MAX_DISTANCE]
+        return self._property_instances[
+            _libaudioverse.Lav_ENVIRONMENT_DEFAULT_MAX_DISTANCE
+        ]
 
     @default_max_distance.setter
     def default_max_distance(self, value):
-        self.default_max_distance.value=value
-
-
+        self.default_max_distance.value = value
 
     @property
-    def default_reverb_distance(self):   
+    def default_reverb_distance(self):
         """Type: float
 
 Range: [0.0, INFINITY]
@@ -1118,16 +1437,16 @@ Default value: 30.0
 The default distance at which a source will be heard only in the reverb.
 
 See documentation on the :class:`SourceNode` node."""
-        return self._property_instances[_libaudioverse.Lav_ENVIRONMENT_DEFAULT_REVERB_DISTANCE]
+        return self._property_instances[
+            _libaudioverse.Lav_ENVIRONMENT_DEFAULT_REVERB_DISTANCE
+        ]
 
     @default_reverb_distance.setter
     def default_reverb_distance(self, value):
-        self.default_reverb_distance.value=value
-
-
+        self.default_reverb_distance.value = value
 
     @property
-    def default_size(self):   
+    def default_size(self):
         """Type: float
 
 Range: [0.0, INFINITY]
@@ -1139,12 +1458,10 @@ Size is used to determine the listener's distance from a source."""
 
     @default_size.setter
     def default_size(self, value):
-        self.default_size.value=value
-
-
+        self.default_size.value = value
 
     @property
-    def distance_model(self):   
+    def distance_model(self):
         """Type: int
 
 Range: :any:`DistanceModels`
@@ -1162,12 +1479,10 @@ Do not rely on this behavior.  The internal ilimitations preventing this will be
 
     @distance_model.setter
     def distance_model(self, value):
-        self.distance_model.value=value
-
-
+        self.distance_model.value = value
 
     @property
-    def orientation(self):   
+    def orientation(self):
         """Type: float6
 
 
@@ -1190,12 +1505,10 @@ As usual, note that radians=degrees*PI/180."""
 
     @orientation.setter
     def orientation(self, value):
-        self.orientation.value=value
-
-
+        self.orientation.value = value
 
     @property
-    def output_channels(self):   
+    def output_channels(self):
         """Type: int
 
 Range: [0, 8]
@@ -1210,12 +1523,10 @@ Values besides 2, 4, 6, or 8 do not usually have much meaning."""
 
     @output_channels.setter
     def output_channels(self, value):
-        self.output_channels.value=value
-
-
+        self.output_channels.value = value
 
     @property
-    def panning_strategy(self):   
+    def panning_strategy(self):
         """Type: int
 
 Range: :any:`PanningStrategies`
@@ -1230,12 +1541,10 @@ These limitations will be lifted in future; do not rely on this behavior."""
 
     @panning_strategy.setter
     def panning_strategy(self, value):
-        self.panning_strategy.value=value
-
-
+        self.panning_strategy.value = value
 
     @property
-    def position(self):   
+    def position(self):
         """Type: float3
 
 
@@ -1245,9 +1554,7 @@ The position of the listener, in world coordinates."""
 
     @position.setter
     def position(self, value):
-        self.position.value=value
-
-
+        self.position.value = value
 
     def add_effect_send(node, channels, is_reverb, connect_by_default):
         r"""Add an effect send.
@@ -1268,7 +1575,9 @@ Reverb effect sends are treated differently in terms of attenuation:
 as sources move away from the listener, their dry path becomes less but the audio sent to the reverb effect send becomes greater.
 
 No effect send can include occlusion effects."""
-        return _lav.environment_node_add_effect_send(node, channels, is_reverb, connect_by_default)
+        return _lav.environment_node_add_effect_send(
+            node, channels, is_reverb, connect_by_default
+        )
 
     def play_async(node, buffer, x, y, z, is_dry):
         r"""Play a buffer, using the specified position and the currently set defaults on the world for distance model and panning strategy.
@@ -1277,8 +1586,9 @@ When the buffer finishes playing, the source is automatically disposed of."""
         return _lav.environment_node_play_async(node, buffer, x, y, z, is_dry)
 
 
-
 _types_to_classes[ObjectTypes.environment_node] = EnvironmentNode
+
+
 class SourceNode(GenericNode):
     r"""The source node allows the spatialization of sound that passes through it.
 Sources have one input which is mono, to which a node should be connected.
@@ -1288,42 +1598,105 @@ To hear a source, you must connect its environment to something instead.
 
 Since the source communicates with the environment through a nonstandard mechanism, environments do not keep their sources alive.
 If you are in a garbage collected language, failure to hold on to the source nodes will cause them to go silent."""
-    
+
     def __init__(self, simulation, environment):
-        super(SourceNode, self).__init__(_lav.create_source_node(simulation, environment))
+        super(SourceNode, self).__init__(
+            _lav.create_source_node(simulation, environment)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(SourceNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["distance_model"] = _libaudioverse.Lav_SOURCE_DISTANCE_MODEL
-                self._state['properties']["head_relative"] = _libaudioverse.Lav_SOURCE_HEAD_RELATIVE
-                self._state['properties']["max_distance"] = _libaudioverse.Lav_SOURCE_MAX_DISTANCE
-                self._state['properties']["max_reverb_level"] = _libaudioverse.Lav_SOURCE_MAX_REVERB_LEVEL
-                self._state['properties']["min_reverb_level"] = _libaudioverse.Lav_SOURCE_MIN_REVERB_LEVEL
-                self._state['properties']["occlusion"] = _libaudioverse.Lav_SOURCE_OCCLUSION
-                self._state['properties']["orientation"] = _libaudioverse.Lav_3D_ORIENTATION
-                self._state['properties']["panning_strategy"] = _libaudioverse.Lav_SOURCE_PANNING_STRATEGY
-                self._state['properties']["position"] = _libaudioverse.Lav_3D_POSITION
-                self._state['properties']["reverb_distance"] = _libaudioverse.Lav_SOURCE_REVERB_DISTANCE
-                self._state['properties']["size"] = _libaudioverse.Lav_SOURCE_SIZE
-            self._property_instances[_libaudioverse.Lav_SOURCE_DISTANCE_MODEL] = EnumProperty(handle = self.handle, slot = _libaudioverse.Lav_SOURCE_DISTANCE_MODEL, enum = DistanceModels)
-            self._property_instances[_libaudioverse.Lav_SOURCE_HEAD_RELATIVE] = BooleanProperty(handle = self.handle, slot = _libaudioverse.Lav_SOURCE_HEAD_RELATIVE)
-            self._property_instances[_libaudioverse.Lav_SOURCE_MAX_DISTANCE] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_SOURCE_MAX_DISTANCE)
-            self._property_instances[_libaudioverse.Lav_SOURCE_MAX_REVERB_LEVEL] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_SOURCE_MAX_REVERB_LEVEL)
-            self._property_instances[_libaudioverse.Lav_SOURCE_MIN_REVERB_LEVEL] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_SOURCE_MIN_REVERB_LEVEL)
-            self._property_instances[_libaudioverse.Lav_SOURCE_OCCLUSION] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_SOURCE_OCCLUSION)
-            self._property_instances[_libaudioverse.Lav_3D_ORIENTATION] = Float6Property(handle = self.handle, slot = _libaudioverse.Lav_3D_ORIENTATION)
-            self._property_instances[_libaudioverse.Lav_SOURCE_PANNING_STRATEGY] = EnumProperty(handle = self.handle, slot = _libaudioverse.Lav_SOURCE_PANNING_STRATEGY, enum = PanningStrategies)
-            self._property_instances[_libaudioverse.Lav_3D_POSITION] = Float3Property(handle = self.handle, slot = _libaudioverse.Lav_3D_POSITION)
-            self._property_instances[_libaudioverse.Lav_SOURCE_REVERB_DISTANCE] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_SOURCE_REVERB_DISTANCE)
-            self._property_instances[_libaudioverse.Lav_SOURCE_SIZE] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_SOURCE_SIZE)
-
+                self._state["properties"][
+                    "distance_model"
+                ] = _libaudioverse.Lav_SOURCE_DISTANCE_MODEL
+                self._state["properties"][
+                    "head_relative"
+                ] = _libaudioverse.Lav_SOURCE_HEAD_RELATIVE
+                self._state["properties"][
+                    "max_distance"
+                ] = _libaudioverse.Lav_SOURCE_MAX_DISTANCE
+                self._state["properties"][
+                    "max_reverb_level"
+                ] = _libaudioverse.Lav_SOURCE_MAX_REVERB_LEVEL
+                self._state["properties"][
+                    "min_reverb_level"
+                ] = _libaudioverse.Lav_SOURCE_MIN_REVERB_LEVEL
+                self._state["properties"][
+                    "occlusion"
+                ] = _libaudioverse.Lav_SOURCE_OCCLUSION
+                self._state["properties"][
+                    "orientation"
+                ] = _libaudioverse.Lav_3D_ORIENTATION
+                self._state["properties"][
+                    "panning_strategy"
+                ] = _libaudioverse.Lav_SOURCE_PANNING_STRATEGY
+                self._state["properties"]["position"] = _libaudioverse.Lav_3D_POSITION
+                self._state["properties"][
+                    "reverb_distance"
+                ] = _libaudioverse.Lav_SOURCE_REVERB_DISTANCE
+                self._state["properties"]["size"] = _libaudioverse.Lav_SOURCE_SIZE
+            self._property_instances[
+                _libaudioverse.Lav_SOURCE_DISTANCE_MODEL
+            ] = EnumProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_SOURCE_DISTANCE_MODEL,
+                enum=DistanceModels,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_SOURCE_HEAD_RELATIVE
+            ] = BooleanProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_SOURCE_HEAD_RELATIVE
+            )
+            self._property_instances[
+                _libaudioverse.Lav_SOURCE_MAX_DISTANCE
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_SOURCE_MAX_DISTANCE
+            )
+            self._property_instances[
+                _libaudioverse.Lav_SOURCE_MAX_REVERB_LEVEL
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_SOURCE_MAX_REVERB_LEVEL
+            )
+            self._property_instances[
+                _libaudioverse.Lav_SOURCE_MIN_REVERB_LEVEL
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_SOURCE_MIN_REVERB_LEVEL
+            )
+            self._property_instances[
+                _libaudioverse.Lav_SOURCE_OCCLUSION
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_SOURCE_OCCLUSION
+            )
+            self._property_instances[
+                _libaudioverse.Lav_3D_ORIENTATION
+            ] = Float6Property(
+                handle=self.handle, slot=_libaudioverse.Lav_3D_ORIENTATION
+            )
+            self._property_instances[
+                _libaudioverse.Lav_SOURCE_PANNING_STRATEGY
+            ] = EnumProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_SOURCE_PANNING_STRATEGY,
+                enum=PanningStrategies,
+            )
+            self._property_instances[_libaudioverse.Lav_3D_POSITION] = Float3Property(
+                handle=self.handle, slot=_libaudioverse.Lav_3D_POSITION
+            )
+            self._property_instances[
+                _libaudioverse.Lav_SOURCE_REVERB_DISTANCE
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_SOURCE_REVERB_DISTANCE
+            )
+            self._property_instances[_libaudioverse.Lav_SOURCE_SIZE] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_SOURCE_SIZE
+            )
 
     @property
-    def distance_model(self):   
+    def distance_model(self):
         """Type: int
 
 Range: :any:`DistanceModels`
@@ -1335,12 +1708,10 @@ By default, this property is set to delegate, and sources consequently read from
 
     @distance_model.setter
     def distance_model(self, value):
-        self.distance_model.value=value
-
-
+        self.distance_model.value = value
 
     @property
-    def head_relative(self):   
+    def head_relative(self):
         """Type: boolean
 
 
@@ -1354,12 +1725,10 @@ The orientation and position properties of an environment do not affect head rel
 
     @head_relative.setter
     def head_relative(self, value):
-        self.head_relative.value=value
-
-
+        self.head_relative.value = value
 
     @property
-    def max_distance(self):   
+    def max_distance(self):
         """Type: float
 
 Range: [0.0, INFINITY]
@@ -1370,12 +1739,10 @@ This property's default value is copied from the environment at source creation.
 
     @max_distance.setter
     def max_distance(self, value):
-        self.max_distance.value=value
-
-
+        self.max_distance.value = value
 
     @property
-    def max_reverb_level(self):   
+    def max_reverb_level(self):
         """Type: float
 
 Range: [0.0, 1.0]
@@ -1387,12 +1754,10 @@ Behavior is undefined if this property is ever less than Lav_SOURCE_MIN_REVERB_L
 
     @max_reverb_level.setter
     def max_reverb_level(self, value):
-        self.max_reverb_level.value=value
-
-
+        self.max_reverb_level.value = value
 
     @property
-    def min_reverb_level(self):   
+    def min_reverb_level(self):
         """Type: float
 
 Range: [0.0, 1.0]
@@ -1406,12 +1771,10 @@ Behavior is undefined if this property is ever greater than the value you give t
 
     @min_reverb_level.setter
     def min_reverb_level(self, value):
-        self.min_reverb_level.value=value
-
-
+        self.min_reverb_level.value = value
 
     @property
-    def occlusion(self):   
+    def occlusion(self):
         """Type: float
 
 Range: [0.0, 1.0]
@@ -1428,12 +1791,10 @@ Libaudioverse therefore chooses to use this scalar quantity and to attempt to do
 
     @occlusion.setter
     def occlusion(self, value):
-        self.occlusion.value=value
-
-
+        self.occlusion.value = value
 
     @property
-    def orientation(self):   
+    def orientation(self):
         """Type: float6
 
 
@@ -1448,12 +1809,10 @@ They are packed because, also like the listener, they must never be modified sep
 
     @orientation.setter
     def orientation(self, value):
-        self.orientation.value=value
-
-
+        self.orientation.value = value
 
     @property
-    def panning_strategy(self):   
+    def panning_strategy(self):
         """Type: int
 
 Range: :any:`PanningStrategies`
@@ -1464,12 +1823,10 @@ By default, this delegates to the environment."""
 
     @panning_strategy.setter
     def panning_strategy(self, value):
-        self.panning_strategy.value=value
-
-
+        self.panning_strategy.value = value
 
     @property
-    def position(self):   
+    def position(self):
         """Type: float3
 
 
@@ -1479,12 +1836,10 @@ The position of the source in world coordinates."""
 
     @position.setter
     def position(self, value):
-        self.position.value=value
-
-
+        self.position.value = value
 
     @property
-    def reverb_distance(self):   
+    def reverb_distance(self):
         """Type: float
 
 Range: [0.0, INFINITY]
@@ -1499,12 +1854,10 @@ Lav_SOURCE_DISTANCE_MODEL controls how this crossfading takes place."""
 
     @reverb_distance.setter
     def reverb_distance(self, value):
-        self.reverb_distance.value=value
-
-
+        self.reverb_distance.value = value
 
     @property
-    def size(self):   
+    def size(self):
         """Type: float
 
 Range: [0.0, INFINITY]
@@ -1517,9 +1870,7 @@ Size currently has no other effect."""
 
     @size.setter
     def size(self, value):
-        self.size.value=value
-
-
+        self.size.value = value
 
     def feed_effect(node, effect):
         r"""Begin feeding the specified effect send."""
@@ -1530,32 +1881,46 @@ Size currently has no other effect."""
         return _lav.source_node_stop_feeding_effect(node, effect)
 
 
-
 _types_to_classes[ObjectTypes.source_node] = SourceNode
+
+
 class HrtfNode(GenericNode):
     r"""This node implements an HRTF panner.
 You can use either Libaudioverse's internal HRTF (The Diffuse MIT Kemar Dataset) by passing "default" as the HRTf file name,
 or an HRTF of your own."""
-    
+
     def __init__(self, simulation, hrtf_path):
         super(HrtfNode, self).__init__(_lav.create_hrtf_node(simulation, hrtf_path))
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(HrtfNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["azimuth"] = _libaudioverse.Lav_PANNER_AZIMUTH
-                self._state['properties']["elevation"] = _libaudioverse.Lav_PANNER_ELEVATION
-                self._state['properties']["should_crossfade"] = _libaudioverse.Lav_PANNER_SHOULD_CROSSFADE
-            self._property_instances[_libaudioverse.Lav_PANNER_AZIMUTH] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_PANNER_AZIMUTH)
-            self._property_instances[_libaudioverse.Lav_PANNER_ELEVATION] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_PANNER_ELEVATION)
-            self._property_instances[_libaudioverse.Lav_PANNER_SHOULD_CROSSFADE] = BooleanProperty(handle = self.handle, slot = _libaudioverse.Lav_PANNER_SHOULD_CROSSFADE)
-
+                self._state["properties"]["azimuth"] = _libaudioverse.Lav_PANNER_AZIMUTH
+                self._state["properties"][
+                    "elevation"
+                ] = _libaudioverse.Lav_PANNER_ELEVATION
+                self._state["properties"][
+                    "should_crossfade"
+                ] = _libaudioverse.Lav_PANNER_SHOULD_CROSSFADE
+            self._property_instances[_libaudioverse.Lav_PANNER_AZIMUTH] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_PANNER_AZIMUTH
+            )
+            self._property_instances[
+                _libaudioverse.Lav_PANNER_ELEVATION
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_PANNER_ELEVATION
+            )
+            self._property_instances[
+                _libaudioverse.Lav_PANNER_SHOULD_CROSSFADE
+            ] = BooleanProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_PANNER_SHOULD_CROSSFADE
+            )
 
     @property
-    def azimuth(self):   
+    def azimuth(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -1566,12 +1931,10 @@ The horizontal angle of the panner in degrees.
 
     @azimuth.setter
     def azimuth(self, value):
-        self.azimuth.value=value
-
-
+        self.azimuth.value = value
 
     @property
-    def elevation(self):   
+    def elevation(self):
         """Type: float
 
 Range: [-90.0, 90.0]
@@ -1582,12 +1945,10 @@ The vertical angle of the panner in degrees.
 
     @elevation.setter
     def elevation(self, value):
-        self.elevation.value=value
-
-
+        self.elevation.value = value
 
     @property
-    def should_crossfade(self):   
+    def should_crossfade(self):
         """Type: boolean
 
 
@@ -1600,35 +1961,50 @@ Unlike other panner types, the audio artifacts produced by disabling crossfading
 
     @should_crossfade.setter
     def should_crossfade(self, value):
-        self.should_crossfade.value=value
-
-
-
+        self.should_crossfade.value = value
 
 
 _types_to_classes[ObjectTypes.hrtf_node] = HrtfNode
+
+
 class SineNode(GenericNode):
     r"""A simple sine oscillator."""
-    
+
     def __init__(self, simulation):
         super(SineNode, self).__init__(_lav.create_sine_node(simulation))
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(SineNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["frequency"] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY
-                self._state['properties']["frequency_multiplier"] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
-                self._state['properties']["phase"] = _libaudioverse.Lav_OSCILLATOR_PHASE
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_FREQUENCY)
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER)
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_PHASE] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_PHASE)
-
+                self._state["properties"][
+                    "frequency"
+                ] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY
+                self._state["properties"][
+                    "frequency_multiplier"
+                ] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+                self._state["properties"]["phase"] = _libaudioverse.Lav_OSCILLATOR_PHASE
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_FREQUENCY
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_OSCILLATOR_FREQUENCY
+            )
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+            ] = FloatProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_PHASE
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_OSCILLATOR_PHASE
+            )
 
     @property
-    def frequency(self):   
+    def frequency(self):
         """Type: float
 
 Range: [0, INFINITY]
@@ -1638,12 +2014,10 @@ The frequency of the sine wave in HZ."""
 
     @frequency.setter
     def frequency(self, value):
-        self.frequency.value=value
-
-
+        self.frequency.value = value
 
     @property
-    def frequency_multiplier(self):   
+    def frequency_multiplier(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -1651,16 +2025,16 @@ Default value: 1.0
 An additional multiplicative factor applied to the frequency of the oscillator.
 
 This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
-        return self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER]
+        return self._property_instances[
+            _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+        ]
 
     @frequency_multiplier.setter
     def frequency_multiplier(self, value):
-        self.frequency_multiplier.value=value
-
-
+        self.frequency_multiplier.value = value
 
     @property
-    def phase(self):   
+    def phase(self):
         """Type: float
 
 Range: [0.0, 1.0]
@@ -1671,56 +2045,76 @@ This is measured in periods, not in radians."""
 
     @phase.setter
     def phase(self, value):
-        self.phase.value=value
-
-
-
+        self.phase.value = value
 
 
 _types_to_classes[ObjectTypes.sine_node] = SineNode
+
+
 class HardLimiterNode(GenericNode):
     r"""The input to this node is hard limited: values less than -1.0 are set to -1.0 and values above 1.0 are set to 1.0.
 Use the hard limiter in order to prevent oddities with audio hardware; it should usually be the last piece in your pipeline before the simulation.
 Note that the 3D API handles hard limiting appropriately, and you do not need to worry about this there."""
-    
+
     def __init__(self, simulation, channels):
-        super(HardLimiterNode, self).__init__(_lav.create_hard_limiter_node(simulation, channels))
+        super(HardLimiterNode, self).__init__(
+            _lav.create_hard_limiter_node(simulation, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(HardLimiterNode, self).init_with_handle(handle)
 
 
-
-
 _types_to_classes[ObjectTypes.hard_limiter_node] = HardLimiterNode
+
+
 class CrossfadingDelayNode(GenericNode):
     r"""Implements a crossfading delay line.
 Delay lines have uses in echo and reverb, as well as many more esoteric effects."""
-    
+
     def __init__(self, simulation, max_delay, channels):
-        super(CrossfadingDelayNode, self).__init__(_lav.create_crossfading_delay_node(simulation, max_delay, channels))
+        super(CrossfadingDelayNode, self).__init__(
+            _lav.create_crossfading_delay_node(simulation, max_delay, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(CrossfadingDelayNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["delay"] = _libaudioverse.Lav_DELAY_DELAY
-                self._state['properties']["delay_max"] = _libaudioverse.Lav_DELAY_DELAY_MAX
-                self._state['properties']["feedback"] = _libaudioverse.Lav_DELAY_FEEDBACK
-                self._state['properties']["interpolation_time"] = _libaudioverse.Lav_DELAY_INTERPOLATION_TIME
-            self._property_instances[_libaudioverse.Lav_DELAY_DELAY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_DELAY_DELAY)
-            self._property_instances[_libaudioverse.Lav_DELAY_DELAY_MAX] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_DELAY_DELAY_MAX)
-            self._property_instances[_libaudioverse.Lav_DELAY_FEEDBACK] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_DELAY_FEEDBACK)
-            self._property_instances[_libaudioverse.Lav_DELAY_INTERPOLATION_TIME] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_DELAY_INTERPOLATION_TIME)
-
+                self._state["properties"]["delay"] = _libaudioverse.Lav_DELAY_DELAY
+                self._state["properties"][
+                    "delay_max"
+                ] = _libaudioverse.Lav_DELAY_DELAY_MAX
+                self._state["properties"][
+                    "feedback"
+                ] = _libaudioverse.Lav_DELAY_FEEDBACK
+                self._state["properties"][
+                    "interpolation_time"
+                ] = _libaudioverse.Lav_DELAY_INTERPOLATION_TIME
+            self._property_instances[_libaudioverse.Lav_DELAY_DELAY] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_DELAY_DELAY
+            )
+            self._property_instances[
+                _libaudioverse.Lav_DELAY_DELAY_MAX
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_DELAY_DELAY_MAX
+            )
+            self._property_instances[_libaudioverse.Lav_DELAY_FEEDBACK] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_DELAY_FEEDBACK
+            )
+            self._property_instances[
+                _libaudioverse.Lav_DELAY_INTERPOLATION_TIME
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_DELAY_INTERPOLATION_TIME
+            )
 
     @property
-    def delay(self):   
+    def delay(self):
         """Type: float
 
 Range: dynamic
@@ -1733,23 +2127,18 @@ Note that values less than 1 sample still introduce delay."""
 
     @delay.setter
     def delay(self, value):
-        self.delay.value=value
-
-
+        self.delay.value = value
 
     @property
-    def delay_max(self):   
+    def delay_max(self):
         """Type: float
 
 This property is read-only.
 The max delay as set at the node's creation time."""
         return self._property_instances[_libaudioverse.Lav_DELAY_DELAY_MAX]
 
-
-
-
     @property
-    def feedback(self):   
+    def feedback(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -1761,12 +2150,10 @@ Setting feedback to small values can make echoes, comb filters, and a variety of
 
     @feedback.setter
     def feedback(self, value):
-        self.feedback.value=value
-
-
+        self.feedback.value = value
 
     @property
-    def interpolation_time(self):   
+    def interpolation_time(self):
         """Type: float
 
 Range: [0.001, INFINITY]
@@ -1778,36 +2165,50 @@ Note that for this node, it is impossible to get rid of the crossfade completely
 
     @interpolation_time.setter
     def interpolation_time(self, value):
-        self.interpolation_time.value=value
-
-
-
+        self.interpolation_time.value = value
 
 
 _types_to_classes[ObjectTypes.crossfading_delay_node] = CrossfadingDelayNode
+
+
 class DoppleringDelayNode(GenericNode):
     r"""Implements a dopplering delay line, an interpolated delay line that intensionally bends pitch when the delay changes.
 Delay lines have uses in echo and reverb, as well as many more esoteric effects."""
-    
+
     def __init__(self, simulation, max_delay, channels):
-        super(DoppleringDelayNode, self).__init__(_lav.create_dopplering_delay_node(simulation, max_delay, channels))
+        super(DoppleringDelayNode, self).__init__(
+            _lav.create_dopplering_delay_node(simulation, max_delay, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(DoppleringDelayNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["delay"] = _libaudioverse.Lav_DELAY_DELAY
-                self._state['properties']["delay_max"] = _libaudioverse.Lav_DELAY_DELAY_MAX
-                self._state['properties']["interpolation_time"] = _libaudioverse.Lav_DELAY_INTERPOLATION_TIME
-            self._property_instances[_libaudioverse.Lav_DELAY_DELAY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_DELAY_DELAY)
-            self._property_instances[_libaudioverse.Lav_DELAY_DELAY_MAX] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_DELAY_DELAY_MAX)
-            self._property_instances[_libaudioverse.Lav_DELAY_INTERPOLATION_TIME] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_DELAY_INTERPOLATION_TIME)
-
+                self._state["properties"]["delay"] = _libaudioverse.Lav_DELAY_DELAY
+                self._state["properties"][
+                    "delay_max"
+                ] = _libaudioverse.Lav_DELAY_DELAY_MAX
+                self._state["properties"][
+                    "interpolation_time"
+                ] = _libaudioverse.Lav_DELAY_INTERPOLATION_TIME
+            self._property_instances[_libaudioverse.Lav_DELAY_DELAY] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_DELAY_DELAY
+            )
+            self._property_instances[
+                _libaudioverse.Lav_DELAY_DELAY_MAX
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_DELAY_DELAY_MAX
+            )
+            self._property_instances[
+                _libaudioverse.Lav_DELAY_INTERPOLATION_TIME
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_DELAY_INTERPOLATION_TIME
+            )
 
     @property
-    def delay(self):   
+    def delay(self):
         """Type: float
 
 Range: dynamic
@@ -1820,23 +2221,18 @@ Note that values less than 1 sample still introduce delay."""
 
     @delay.setter
     def delay(self, value):
-        self.delay.value=value
-
-
+        self.delay.value = value
 
     @property
-    def delay_max(self):   
+    def delay_max(self):
         """Type: float
 
 This property is read-only.
 The max delay as set at the node's creation time."""
         return self._property_instances[_libaudioverse.Lav_DELAY_DELAY_MAX]
 
-
-
-
     @property
-    def interpolation_time(self):   
+    def interpolation_time(self):
         """Type: float
 
 Range: [0.001, INFINITY]
@@ -1850,40 +2246,62 @@ On this delay line, the interpolation time is the total duration of a pitch bend
 
     @interpolation_time.setter
     def interpolation_time(self, value):
-        self.interpolation_time.value=value
-
-
-
+        self.interpolation_time.value = value
 
 
 _types_to_classes[ObjectTypes.dopplering_delay_node] = DoppleringDelayNode
+
+
 class AmplitudePannerNode(GenericNode):
     r"""This panner pans for a set of regular speakers without any additional effects applied.
 Additionally, it understands surround sound speaker layouts and allows for the assignment of custom speaker mappings.
 The default configuration provides a stereo panner that can be used without any additional steps.
 The additional function Lav_amplitudePannerNodeConfigureStandardChannelMap can set the panner to output for a variety of standard configurations, so be sure to see its documentation."""
-    
+
     def __init__(self, simulation):
-        super(AmplitudePannerNode, self).__init__(_lav.create_amplitude_panner_node(simulation))
+        super(AmplitudePannerNode, self).__init__(
+            _lav.create_amplitude_panner_node(simulation)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(AmplitudePannerNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["azimuth"] = _libaudioverse.Lav_PANNER_AZIMUTH
-                self._state['properties']["channel_map"] = _libaudioverse.Lav_PANNER_CHANNEL_MAP
-                self._state['properties']["elevation"] = _libaudioverse.Lav_PANNER_ELEVATION
-                self._state['properties']["should_crossfade"] = _libaudioverse.Lav_PANNER_SHOULD_CROSSFADE
-            self._property_instances[_libaudioverse.Lav_PANNER_AZIMUTH] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_PANNER_AZIMUTH)
-            self._property_instances[_libaudioverse.Lav_PANNER_CHANNEL_MAP] = FloatArrayProperty(handle = self.handle, slot=_libaudioverse.Lav_PANNER_CHANNEL_MAP, lock = self._lock)
-            self._property_instances[_libaudioverse.Lav_PANNER_ELEVATION] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_PANNER_ELEVATION)
-            self._property_instances[_libaudioverse.Lav_PANNER_SHOULD_CROSSFADE] = BooleanProperty(handle = self.handle, slot = _libaudioverse.Lav_PANNER_SHOULD_CROSSFADE)
-
+                self._state["properties"]["azimuth"] = _libaudioverse.Lav_PANNER_AZIMUTH
+                self._state["properties"][
+                    "channel_map"
+                ] = _libaudioverse.Lav_PANNER_CHANNEL_MAP
+                self._state["properties"][
+                    "elevation"
+                ] = _libaudioverse.Lav_PANNER_ELEVATION
+                self._state["properties"][
+                    "should_crossfade"
+                ] = _libaudioverse.Lav_PANNER_SHOULD_CROSSFADE
+            self._property_instances[_libaudioverse.Lav_PANNER_AZIMUTH] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_PANNER_AZIMUTH
+            )
+            self._property_instances[
+                _libaudioverse.Lav_PANNER_CHANNEL_MAP
+            ] = FloatArrayProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_PANNER_CHANNEL_MAP,
+                lock=self._lock,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_PANNER_ELEVATION
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_PANNER_ELEVATION
+            )
+            self._property_instances[
+                _libaudioverse.Lav_PANNER_SHOULD_CROSSFADE
+            ] = BooleanProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_PANNER_SHOULD_CROSSFADE
+            )
 
     @property
-    def azimuth(self):   
+    def azimuth(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -1894,12 +2312,10 @@ The horizontal angle of the panner in degrees.
 
     @azimuth.setter
     def azimuth(self, value):
-        self.azimuth.value=value
-
-
+        self.azimuth.value = value
 
     @property
-    def channel_map(self):   
+    def channel_map(self):
         """Type: float_array
 
 Range: [-INFINITY, INFINITY]
@@ -1914,12 +2330,10 @@ This functionality is used by all of the standard channel maps to skip the cente
 
     @channel_map.setter
     def channel_map(self, value):
-        self.channel_map.value=value
-
-
+        self.channel_map.value = value
 
     @property
-    def elevation(self):   
+    def elevation(self):
         """Type: float
 
 Range: [-90.0, 90.0]
@@ -1931,12 +2345,10 @@ Note that, for amplitude panners, this has no effect and exists only to allow sw
 
     @elevation.setter
     def elevation(self, value):
-        self.elevation.value=value
-
-
+        self.elevation.value = value
 
     @property
-    def should_crossfade(self):   
+    def should_crossfade(self):
         """Type: boolean
 
 
@@ -1949,9 +2361,7 @@ If crossfading is enabled, moving the panner will slowly fade it to the new posi
 
     @should_crossfade.setter
     def should_crossfade(self, value):
-        self.should_crossfade.value=value
-
-
+        self.should_crossfade.value = value
 
     def configure_standard_map(node, channels):
         r"""Sets the channel map and other properties on this node to match a standard configuration.
@@ -1959,30 +2369,34 @@ The possible standard configurations are found in the :class:`PanningStrategies`
         return _lav.amplitude_panner_node_configure_standard_map(node, channels)
 
 
-
 _types_to_classes[ObjectTypes.amplitude_panner_node] = AmplitudePannerNode
+
+
 class PushNode(GenericNode):
     r"""The purpose of this node is the same as the pull node, but it is used in situations wherein we do not know when we are going to get audio.
 Audio is queued as it is pushed to this node and then played as fast as possible.
 This node can be used to avoid writing a queue of audio yourself, as it essentially implements said functionality.
 If you need low latency audio or the ability to run something like the Opus encoder's
 ability to cover for missing frames, you need a pull node."""
-    
+
     def __init__(self, simulation, sr, channels):
         super(PushNode, self).__init__(_lav.create_push_node(simulation, sr, channels))
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(PushNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["threshold"] = _libaudioverse.Lav_PUSH_THRESHOLD
-            self._property_instances[_libaudioverse.Lav_PUSH_THRESHOLD] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_PUSH_THRESHOLD)
-
+                self._state["properties"][
+                    "threshold"
+                ] = _libaudioverse.Lav_PUSH_THRESHOLD
+            self._property_instances[_libaudioverse.Lav_PUSH_THRESHOLD] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_PUSH_THRESHOLD
+            )
 
     @property
-    def threshold(self):   
+    def threshold(self):
         """Type: float
 
 Range: [0.0, INFINITY]
@@ -1992,107 +2406,131 @@ When the remaining audio in the push node has a duration less than this property
 
     @threshold.setter
     def threshold(self, value):
-        self.threshold.value=value
-
-
+        self.threshold.value = value
 
     def feed(node, length, frames):
         r"""Feed more audio data into the internal queue."""
         return _lav.push_node_feed(node, length, frames)
-
 
     def get_low_callback(self):
         r"""Get the low callback.
         
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
-            cb = self._state['callbacks'].get("low", None)
+            cb = self._state["callbacks"].get("low", None)
             if cb is None:
                 return None
             else:
                 return cb[0]
 
-    def set_low_callback(self, callback, additional_args = None, additional_kwargs = None):
+    def set_low_callback(self, callback, additional_args=None, additional_kwargs=None):
         r"""Set the low callback.
         
 Called once per block and outside the audio thread when there is less than the specified threshold audio remaining."""
         with self._lock:
             if callback is None:
-                #delete the key, clear the callback with Libaudioverse.
+                # delete the key, clear the callback with Libaudioverse.
                 _lav.push_node_set_low_callback(self.handle, None, None)
-                del self._state['callbacks']['low']
+                del self._state["callbacks"]["low"]
                 return
             if additional_args is None:
                 additionnal_args = ()
             if additional_kwargs is None:
                 additional_kwargs = dict()
-            wrapper = _CallbackWrapper(self, callback, additional_args, additional_kwargs)
+            wrapper = _CallbackWrapper(
+                self, callback, additional_args, additional_kwargs
+            )
             ctypes_callback = _libaudioverse.LavParameterlessCallback(wrapper)
             _lav.push_node_set_low_callback(self.handle, ctypes_callback, None)
-            #if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
-            #As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
-            self._state['callbacks']["low"] = (callback, wrapper, ctypes_callback)
+            # if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
+            # As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
+            self._state["callbacks"]["low"] = (callback, wrapper, ctypes_callback)
+
     def get_underrun_callback(self):
         r"""Get the underrun callback.
         
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
-            cb = self._state['callbacks'].get("underrun", None)
+            cb = self._state["callbacks"].get("underrun", None)
             if cb is None:
                 return None
             else:
                 return cb[0]
 
-    def set_underrun_callback(self, callback, additional_args = None, additional_kwargs = None):
+    def set_underrun_callback(
+        self, callback, additional_args=None, additional_kwargs=None
+    ):
         r"""Set the underrun callback.
         
 Called exactly once and outside the audio thread when the node runs out of audio completely."""
         with self._lock:
             if callback is None:
-                #delete the key, clear the callback with Libaudioverse.
+                # delete the key, clear the callback with Libaudioverse.
                 _lav.push_node_set_underrun_callback(self.handle, None, None)
-                del self._state['callbacks']['underrun']
+                del self._state["callbacks"]["underrun"]
                 return
             if additional_args is None:
                 additionnal_args = ()
             if additional_kwargs is None:
                 additional_kwargs = dict()
-            wrapper = _CallbackWrapper(self, callback, additional_args, additional_kwargs)
+            wrapper = _CallbackWrapper(
+                self, callback, additional_args, additional_kwargs
+            )
             ctypes_callback = _libaudioverse.LavParameterlessCallback(wrapper)
             _lav.push_node_set_underrun_callback(self.handle, ctypes_callback, None)
-            #if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
-            #As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
-            self._state['callbacks']["underrun"] = (callback, wrapper, ctypes_callback)
+            # if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
+            # As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
+            self._state["callbacks"]["underrun"] = (callback, wrapper, ctypes_callback)
+
 
 _types_to_classes[ObjectTypes.push_node] = PushNode
+
+
 class BiquadNode(GenericNode):
     r"""Implementation of a biquad filter section, as defined by the Audio EQ Cookbook by Robert Bristo-Johnson.
 This node is capable of implementing almost every filter needed for basic audio effects, including equalizers.
 For the specific equations used, see the Audio EQ Cookbook.
 It may be found at:
 http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt"""
-    
+
     def __init__(self, simulation, channels):
         super(BiquadNode, self).__init__(_lav.create_biquad_node(simulation, channels))
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(BiquadNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["dbgain"] = _libaudioverse.Lav_BIQUAD_DBGAIN
-                self._state['properties']["filter_type"] = _libaudioverse.Lav_BIQUAD_FILTER_TYPE
-                self._state['properties']["frequency"] = _libaudioverse.Lav_BIQUAD_FREQUENCY
-                self._state['properties']["q"] = _libaudioverse.Lav_BIQUAD_Q
-            self._property_instances[_libaudioverse.Lav_BIQUAD_DBGAIN] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_BIQUAD_DBGAIN)
-            self._property_instances[_libaudioverse.Lav_BIQUAD_FILTER_TYPE] = EnumProperty(handle = self.handle, slot = _libaudioverse.Lav_BIQUAD_FILTER_TYPE, enum = BiquadTypes)
-            self._property_instances[_libaudioverse.Lav_BIQUAD_FREQUENCY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_BIQUAD_FREQUENCY)
-            self._property_instances[_libaudioverse.Lav_BIQUAD_Q] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_BIQUAD_Q)
-
+                self._state["properties"]["dbgain"] = _libaudioverse.Lav_BIQUAD_DBGAIN
+                self._state["properties"][
+                    "filter_type"
+                ] = _libaudioverse.Lav_BIQUAD_FILTER_TYPE
+                self._state["properties"][
+                    "frequency"
+                ] = _libaudioverse.Lav_BIQUAD_FREQUENCY
+                self._state["properties"]["q"] = _libaudioverse.Lav_BIQUAD_Q
+            self._property_instances[_libaudioverse.Lav_BIQUAD_DBGAIN] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_BIQUAD_DBGAIN
+            )
+            self._property_instances[
+                _libaudioverse.Lav_BIQUAD_FILTER_TYPE
+            ] = EnumProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_BIQUAD_FILTER_TYPE,
+                enum=BiquadTypes,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_BIQUAD_FREQUENCY
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_BIQUAD_FREQUENCY
+            )
+            self._property_instances[_libaudioverse.Lav_BIQUAD_Q] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_BIQUAD_Q
+            )
 
     @property
-    def dbgain(self):   
+    def dbgain(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -2103,12 +2541,10 @@ It measures the gain that these filters apply to the part of the signal they boo
 
     @dbgain.setter
     def dbgain(self, value):
-        self.dbgain.value=value
-
-
+        self.dbgain.value = value
 
     @property
-    def filter_type(self):   
+    def filter_type(self):
         """Type: int
 
 Range: :any:`BiquadTypes`
@@ -2119,12 +2555,10 @@ This determines the interpretations of the other properties on this node."""
 
     @filter_type.setter
     def filter_type(self, value):
-        self.filter_type.value=value
-
-
+        self.filter_type.value = value
 
     @property
-    def frequency(self):   
+    def frequency(self):
         """Type: float
 
 Range: [0, INFINITY]
@@ -2135,12 +2569,10 @@ What specifically this means depends on the selected filter type; for example, i
 
     @frequency.setter
     def frequency(self, value):
-        self.frequency.value=value
-
-
+        self.frequency.value = value
 
     @property
-    def q(self):   
+    def q(self):
         """Type: float
 
 Range: [0.001, INFINITY]
@@ -2160,205 +2592,256 @@ http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt"""
 
     @q.setter
     def q(self, value):
-        self.q.value=value
-
-
-
+        self.q.value = value
 
 
 _types_to_classes[ObjectTypes.biquad_node] = BiquadNode
+
+
 class PullNode(GenericNode):
     r"""This node calls the audio callback whenever it needs more audio.
 The purpose of this node is to inject audio from an external source that Libaudioverse does not support, for example a custom network protocol."""
-    
+
     def __init__(self, simulation, sr, channels):
         super(PullNode, self).__init__(_lav.create_pull_node(simulation, sr, channels))
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(PullNode, self).init_with_handle(handle)
-
-
 
     def get_audio_callback(self):
         r"""Get the audio callback.
         
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
-            cb = self._state['callbacks'].get("audio", None)
+            cb = self._state["callbacks"].get("audio", None)
             if cb is None:
                 return None
             else:
                 return cb[0]
 
-    def set_audio_callback(self, callback, additional_args = None, additional_kwargs = None):
+    def set_audio_callback(
+        self, callback, additional_args=None, additional_kwargs=None
+    ):
         r"""Set the audio callback.
         
 Called when the node needs more audio."""
         with self._lock:
             if callback is None:
-                #delete the key, clear the callback with Libaudioverse.
+                # delete the key, clear the callback with Libaudioverse.
                 _lav.pull_node_set_audio_callback(self.handle, None, None)
-                del self._state['callbacks']['audio']
+                del self._state["callbacks"]["audio"]
                 return
             if additional_args is None:
                 additionnal_args = ()
             if additional_kwargs is None:
                 additional_kwargs = dict()
-            wrapper = _CallbackWrapper(self, callback, additional_args, additional_kwargs)
+            wrapper = _CallbackWrapper(
+                self, callback, additional_args, additional_kwargs
+            )
             ctypes_callback = _libaudioverse.LavPullNodeAudioCallback(wrapper)
             _lav.pull_node_set_audio_callback(self.handle, ctypes_callback, None)
-            #if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
-            #As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
-            self._state['callbacks']["audio"] = (callback, wrapper, ctypes_callback)
+            # if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
+            # As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
+            self._state["callbacks"]["audio"] = (callback, wrapper, ctypes_callback)
+
 
 _types_to_classes[ObjectTypes.pull_node] = PullNode
+
+
 class GraphListenerNode(GenericNode):
     r"""This node defines a callback which is called every block.
 The callback is passed pointers to the audio data passing through this node for the current block.
 The effect is that this node allows observing audio passing through any location in the audio graph."""
-    
+
     def __init__(self, simulation, channels):
-        super(GraphListenerNode, self).__init__(_lav.create_graph_listener_node(simulation, channels))
+        super(GraphListenerNode, self).__init__(
+            _lav.create_graph_listener_node(simulation, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(GraphListenerNode, self).init_with_handle(handle)
-
-
 
     def get_listening_callback(self):
         r"""Get the listening callback.
         
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
-            cb = self._state['callbacks'].get("listening", None)
+            cb = self._state["callbacks"].get("listening", None)
             if cb is None:
                 return None
             else:
                 return cb[0]
 
-    def set_listening_callback(self, callback, additional_args = None, additional_kwargs = None):
+    def set_listening_callback(
+        self, callback, additional_args=None, additional_kwargs=None
+    ):
         r"""Set the listening callback.
         
 When set, audio is passed to this callback every block.
 This callback is called inside the audio threads; do not block."""
         with self._lock:
             if callback is None:
-                #delete the key, clear the callback with Libaudioverse.
+                # delete the key, clear the callback with Libaudioverse.
                 _lav.graph_listener_node_set_listening_callback(self.handle, None, None)
-                del self._state['callbacks']['listening']
+                del self._state["callbacks"]["listening"]
                 return
             if additional_args is None:
                 additionnal_args = ()
             if additional_kwargs is None:
                 additional_kwargs = dict()
-            wrapper = _CallbackWrapper(self, callback, additional_args, additional_kwargs)
-            ctypes_callback = _libaudioverse.LavGraphListenerNodeListeningCallback(wrapper)
-            _lav.graph_listener_node_set_listening_callback(self.handle, ctypes_callback, None)
-            #if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
-            #As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
-            self._state['callbacks']["listening"] = (callback, wrapper, ctypes_callback)
+            wrapper = _CallbackWrapper(
+                self, callback, additional_args, additional_kwargs
+            )
+            ctypes_callback = _libaudioverse.LavGraphListenerNodeListeningCallback(
+                wrapper
+            )
+            _lav.graph_listener_node_set_listening_callback(
+                self.handle, ctypes_callback, None
+            )
+            # if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
+            # As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
+            self._state["callbacks"]["listening"] = (callback, wrapper, ctypes_callback)
+
 
 _types_to_classes[ObjectTypes.graph_listener_node] = GraphListenerNode
+
+
 class CustomNode(GenericNode):
     r"""This node's processing depends solely on a user-defined callback.
 It has a specific number of inputs and outputs which are aggregated into individual channels.
 The callback is then called for every block of audio.
 If implementing a custom node, it is required that you handle all communication yourself."""
-    
-    def __init__(self, simulation, inputs, channels_per_input, outputs, channels_per_output):
-        super(CustomNode, self).__init__(_lav.create_custom_node(simulation, inputs, channels_per_input, outputs, channels_per_output))
+
+    def __init__(
+        self, simulation, inputs, channels_per_input, outputs, channels_per_output
+    ):
+        super(CustomNode, self).__init__(
+            _lav.create_custom_node(
+                simulation, inputs, channels_per_input, outputs, channels_per_output
+            )
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(CustomNode, self).init_with_handle(handle)
-
-
 
     def get_processing_callback(self):
         r"""Get the processing callback.
         
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
-            cb = self._state['callbacks'].get("processing", None)
+            cb = self._state["callbacks"].get("processing", None)
             if cb is None:
                 return None
             else:
                 return cb[0]
 
-    def set_processing_callback(self, callback, additional_args = None, additional_kwargs = None):
+    def set_processing_callback(
+        self, callback, additional_args=None, additional_kwargs=None
+    ):
         r"""Set the processing callback.
         
 Called to process audio.
 If implementing a custom node, the custom node behaves as identity until this callback is set."""
         with self._lock:
             if callback is None:
-                #delete the key, clear the callback with Libaudioverse.
+                # delete the key, clear the callback with Libaudioverse.
                 _lav.custom_node_set_processing_callback(self.handle, None, None)
-                del self._state['callbacks']['processing']
+                del self._state["callbacks"]["processing"]
                 return
             if additional_args is None:
                 additionnal_args = ()
             if additional_kwargs is None:
                 additional_kwargs = dict()
-            wrapper = _CallbackWrapper(self, callback, additional_args, additional_kwargs)
+            wrapper = _CallbackWrapper(
+                self, callback, additional_args, additional_kwargs
+            )
             ctypes_callback = _libaudioverse.LavCustomNodeProcessingCallback(wrapper)
             _lav.custom_node_set_processing_callback(self.handle, ctypes_callback, None)
-            #if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
-            #As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
-            self._state['callbacks']["processing"] = (callback, wrapper, ctypes_callback)
+            # if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
+            # As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
+            self._state["callbacks"]["processing"] = (
+                callback,
+                wrapper,
+                ctypes_callback,
+            )
+
 
 _types_to_classes[ObjectTypes.custom_node] = CustomNode
+
+
 class RingmodNode(GenericNode):
     r"""This node has two inputs and one output.
 The two inputs will be converted to mono and then multiplied, before being sent to the output."""
-    
+
     def __init__(self, simulation):
         super(RingmodNode, self).__init__(_lav.create_ringmod_node(simulation))
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(RingmodNode, self).init_with_handle(handle)
 
 
-
-
 _types_to_classes[ObjectTypes.ringmod_node] = RingmodNode
+
+
 class MultipannerNode(GenericNode):
     r"""A panner which can have the algorithm it uses changed at runtime.
 The use for multipanners is for applications in which we may wish to change the speaker configuration at runtime.
 Capabilities include switching from HRTF to stereo and back, a useful property for games wherein the user might or might not be using headphones."""
-    
+
     def __init__(self, simulation, hrtf_path):
-        super(MultipannerNode, self).__init__(_lav.create_multipanner_node(simulation, hrtf_path))
+        super(MultipannerNode, self).__init__(
+            _lav.create_multipanner_node(simulation, hrtf_path)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(MultipannerNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["azimuth"] = _libaudioverse.Lav_PANNER_AZIMUTH
-                self._state['properties']["elevation"] = _libaudioverse.Lav_PANNER_ELEVATION
-                self._state['properties']["should_crossfade"] = _libaudioverse.Lav_PANNER_SHOULD_CROSSFADE
-                self._state['properties']["strategy"] = _libaudioverse.Lav_PANNER_STRATEGY
-            self._property_instances[_libaudioverse.Lav_PANNER_AZIMUTH] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_PANNER_AZIMUTH)
-            self._property_instances[_libaudioverse.Lav_PANNER_ELEVATION] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_PANNER_ELEVATION)
-            self._property_instances[_libaudioverse.Lav_PANNER_SHOULD_CROSSFADE] = BooleanProperty(handle = self.handle, slot = _libaudioverse.Lav_PANNER_SHOULD_CROSSFADE)
-            self._property_instances[_libaudioverse.Lav_PANNER_STRATEGY] = EnumProperty(handle = self.handle, slot = _libaudioverse.Lav_PANNER_STRATEGY, enum = PanningStrategies)
-
+                self._state["properties"]["azimuth"] = _libaudioverse.Lav_PANNER_AZIMUTH
+                self._state["properties"][
+                    "elevation"
+                ] = _libaudioverse.Lav_PANNER_ELEVATION
+                self._state["properties"][
+                    "should_crossfade"
+                ] = _libaudioverse.Lav_PANNER_SHOULD_CROSSFADE
+                self._state["properties"][
+                    "strategy"
+                ] = _libaudioverse.Lav_PANNER_STRATEGY
+            self._property_instances[_libaudioverse.Lav_PANNER_AZIMUTH] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_PANNER_AZIMUTH
+            )
+            self._property_instances[
+                _libaudioverse.Lav_PANNER_ELEVATION
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_PANNER_ELEVATION
+            )
+            self._property_instances[
+                _libaudioverse.Lav_PANNER_SHOULD_CROSSFADE
+            ] = BooleanProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_PANNER_SHOULD_CROSSFADE
+            )
+            self._property_instances[_libaudioverse.Lav_PANNER_STRATEGY] = EnumProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_PANNER_STRATEGY,
+                enum=PanningStrategies,
+            )
 
     @property
-    def azimuth(self):   
+    def azimuth(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -2369,12 +2852,10 @@ The horizontal angle of the panner, in degrees.
 
     @azimuth.setter
     def azimuth(self, value):
-        self.azimuth.value=value
-
-
+        self.azimuth.value = value
 
     @property
-    def elevation(self):   
+    def elevation(self):
         """Type: float
 
 Range: [-90.0, 90.0]
@@ -2385,12 +2866,10 @@ The vertical angle of the panner, in degrees.
 
     @elevation.setter
     def elevation(self, value):
-        self.elevation.value=value
-
-
+        self.elevation.value = value
 
     @property
-    def should_crossfade(self):   
+    def should_crossfade(self):
         """Type: boolean
 
 
@@ -2402,12 +2881,10 @@ You usually want this on."""
 
     @should_crossfade.setter
     def should_crossfade(self, value):
-        self.should_crossfade.value=value
-
-
+        self.should_crossfade.value = value
 
     @property
-    def strategy(self):   
+    def strategy(self):
         """Type: int
 
 Range: :any:`PanningStrategies`
@@ -2419,13 +2896,12 @@ For something more nontraditional, use an amplitude panner."""
 
     @strategy.setter
     def strategy(self, value):
-        self.strategy.value=value
-
-
-
+        self.strategy.value = value
 
 
 _types_to_classes[ObjectTypes.multipanner_node] = MultipannerNode
+
+
 class FeedbackDelayNetworkNode(GenericNode):
     r"""Implements a feedback delay network.
 This is possibly the single-most complicated node in Libaudioverse, and full documentation of it goes well beyond the manual.
@@ -2433,32 +2909,69 @@ Unless you know  what a  feedback delay network is and have a specific reason fo
 
 This node has `n` inputs and outputs, where `n` is the `lines` parameter to the constructor.
 Each input and output pair represent the input and output of a specific delay line, respectively."""
-    
+
     def __init__(self, simulation, max_delay, channels):
-        super(FeedbackDelayNetworkNode, self).__init__(_lav.create_feedback_delay_network_node(simulation, max_delay, channels))
+        super(FeedbackDelayNetworkNode, self).__init__(
+            _lav.create_feedback_delay_network_node(simulation, max_delay, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(FeedbackDelayNetworkNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["delays"] = _libaudioverse.Lav_FDN_DELAYS
-                self._state['properties']["filter_frequencies"] = _libaudioverse.Lav_FDN_FILTER_FREQUENCIES
-                self._state['properties']["filter_types"] = _libaudioverse.Lav_FDN_FILTER_TYPES
-                self._state['properties']["matrix"] = _libaudioverse.Lav_FDN_MATRIX
-                self._state['properties']["max_delay"] = _libaudioverse.Lav_FDN_MAX_DELAY
-                self._state['properties']["output_gains"] = _libaudioverse.Lav_FDN_OUTPUT_GAINS
-            self._property_instances[_libaudioverse.Lav_FDN_DELAYS] = FloatArrayProperty(handle = self.handle, slot=_libaudioverse.Lav_FDN_DELAYS, lock = self._lock)
-            self._property_instances[_libaudioverse.Lav_FDN_FILTER_FREQUENCIES] = FloatArrayProperty(handle = self.handle, slot=_libaudioverse.Lav_FDN_FILTER_FREQUENCIES, lock = self._lock)
-            self._property_instances[_libaudioverse.Lav_FDN_FILTER_TYPES] = IntArrayProperty(handle = self.handle, slot=_libaudioverse.Lav_FDN_FILTER_TYPES, lock = self._lock)
-            self._property_instances[_libaudioverse.Lav_FDN_MATRIX] = FloatArrayProperty(handle = self.handle, slot=_libaudioverse.Lav_FDN_MATRIX, lock = self._lock)
-            self._property_instances[_libaudioverse.Lav_FDN_MAX_DELAY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FDN_MAX_DELAY)
-            self._property_instances[_libaudioverse.Lav_FDN_OUTPUT_GAINS] = FloatArrayProperty(handle = self.handle, slot=_libaudioverse.Lav_FDN_OUTPUT_GAINS, lock = self._lock)
-
+                self._state["properties"]["delays"] = _libaudioverse.Lav_FDN_DELAYS
+                self._state["properties"][
+                    "filter_frequencies"
+                ] = _libaudioverse.Lav_FDN_FILTER_FREQUENCIES
+                self._state["properties"][
+                    "filter_types"
+                ] = _libaudioverse.Lav_FDN_FILTER_TYPES
+                self._state["properties"]["matrix"] = _libaudioverse.Lav_FDN_MATRIX
+                self._state["properties"][
+                    "max_delay"
+                ] = _libaudioverse.Lav_FDN_MAX_DELAY
+                self._state["properties"][
+                    "output_gains"
+                ] = _libaudioverse.Lav_FDN_OUTPUT_GAINS
+            self._property_instances[
+                _libaudioverse.Lav_FDN_DELAYS
+            ] = FloatArrayProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FDN_DELAYS, lock=self._lock
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FDN_FILTER_FREQUENCIES
+            ] = FloatArrayProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_FDN_FILTER_FREQUENCIES,
+                lock=self._lock,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FDN_FILTER_TYPES
+            ] = IntArrayProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_FDN_FILTER_TYPES,
+                lock=self._lock,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FDN_MATRIX
+            ] = FloatArrayProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FDN_MATRIX, lock=self._lock
+            )
+            self._property_instances[_libaudioverse.Lav_FDN_MAX_DELAY] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FDN_MAX_DELAY
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FDN_OUTPUT_GAINS
+            ] = FloatArrayProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_FDN_OUTPUT_GAINS,
+                lock=self._lock,
+            )
 
     @property
-    def delays(self):   
+    def delays(self):
         """Type: float_array
 
 
@@ -2470,12 +2983,10 @@ All values must be positive and no more than the maximum delay specified to the 
 
     @delays.setter
     def delays(self, value):
-        self.delays.value=value
-
-
+        self.delays.value = value
 
     @property
-    def filter_frequencies(self):   
+    def filter_frequencies(self):
         """Type: float_array
 
 
@@ -2486,12 +2997,10 @@ The range of this property is 0 to Nyquist, or half the sampling rate."""
 
     @filter_frequencies.setter
     def filter_frequencies(self, value):
-        self.filter_frequencies.value=value
-
-
+        self.filter_frequencies.value = value
 
     @property
-    def filter_types(self):   
+    def filter_types(self):
         """Type: int_array
 
 Range: :any:`FdnFilterTypes`
@@ -2502,12 +3011,10 @@ These filters can be individually enabled and disabled; the default is disabled.
 
     @filter_types.setter
     def filter_types(self, value):
-        self.filter_types.value=value
-
-
+        self.filter_types.value = value
 
     @property
-    def matrix(self):   
+    def matrix(self):
         """Type: float_array
 
 
@@ -2523,23 +3030,18 @@ The supplied array must have a length equal to the square of the channels specif
 
     @matrix.setter
     def matrix(self, value):
-        self.matrix.value=value
-
-
+        self.matrix.value = value
 
     @property
-    def max_delay(self):   
+    def max_delay(self):
         """Type: float
 
 This property is read-only.
 The maximum delay any of the internal delay lines may be set to."""
         return self._property_instances[_libaudioverse.Lav_FDN_MAX_DELAY]
 
-
-
-
     @property
-    def output_gains(self):   
+    def output_gains(self):
         """Type: float_array
 
 
@@ -2551,13 +3053,12 @@ The array for this property allows any floating point values, and must be exactl
 
     @output_gains.setter
     def output_gains(self, value):
-        self.output_gains.value=value
-
-
-
+        self.output_gains.value = value
 
 
 _types_to_classes[ObjectTypes.feedback_delay_network_node] = FeedbackDelayNetworkNode
+
+
 class AdditiveSquareNode(GenericNode):
     r"""The most accurate, least featureful, and slowest square oscillator.
 
@@ -2568,28 +3069,50 @@ Sweeping this oscillator will perform poorly if you do not set the harmonics to 
 This oscillator is slightly under the range -1 to 1.
 For this reason, it is probably not suitable as a control signal.
 This is not fixable using additive synthesis and is a frequency dependent effect."""
-    
+
     def __init__(self, simulation):
-        super(AdditiveSquareNode, self).__init__(_lav.create_additive_square_node(simulation))
+        super(AdditiveSquareNode, self).__init__(
+            _lav.create_additive_square_node(simulation)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(AdditiveSquareNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["frequency"] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY
-                self._state['properties']["frequency_multiplier"] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
-                self._state['properties']["harmonics"] = _libaudioverse.Lav_SQUARE_HARMONICS
-                self._state['properties']["phase"] = _libaudioverse.Lav_OSCILLATOR_PHASE
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_FREQUENCY)
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER)
-            self._property_instances[_libaudioverse.Lav_SQUARE_HARMONICS] = IntProperty(handle = self.handle, slot = _libaudioverse.Lav_SQUARE_HARMONICS)
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_PHASE] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_PHASE)
-
+                self._state["properties"][
+                    "frequency"
+                ] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY
+                self._state["properties"][
+                    "frequency_multiplier"
+                ] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+                self._state["properties"][
+                    "harmonics"
+                ] = _libaudioverse.Lav_SQUARE_HARMONICS
+                self._state["properties"]["phase"] = _libaudioverse.Lav_OSCILLATOR_PHASE
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_FREQUENCY
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_OSCILLATOR_FREQUENCY
+            )
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+            ] = FloatProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER,
+            )
+            self._property_instances[_libaudioverse.Lav_SQUARE_HARMONICS] = IntProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_SQUARE_HARMONICS
+            )
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_PHASE
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_OSCILLATOR_PHASE
+            )
 
     @property
-    def frequency(self):   
+    def frequency(self):
         """Type: float
 
 Range: [0, INFINITY]
@@ -2599,12 +3122,10 @@ The frequency of the square wave, in hertz."""
 
     @frequency.setter
     def frequency(self, value):
-        self.frequency.value=value
-
-
+        self.frequency.value = value
 
     @property
-    def frequency_multiplier(self):   
+    def frequency_multiplier(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -2612,16 +3133,16 @@ Default value: 1.0
 An additional multiplicative factor applied to the frequency of the oscillator.
 
 This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
-        return self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER]
+        return self._property_instances[
+            _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+        ]
 
     @frequency_multiplier.setter
     def frequency_multiplier(self, value):
-        self.frequency_multiplier.value=value
-
-
+        self.frequency_multiplier.value = value
 
     @property
-    def harmonics(self):   
+    def harmonics(self):
         """Type: int
 
 Range: [0, MAX_INT]
@@ -2636,12 +3157,10 @@ To avoid this, make sure that ``2*frequency*(2*harmonics-1)`` never goes over ha
 
     @harmonics.setter
     def harmonics(self, value):
-        self.harmonics.value=value
-
-
+        self.harmonics.value = value
 
     @property
-    def phase(self):   
+    def phase(self):
         """Type: float
 
 Range: [0.0, 1.0]
@@ -2652,13 +3171,12 @@ This is measured in periods, not in radians."""
 
     @phase.setter
     def phase(self, value):
-        self.phase.value=value
-
-
-
+        self.phase.value = value
 
 
 _types_to_classes[ObjectTypes.additive_square_node] = AdditiveSquareNode
+
+
 class AdditiveTriangleNode(GenericNode):
     r"""The most accurate, least featureful, and slowest triangle oscillator.
 
@@ -2670,28 +3188,52 @@ This oscillator is slightly under the range -1 to 1.
 Calibration scripts show that the worst case is -0.9 to 0.9, with the error increasing as frequency increases.
 For this reason, it is probably not suitable as a control signal.
 This is not fixable using additive synthesis and is a frequency dependent effect."""
-    
+
     def __init__(self, simulation):
-        super(AdditiveTriangleNode, self).__init__(_lav.create_additive_triangle_node(simulation))
+        super(AdditiveTriangleNode, self).__init__(
+            _lav.create_additive_triangle_node(simulation)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(AdditiveTriangleNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["frequency"] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY
-                self._state['properties']["frequency_multiplier"] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
-                self._state['properties']["harmonics"] = _libaudioverse.Lav_TRIANGLE_HARMONICS
-                self._state['properties']["phase"] = _libaudioverse.Lav_OSCILLATOR_PHASE
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_FREQUENCY)
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER)
-            self._property_instances[_libaudioverse.Lav_TRIANGLE_HARMONICS] = IntProperty(handle = self.handle, slot = _libaudioverse.Lav_TRIANGLE_HARMONICS)
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_PHASE] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_PHASE)
-
+                self._state["properties"][
+                    "frequency"
+                ] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY
+                self._state["properties"][
+                    "frequency_multiplier"
+                ] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+                self._state["properties"][
+                    "harmonics"
+                ] = _libaudioverse.Lav_TRIANGLE_HARMONICS
+                self._state["properties"]["phase"] = _libaudioverse.Lav_OSCILLATOR_PHASE
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_FREQUENCY
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_OSCILLATOR_FREQUENCY
+            )
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+            ] = FloatProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_TRIANGLE_HARMONICS
+            ] = IntProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_TRIANGLE_HARMONICS
+            )
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_PHASE
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_OSCILLATOR_PHASE
+            )
 
     @property
-    def frequency(self):   
+    def frequency(self):
         """Type: float
 
 Range: [0, INFINITY]
@@ -2701,12 +3243,10 @@ The frequency of the triangle wave, in hertz."""
 
     @frequency.setter
     def frequency(self, value):
-        self.frequency.value=value
-
-
+        self.frequency.value = value
 
     @property
-    def frequency_multiplier(self):   
+    def frequency_multiplier(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -2714,16 +3254,16 @@ Default value: 1.0
 An additional multiplicative factor applied to the frequency of the oscillator.
 
 This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
-        return self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER]
+        return self._property_instances[
+            _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+        ]
 
     @frequency_multiplier.setter
     def frequency_multiplier(self, value):
-        self.frequency_multiplier.value=value
-
-
+        self.frequency_multiplier.value = value
 
     @property
-    def harmonics(self):   
+    def harmonics(self):
         """Type: int
 
 Range: [0, MAX_INT]
@@ -2738,12 +3278,10 @@ To avoid this, make sure that ``2*frequency*(2*harmonics-1)`` never goes over ha
 
     @harmonics.setter
     def harmonics(self, value):
-        self.harmonics.value=value
-
-
+        self.harmonics.value = value
 
     @property
-    def phase(self):   
+    def phase(self):
         """Type: float
 
 Range: [0.0, 1.0]
@@ -2754,13 +3292,12 @@ This is measured in periods, not in radians."""
 
     @phase.setter
     def phase(self, value):
-        self.phase.value=value
-
-
-
+        self.phase.value = value
 
 
 _types_to_classes[ObjectTypes.additive_triangle_node] = AdditiveTriangleNode
+
+
 class AdditiveSawNode(GenericNode):
     r"""The most accurate, least featureful, and slowest saw oscillator.
 
@@ -2772,28 +3309,48 @@ This oscillator is slightly under the range -1 to 1.
 Of the additive oscillators, the sawtooth wave is the worst in this respect.
 For this reason, it is probably not suitable as a control signal.
 This is not fixable using additive synthesis and is a frequency dependent effect."""
-    
+
     def __init__(self, simulation):
         super(AdditiveSawNode, self).__init__(_lav.create_additive_saw_node(simulation))
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(AdditiveSawNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["frequency"] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY
-                self._state['properties']["frequency_multiplier"] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
-                self._state['properties']["harmonics"] = _libaudioverse.Lav_SAW_HARMONICS
-                self._state['properties']["phase"] = _libaudioverse.Lav_OSCILLATOR_PHASE
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_FREQUENCY)
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER)
-            self._property_instances[_libaudioverse.Lav_SAW_HARMONICS] = IntProperty(handle = self.handle, slot = _libaudioverse.Lav_SAW_HARMONICS)
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_PHASE] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_PHASE)
-
+                self._state["properties"][
+                    "frequency"
+                ] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY
+                self._state["properties"][
+                    "frequency_multiplier"
+                ] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+                self._state["properties"][
+                    "harmonics"
+                ] = _libaudioverse.Lav_SAW_HARMONICS
+                self._state["properties"]["phase"] = _libaudioverse.Lav_OSCILLATOR_PHASE
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_FREQUENCY
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_OSCILLATOR_FREQUENCY
+            )
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+            ] = FloatProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER,
+            )
+            self._property_instances[_libaudioverse.Lav_SAW_HARMONICS] = IntProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_SAW_HARMONICS
+            )
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_PHASE
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_OSCILLATOR_PHASE
+            )
 
     @property
-    def frequency(self):   
+    def frequency(self):
         """Type: float
 
 Range: [0, INFINITY]
@@ -2803,12 +3360,10 @@ The frequency of the saw wave, in hertz."""
 
     @frequency.setter
     def frequency(self, value):
-        self.frequency.value=value
-
-
+        self.frequency.value = value
 
     @property
-    def frequency_multiplier(self):   
+    def frequency_multiplier(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -2816,16 +3371,16 @@ Default value: 1.0
 An additional multiplicative factor applied to the frequency of the oscillator.
 
 This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
-        return self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER]
+        return self._property_instances[
+            _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+        ]
 
     @frequency_multiplier.setter
     def frequency_multiplier(self, value):
-        self.frequency_multiplier.value=value
-
-
+        self.frequency_multiplier.value = value
 
     @property
-    def harmonics(self):   
+    def harmonics(self):
         """Type: int
 
 Range: [0, MAX_INT]
@@ -2840,12 +3395,10 @@ To avoid this, make sure that ``frequency*harmonics`` never goes over half your 
 
     @harmonics.setter
     def harmonics(self, value):
-        self.harmonics.value=value
-
-
+        self.harmonics.value = value
 
     @property
-    def phase(self):   
+    def phase(self):
         """Type: float
 
 Range: [0.0, 1.0]
@@ -2856,33 +3409,45 @@ This is measured in periods, not in radians."""
 
     @phase.setter
     def phase(self, value):
-        self.phase.value=value
-
-
-
+        self.phase.value = value
 
 
 _types_to_classes[ObjectTypes.additive_saw_node] = AdditiveSawNode
+
+
 class NoiseNode(GenericNode):
     r"""Generates any of a variety of types of noise."""
-    
+
     def __init__(self, simulation):
         super(NoiseNode, self).__init__(_lav.create_noise_node(simulation))
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(NoiseNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["noise_type"] = _libaudioverse.Lav_NOISE_NOISE_TYPE
-                self._state['properties']["should_normalize"] = _libaudioverse.Lav_NOISE_SHOULD_NORMALIZE
-            self._property_instances[_libaudioverse.Lav_NOISE_NOISE_TYPE] = EnumProperty(handle = self.handle, slot = _libaudioverse.Lav_NOISE_NOISE_TYPE, enum = NoiseTypes)
-            self._property_instances[_libaudioverse.Lav_NOISE_SHOULD_NORMALIZE] = BooleanProperty(handle = self.handle, slot = _libaudioverse.Lav_NOISE_SHOULD_NORMALIZE)
-
+                self._state["properties"][
+                    "noise_type"
+                ] = _libaudioverse.Lav_NOISE_NOISE_TYPE
+                self._state["properties"][
+                    "should_normalize"
+                ] = _libaudioverse.Lav_NOISE_SHOULD_NORMALIZE
+            self._property_instances[
+                _libaudioverse.Lav_NOISE_NOISE_TYPE
+            ] = EnumProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_NOISE_NOISE_TYPE,
+                enum=NoiseTypes,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_NOISE_SHOULD_NORMALIZE
+            ] = BooleanProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_NOISE_SHOULD_NORMALIZE
+            )
 
     @property
-    def noise_type(self):   
+    def noise_type(self):
         """Type: int
 
 Range: :any:`NoiseTypes`
@@ -2892,12 +3457,10 @@ The type of noise to generate."""
 
     @noise_type.setter
     def noise_type(self, value):
-        self.noise_type.value=value
-
-
+        self.noise_type.value = value
 
     @property
-    def should_normalize(self):   
+    def should_normalize(self):
         """Type: boolean
 
 
@@ -2909,118 +3472,154 @@ Turning it on is sometimes helpful and sometimes not."""
 
     @should_normalize.setter
     def should_normalize(self, value):
-        self.should_normalize.value=value
-
-
-
+        self.should_normalize.value = value
 
 
 _types_to_classes[ObjectTypes.noise_node] = NoiseNode
+
+
 class IirNode(GenericNode):
     r"""Implements arbetrary IIR filters.
 The only restriction on the filter is that the first element of the denominator must be nonzero.
 To configure this node, use the function Lav_iirNodeSetCoefficients."""
-    
+
     def __init__(self, simulation, channels):
         super(IirNode, self).__init__(_lav.create_iir_node(simulation, channels))
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(IirNode, self).init_with_handle(handle)
 
-
-    def set_coefficients(node, numerator_length, numerator, denominator_length, denominator, should_clear_history):
+    def set_coefficients(
+        node,
+        numerator_length,
+        numerator,
+        denominator_length,
+        denominator,
+        should_clear_history,
+    ):
         r"""Configure the coefficients of the IIR filter."""
-        return _lav.iir_node_set_coefficients(node, numerator_length, numerator, denominator_length, denominator, should_clear_history)
-
+        return _lav.iir_node_set_coefficients(
+            node,
+            numerator_length,
+            numerator,
+            denominator_length,
+            denominator,
+            should_clear_history,
+        )
 
 
 _types_to_classes[ObjectTypes.iir_node] = IirNode
+
+
 class GainNode(GenericNode):
     r"""This node is essentially in instantiated generic node, offering only the functionality therein.
 Its purpose is to allow changing the gain or adding offset to a large collection of nodes.
 One possible use is as a simple mixer: point all the nodes to be mixed at the input, set mul, and then point the output at the destination for the mixed audio."""
-    
+
     def __init__(self, simulation, channels):
         super(GainNode, self).__init__(_lav.create_gain_node(simulation, channels))
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(GainNode, self).init_with_handle(handle)
 
 
-
-
 _types_to_classes[ObjectTypes.gain_node] = GainNode
+
+
 class ChannelSplitterNode(GenericNode):
     r"""Libaudioverse inputs and outputs transport multiple channels of audio, which is usually the desired behavior.
 This node, coupled with the :class:`ChannelMergerNode`, allows advanced applications to manipulate the individual audio channels directly.
 The usual workflow is as follows: feed the output of a node through this node,
 modify the channels individually, and then merge them with a :class:`ChannelMergerNode`."""
-    
+
     def __init__(self, simulation, channels):
-        super(ChannelSplitterNode, self).__init__(_lav.create_channel_splitter_node(simulation, channels))
+        super(ChannelSplitterNode, self).__init__(
+            _lav.create_channel_splitter_node(simulation, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(ChannelSplitterNode, self).init_with_handle(handle)
 
 
-
-
 _types_to_classes[ObjectTypes.channel_splitter_node] = ChannelSplitterNode
+
+
 class ChannelMergerNode(GenericNode):
     r"""Libaudioverse inputs and outputs transport multiple channels of audio, which is usually the desired behavior.
 This node, coupled with the :class:`ChannelSplitterNode` , allows advanced applications to manipulate the individual audio channels directly.
 The usual workflow is as follows: feed the output of a node through a :class:`ChannelSplitterNode`,
 modify the channels individually, and then merge them with this node."""
-    
+
     def __init__(self, simulation, channels):
-        super(ChannelMergerNode, self).__init__(_lav.create_channel_merger_node(simulation, channels))
+        super(ChannelMergerNode, self).__init__(
+            _lav.create_channel_merger_node(simulation, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(ChannelMergerNode, self).init_with_handle(handle)
 
 
-
-
 _types_to_classes[ObjectTypes.channel_merger_node] = ChannelMergerNode
+
+
 class BufferNode(GenericNode):
     r"""This node plays a buffer.
 The output of this node will have as many channels as the buffer does, so connecting it directly to the simulation will have the desired effect."""
-    
+
     def __init__(self, simulation):
         super(BufferNode, self).__init__(_lav.create_buffer_node(simulation))
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(BufferNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["buffer"] = _libaudioverse.Lav_BUFFER_BUFFER
-                self._state['properties']["ended_count"] = _libaudioverse.Lav_BUFFER_ENDED_COUNT
-                self._state['properties']["looping"] = _libaudioverse.Lav_BUFFER_LOOPING
-                self._state['properties']["position"] = _libaudioverse.Lav_BUFFER_POSITION
-                self._state['properties']["rate"] = _libaudioverse.Lav_BUFFER_RATE
-            self._property_instances[_libaudioverse.Lav_BUFFER_BUFFER] = BufferProperty(handle = self.handle, slot = _libaudioverse.Lav_BUFFER_BUFFER)
-            self._property_instances[_libaudioverse.Lav_BUFFER_ENDED_COUNT] = IntProperty(handle = self.handle, slot = _libaudioverse.Lav_BUFFER_ENDED_COUNT)
-            self._property_instances[_libaudioverse.Lav_BUFFER_LOOPING] = BooleanProperty(handle = self.handle, slot = _libaudioverse.Lav_BUFFER_LOOPING)
-            self._property_instances[_libaudioverse.Lav_BUFFER_POSITION] = DoubleProperty(handle = self.handle, slot = _libaudioverse.Lav_BUFFER_POSITION)
-            self._property_instances[_libaudioverse.Lav_BUFFER_RATE] = DoubleProperty(handle = self.handle, slot = _libaudioverse.Lav_BUFFER_RATE)
-
+                self._state["properties"]["buffer"] = _libaudioverse.Lav_BUFFER_BUFFER
+                self._state["properties"][
+                    "ended_count"
+                ] = _libaudioverse.Lav_BUFFER_ENDED_COUNT
+                self._state["properties"]["looping"] = _libaudioverse.Lav_BUFFER_LOOPING
+                self._state["properties"][
+                    "position"
+                ] = _libaudioverse.Lav_BUFFER_POSITION
+                self._state["properties"]["rate"] = _libaudioverse.Lav_BUFFER_RATE
+            self._property_instances[_libaudioverse.Lav_BUFFER_BUFFER] = BufferProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_BUFFER_BUFFER
+            )
+            self._property_instances[
+                _libaudioverse.Lav_BUFFER_ENDED_COUNT
+            ] = IntProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_BUFFER_ENDED_COUNT
+            )
+            self._property_instances[
+                _libaudioverse.Lav_BUFFER_LOOPING
+            ] = BooleanProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_BUFFER_LOOPING
+            )
+            self._property_instances[
+                _libaudioverse.Lav_BUFFER_POSITION
+            ] = DoubleProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_BUFFER_POSITION
+            )
+            self._property_instances[_libaudioverse.Lav_BUFFER_RATE] = DoubleProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_BUFFER_RATE
+            )
 
     @property
-    def buffer(self):   
+    def buffer(self):
         """Type: buffer
 
 
@@ -3031,12 +3630,10 @@ Setting this property will reset position."""
 
     @buffer.setter
     def buffer(self, value):
-        self.buffer.value=value
-
-
+        self.buffer.value = value
 
     @property
-    def ended_count(self):   
+    def ended_count(self):
         """Type: int
 
 This property is read-only.
@@ -3047,11 +3644,8 @@ Note that this property can technically wrap if your buffer node manages to end 
 This should be impossible, save for the most long-running applications and shortest meaningful buffers."""
         return self._property_instances[_libaudioverse.Lav_BUFFER_ENDED_COUNT]
 
-
-
-
     @property
-    def looping(self):   
+    def looping(self):
         """Type: boolean
 
 
@@ -3061,12 +3655,10 @@ If true, this node continues playing the same buffer from the beginning after it
 
     @looping.setter
     def looping(self, value):
-        self.looping.value=value
-
-
+        self.looping.value = value
 
     @property
-    def position(self):   
+    def position(self):
         """Type: double
 
 Range: dynamic
@@ -3077,12 +3669,10 @@ The range of this property corresponds to the total duration of the buffer."""
 
     @position.setter
     def position(self, value):
-        self.position.value=value
-
-
+        self.position.value = value
 
     @property
-    def rate(self):   
+    def rate(self):
         """Type: double
 
 Range: [0, INFINITY]
@@ -3094,60 +3684,63 @@ Values less than 1.0 cause a decrease in pitch and values greater than 1.0 cause
 
     @rate.setter
     def rate(self, value):
-        self.rate.value=value
-
-
-
+        self.rate.value = value
 
     def get_end_callback(self):
         r"""Get the end callback.
         
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
-            cb = self._state['callbacks'].get("end", None)
+            cb = self._state["callbacks"].get("end", None)
             if cb is None:
                 return None
             else:
                 return cb[0]
 
-    def set_end_callback(self, callback, additional_args = None, additional_kwargs = None):
+    def set_end_callback(self, callback, additional_args=None, additional_kwargs=None):
         r"""Set the end callback.
         
 Called outside the audio threads every time the buffer reaches the end of the audio data."""
         with self._lock:
             if callback is None:
-                #delete the key, clear the callback with Libaudioverse.
+                # delete the key, clear the callback with Libaudioverse.
                 _lav.buffer_node_set_end_callback(self.handle, None, None)
-                del self._state['callbacks']['end']
+                del self._state["callbacks"]["end"]
                 return
             if additional_args is None:
                 additionnal_args = ()
             if additional_kwargs is None:
                 additional_kwargs = dict()
-            wrapper = _CallbackWrapper(self, callback, additional_args, additional_kwargs)
+            wrapper = _CallbackWrapper(
+                self, callback, additional_args, additional_kwargs
+            )
             ctypes_callback = _libaudioverse.LavParameterlessCallback(wrapper)
             _lav.buffer_node_set_end_callback(self.handle, ctypes_callback, None)
-            #if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
-            #As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
-            self._state['callbacks']["end"] = (callback, wrapper, ctypes_callback)
+            # if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
+            # As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
+            self._state["callbacks"]["end"] = (callback, wrapper, ctypes_callback)
+
 
 _types_to_classes[ObjectTypes.buffer_node] = BufferNode
+
+
 class BufferTimelineNode(GenericNode):
     r"""Represents timelines of buffers.
 
 This node provides the ability to schedule buffers to play at any specific time in the future.
 This node supports pitch bending scheduled buffers.
 There is no limit to the number of buffers which may be scheduled at any given time, and polyphony is supported."""
-    
+
     def __init__(self, simulation, channels):
-        super(BufferTimelineNode, self).__init__(_lav.create_buffer_timeline_node(simulation, channels))
+        super(BufferTimelineNode, self).__init__(
+            _lav.create_buffer_timeline_node(simulation, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(BufferTimelineNode, self).init_with_handle(handle)
-
 
     def schedule_buffer(node, buffer, time, pitch_bend):
         r"""Schedule a buffer, optionally with pitch bend.
@@ -3155,8 +3748,9 @@ The time is relative to now."""
         return _lav.buffer_timeline_node_schedule_buffer(node, buffer, time, pitch_bend)
 
 
-
 _types_to_classes[ObjectTypes.buffer_timeline_node] = BufferTimelineNode
+
+
 class RecorderNode(GenericNode):
     r"""Records audio to files.
 
@@ -3168,16 +3762,17 @@ If you don't, no recording will take place.
 
 Unlike most other nodes in Libaudioverse, it is important that you call Lav_recorderNodeStopRecording when done recording.
 Failure to do so may lead to any of a number of surprising results."""
-    
+
     def __init__(self, simulation, channels):
-        super(RecorderNode, self).__init__(_lav.create_recorder_node(simulation, channels))
+        super(RecorderNode, self).__init__(
+            _lav.create_recorder_node(simulation, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(RecorderNode, self).init_with_handle(handle)
-
 
     def start_recording(node, path):
         r"""Begin recording to the specified files.
@@ -3194,28 +3789,38 @@ Failure to do so may lead to any of a number of undesirable problems."""
         return _lav.recorder_node_stop_recording(node)
 
 
-
 _types_to_classes[ObjectTypes.recorder_node] = RecorderNode
+
+
 class ConvolverNode(GenericNode):
     r"""A simple convolver.
 
 This implements convolution directly, without use of the FFT."""
-    
+
     def __init__(self, simulation, channels):
-        super(ConvolverNode, self).__init__(_lav.create_convolver_node(simulation, channels))
+        super(ConvolverNode, self).__init__(
+            _lav.create_convolver_node(simulation, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(ConvolverNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["impulse_response"] = _libaudioverse.Lav_CONVOLVER_IMPULSE_RESPONSE
-            self._property_instances[_libaudioverse.Lav_CONVOLVER_IMPULSE_RESPONSE] = FloatArrayProperty(handle = self.handle, slot=_libaudioverse.Lav_CONVOLVER_IMPULSE_RESPONSE, lock = self._lock)
-
+                self._state["properties"][
+                    "impulse_response"
+                ] = _libaudioverse.Lav_CONVOLVER_IMPULSE_RESPONSE
+            self._property_instances[
+                _libaudioverse.Lav_CONVOLVER_IMPULSE_RESPONSE
+            ] = FloatArrayProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_CONVOLVER_IMPULSE_RESPONSE,
+                lock=self._lock,
+            )
 
     @property
-    def impulse_response(self):   
+    def impulse_response(self):
         """Type: float_array
 
 Range: [-INFINITY, INFINITY]
@@ -3225,13 +3830,12 @@ The impulse response to convolve the input with."""
 
     @impulse_response.setter
     def impulse_response(self, value):
-        self.impulse_response.value=value
-
-
-
+        self.impulse_response.value = value
 
 
 _types_to_classes[ObjectTypes.convolver_node] = ConvolverNode
+
+
 class FftConvolverNode(GenericNode):
     r"""A convolver for long impulse responses.
 
@@ -3242,16 +3846,17 @@ The difference between this node and the :class:`ConvolverNode` is the complexit
 This node is capable of handling impulses longer than a second, a case for which the :class:`ConvolverNode` will fail to run in realtime.
 
 Furthermore, as the most common operation for this node is reverb, it is possible to set each channel's response separately."""
-    
+
     def __init__(self, simulation, channels):
-        super(FftConvolverNode, self).__init__(_lav.create_fft_convolver_node(simulation, channels))
+        super(FftConvolverNode, self).__init__(
+            _lav.create_fft_convolver_node(simulation, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(FftConvolverNode, self).init_with_handle(handle)
-
 
     def set_response(node, channel, length, response):
         r"""Set the response for a specific channel."""
@@ -3259,11 +3864,14 @@ Furthermore, as the most common operation for this node is reverb, it is possibl
 
     def set_response_from_file(node, path, file_channel, convolver_channel):
         r"""Set the impulse response for a specific channel of this node from a file."""
-        return _lav.fft_convolver_node_set_response_from_file(node, path, file_channel, convolver_channel)
-
+        return _lav.fft_convolver_node_set_response_from_file(
+            node, path, file_channel, convolver_channel
+        )
 
 
 _types_to_classes[ObjectTypes.fft_convolver_node] = FftConvolverNode
+
+
 class ThreeBandEqNode(GenericNode):
     r"""A three band equalizer.
 
@@ -3277,60 +3885,94 @@ Libaudioverse does not check for this case.
 
 The slopes that this node institutes are not perfect and cannot increase effectively beyond a certain point.
 This is the least expensive of the Libaudioverse equalizers, and is sufficient for many simpler applications."""
-    
+
     def __init__(self, simulation, channels):
-        super(ThreeBandEqNode, self).__init__(_lav.create_three_band_eq_node(simulation, channels))
+        super(ThreeBandEqNode, self).__init__(
+            _lav.create_three_band_eq_node(simulation, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(ThreeBandEqNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["highband_dbgain"] = _libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_DBGAIN
-                self._state['properties']["highband_frequency"] = _libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_FREQUENCY
-                self._state['properties']["lowband_dbgain"] = _libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_DBGAIN
-                self._state['properties']["lowband_frequency"] = _libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_FREQUENCY
-                self._state['properties']["midband_dbgain"] = _libaudioverse.Lav_THREE_BAND_EQ_MIDBAND_DBGAIN
-            self._property_instances[_libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_DBGAIN] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_DBGAIN)
-            self._property_instances[_libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_FREQUENCY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_FREQUENCY)
-            self._property_instances[_libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_DBGAIN] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_DBGAIN)
-            self._property_instances[_libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_FREQUENCY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_FREQUENCY)
-            self._property_instances[_libaudioverse.Lav_THREE_BAND_EQ_MIDBAND_DBGAIN] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_THREE_BAND_EQ_MIDBAND_DBGAIN)
-
+                self._state["properties"][
+                    "highband_dbgain"
+                ] = _libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_DBGAIN
+                self._state["properties"][
+                    "highband_frequency"
+                ] = _libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_FREQUENCY
+                self._state["properties"][
+                    "lowband_dbgain"
+                ] = _libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_DBGAIN
+                self._state["properties"][
+                    "lowband_frequency"
+                ] = _libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_FREQUENCY
+                self._state["properties"][
+                    "midband_dbgain"
+                ] = _libaudioverse.Lav_THREE_BAND_EQ_MIDBAND_DBGAIN
+            self._property_instances[
+                _libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_DBGAIN
+            ] = FloatProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_DBGAIN,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_FREQUENCY
+            ] = FloatProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_FREQUENCY,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_DBGAIN
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_DBGAIN
+            )
+            self._property_instances[
+                _libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_FREQUENCY
+            ] = FloatProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_FREQUENCY,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_THREE_BAND_EQ_MIDBAND_DBGAIN
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_THREE_BAND_EQ_MIDBAND_DBGAIN
+            )
 
     @property
-    def highband_dbgain(self):   
+    def highband_dbgain(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
 Default value: 0.0
 The gain to apply to the highest frequency band as decibals."""
-        return self._property_instances[_libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_DBGAIN]
+        return self._property_instances[
+            _libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_DBGAIN
+        ]
 
     @highband_dbgain.setter
     def highband_dbgain(self, value):
-        self.highband_dbgain.value=value
-
-
+        self.highband_dbgain.value = value
 
     @property
-    def highband_frequency(self):   
+    def highband_frequency(self):
         """Type: float
 
 Range: dynamic
 Default value: 1000.0
 The frequency that divides the middle band from the high band."""
-        return self._property_instances[_libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_FREQUENCY]
+        return self._property_instances[
+            _libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_FREQUENCY
+        ]
 
     @highband_frequency.setter
     def highband_frequency(self, value):
-        self.highband_frequency.value=value
-
-
+        self.highband_frequency.value = value
 
     @property
-    def lowband_dbgain(self):   
+    def lowband_dbgain(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -3340,12 +3982,10 @@ The gain of the lowest frequency band as decibals."""
 
     @lowband_dbgain.setter
     def lowband_dbgain(self, value):
-        self.lowband_dbgain.value=value
-
-
+        self.lowband_dbgain.value = value
 
     @property
-    def lowband_frequency(self):   
+    def lowband_frequency(self):
         """Type: float
 
 Range: dynamic
@@ -3353,16 +3993,16 @@ Default value: 300.0
 The frequency that divides the low and middle bands.
 
 This ranges from 0 to nyquist."""
-        return self._property_instances[_libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_FREQUENCY]
+        return self._property_instances[
+            _libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_FREQUENCY
+        ]
 
     @lowband_frequency.setter
     def lowband_frequency(self, value):
-        self.lowband_frequency.value=value
-
-
+        self.lowband_frequency.value = value
 
     @property
-    def midband_dbgain(self):   
+    def midband_dbgain(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -3372,49 +4012,98 @@ The gain to apply to the middle band of the equalizer."""
 
     @midband_dbgain.setter
     def midband_dbgain(self, value):
-        self.midband_dbgain.value=value
-
-
-
+        self.midband_dbgain.value = value
 
 
 _types_to_classes[ObjectTypes.three_band_eq_node] = ThreeBandEqNode
+
+
 class FilteredDelayNode(GenericNode):
     r"""This node consists of a delay line with a biquad filter attached.
 The output of the delay line is filtered.
 The difference between this node and a delay line and filter pair is that this node will use the filtered output for the feedback.
 
 This node is equivalent to the delay line in the Karplus-strong algorithm."""
-    
+
     def __init__(self, simulation, max_delay, channels):
-        super(FilteredDelayNode, self).__init__(_lav.create_filtered_delay_node(simulation, max_delay, channels))
+        super(FilteredDelayNode, self).__init__(
+            _lav.create_filtered_delay_node(simulation, max_delay, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(FilteredDelayNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["dbgain"] = _libaudioverse.Lav_FILTERED_DELAY_DBGAIN
-                self._state['properties']["delay"] = _libaudioverse.Lav_FILTERED_DELAY_DELAY
-                self._state['properties']["delay_max"] = _libaudioverse.Lav_FILTERED_DELAY_DELAY_MAX
-                self._state['properties']["feedback"] = _libaudioverse.Lav_FILTERED_DELAY_FEEDBACK
-                self._state['properties']["filter_type"] = _libaudioverse.Lav_FILTERED_DELAY_FILTER_TYPE
-                self._state['properties']["frequency"] = _libaudioverse.Lav_FILTERED_DELAY_FREQUENCY
-                self._state['properties']["interpolation_time"] = _libaudioverse.Lav_FILTERED_DELAY_INTERPOLATION_TIME
-                self._state['properties']["q"] = _libaudioverse.Lav_FILTERED_DELAY_Q
-            self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_DBGAIN] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FILTERED_DELAY_DBGAIN)
-            self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_DELAY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FILTERED_DELAY_DELAY)
-            self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_DELAY_MAX] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FILTERED_DELAY_DELAY_MAX)
-            self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_FEEDBACK] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FILTERED_DELAY_FEEDBACK)
-            self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_FILTER_TYPE] = EnumProperty(handle = self.handle, slot = _libaudioverse.Lav_FILTERED_DELAY_FILTER_TYPE, enum = BiquadTypes)
-            self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_FREQUENCY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FILTERED_DELAY_FREQUENCY)
-            self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_INTERPOLATION_TIME] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FILTERED_DELAY_INTERPOLATION_TIME)
-            self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_Q] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FILTERED_DELAY_Q)
-
+                self._state["properties"][
+                    "dbgain"
+                ] = _libaudioverse.Lav_FILTERED_DELAY_DBGAIN
+                self._state["properties"][
+                    "delay"
+                ] = _libaudioverse.Lav_FILTERED_DELAY_DELAY
+                self._state["properties"][
+                    "delay_max"
+                ] = _libaudioverse.Lav_FILTERED_DELAY_DELAY_MAX
+                self._state["properties"][
+                    "feedback"
+                ] = _libaudioverse.Lav_FILTERED_DELAY_FEEDBACK
+                self._state["properties"][
+                    "filter_type"
+                ] = _libaudioverse.Lav_FILTERED_DELAY_FILTER_TYPE
+                self._state["properties"][
+                    "frequency"
+                ] = _libaudioverse.Lav_FILTERED_DELAY_FREQUENCY
+                self._state["properties"][
+                    "interpolation_time"
+                ] = _libaudioverse.Lav_FILTERED_DELAY_INTERPOLATION_TIME
+                self._state["properties"]["q"] = _libaudioverse.Lav_FILTERED_DELAY_Q
+            self._property_instances[
+                _libaudioverse.Lav_FILTERED_DELAY_DBGAIN
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FILTERED_DELAY_DBGAIN
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FILTERED_DELAY_DELAY
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FILTERED_DELAY_DELAY
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FILTERED_DELAY_DELAY_MAX
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FILTERED_DELAY_DELAY_MAX
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FILTERED_DELAY_FEEDBACK
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FILTERED_DELAY_FEEDBACK
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FILTERED_DELAY_FILTER_TYPE
+            ] = EnumProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_FILTERED_DELAY_FILTER_TYPE,
+                enum=BiquadTypes,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FILTERED_DELAY_FREQUENCY
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FILTERED_DELAY_FREQUENCY
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FILTERED_DELAY_INTERPOLATION_TIME
+            ] = FloatProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_FILTERED_DELAY_INTERPOLATION_TIME,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FILTERED_DELAY_Q
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FILTERED_DELAY_Q
+            )
 
     @property
-    def dbgain(self):   
+    def dbgain(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -3425,12 +4114,10 @@ It measures the gain that these filters apply to the part of the signal they boo
 
     @dbgain.setter
     def dbgain(self, value):
-        self.dbgain.value=value
-
-
+        self.dbgain.value = value
 
     @property
-    def delay(self):   
+    def delay(self):
         """Type: float
 
 Range: dynamic
@@ -3441,23 +4128,18 @@ The range of this property depends on the maxDelay parameter to the constructor.
 
     @delay.setter
     def delay(self, value):
-        self.delay.value=value
-
-
+        self.delay.value = value
 
     @property
-    def delay_max(self):   
+    def delay_max(self):
         """Type: float
 
 This property is read-only.
 The max delay as set at the node's creation time."""
         return self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_DELAY_MAX]
 
-
-
-
     @property
-    def feedback(self):   
+    def feedback(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -3468,12 +4150,10 @@ The output of the filter is fed back into the delay line, multiplied by this coe
 
     @feedback.setter
     def feedback(self, value):
-        self.feedback.value=value
-
-
+        self.feedback.value = value
 
     @property
-    def filter_type(self):   
+    def filter_type(self):
         """Type: int
 
 Range: :any:`BiquadTypes`
@@ -3484,12 +4164,10 @@ This determines the interpretations of the other properties on this node."""
 
     @filter_type.setter
     def filter_type(self, value):
-        self.filter_type.value=value
-
-
+        self.filter_type.value = value
 
     @property
-    def frequency(self):   
+    def frequency(self):
         """Type: float
 
 Range: [0, INFINITY]
@@ -3500,12 +4178,10 @@ What specifically this means depends on the selected filter type; for example, i
 
     @frequency.setter
     def frequency(self, value):
-        self.frequency.value=value
-
-
+        self.frequency.value = value
 
     @property
-    def interpolation_time(self):   
+    def interpolation_time(self):
         """Type: float
 
 Range: [0.001, INFINITY]
@@ -3513,16 +4189,16 @@ Default value: 0.001
 When the delay property is changed, the delay line crossfades between the old position and the new one.
 This property sets how long this crossfade will take.
 Note that for this node, it is impossible to get rid of the crossfade completely."""
-        return self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_INTERPOLATION_TIME]
+        return self._property_instances[
+            _libaudioverse.Lav_FILTERED_DELAY_INTERPOLATION_TIME
+        ]
 
     @interpolation_time.setter
     def interpolation_time(self, value):
-        self.interpolation_time.value=value
-
-
+        self.interpolation_time.value = value
 
     @property
-    def q(self):   
+    def q(self):
         """Type: float
 
 Range: [0.001, INFINITY]
@@ -3544,13 +4220,12 @@ http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt"""
 
     @q.setter
     def q(self, value):
-        self.q.value=value
-
-
-
+        self.q.value = value
 
 
 _types_to_classes[ObjectTypes.filtered_delay_node] = FilteredDelayNode
+
+
 class CrossfaderNode(GenericNode):
     r"""A crossfader is a node  which allows for selection of exactly one input.
 The selection can be changed by crossfading, a technique whereby the currently selected input is slowly faded out and the new one faded in.
@@ -3561,26 +4236,45 @@ This particular case is optimized, and special support is implemented via allowi
 This crossfader has a configurable number of inputs.
 All inputs and the single output have the same channel count.
 These are both configurable via parameters to the constructor."""
-    
+
     def __init__(self, simulation, channels, inputs):
-        super(CrossfaderNode, self).__init__(_lav.create_crossfader_node(simulation, channels, inputs))
+        super(CrossfaderNode, self).__init__(
+            _lav.create_crossfader_node(simulation, channels, inputs)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(CrossfaderNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["current_input"] = _libaudioverse.Lav_CROSSFADER_CURRENT_INPUT
-                self._state['properties']["is_crossfading"] = _libaudioverse.Lav_CROSSFADER_IS_CROSSFADING
-                self._state['properties']["target_input"] = _libaudioverse.Lav_CROSSFADER_TARGET_INPUT
-            self._property_instances[_libaudioverse.Lav_CROSSFADER_CURRENT_INPUT] = IntProperty(handle = self.handle, slot = _libaudioverse.Lav_CROSSFADER_CURRENT_INPUT)
-            self._property_instances[_libaudioverse.Lav_CROSSFADER_IS_CROSSFADING] = BooleanProperty(handle = self.handle, slot = _libaudioverse.Lav_CROSSFADER_IS_CROSSFADING)
-            self._property_instances[_libaudioverse.Lav_CROSSFADER_TARGET_INPUT] = IntProperty(handle = self.handle, slot = _libaudioverse.Lav_CROSSFADER_TARGET_INPUT)
-
+                self._state["properties"][
+                    "current_input"
+                ] = _libaudioverse.Lav_CROSSFADER_CURRENT_INPUT
+                self._state["properties"][
+                    "is_crossfading"
+                ] = _libaudioverse.Lav_CROSSFADER_IS_CROSSFADING
+                self._state["properties"][
+                    "target_input"
+                ] = _libaudioverse.Lav_CROSSFADER_TARGET_INPUT
+            self._property_instances[
+                _libaudioverse.Lav_CROSSFADER_CURRENT_INPUT
+            ] = IntProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_CROSSFADER_CURRENT_INPUT
+            )
+            self._property_instances[
+                _libaudioverse.Lav_CROSSFADER_IS_CROSSFADING
+            ] = BooleanProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_CROSSFADER_IS_CROSSFADING
+            )
+            self._property_instances[
+                _libaudioverse.Lav_CROSSFADER_TARGET_INPUT
+            ] = IntProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_CROSSFADER_TARGET_INPUT
+            )
 
     @property
-    def current_input(self):   
+    def current_input(self):
         """Type: int
 
 Range: dynamic
@@ -3593,12 +4287,10 @@ Note that the output is a combination of the current and target inputs while cro
 
     @current_input.setter
     def current_input(self, value):
-        self.current_input.value=value
-
-
+        self.current_input.value = value
 
     @property
-    def is_crossfading(self):   
+    def is_crossfading(self):
         """Type: boolean
 
 
@@ -3608,12 +4300,10 @@ True if we are crossfading, otherwise false."""
 
     @is_crossfading.setter
     def is_crossfading(self, value):
-        self.is_crossfading.value=value
-
-
+        self.is_crossfading.value = value
 
     @property
-    def target_input(self):   
+    def target_input(self):
         """Type: int
 
 This property is read-only.
@@ -3621,9 +4311,6 @@ The input which the current crossfade is headed for.
 
 When not crossfading, this property is meaningless."""
         return self._property_instances[_libaudioverse.Lav_CROSSFADER_TARGET_INPUT]
-
-
-
 
     def crossfade(node, duration, input):
         r"""Begin a crossfade.
@@ -3634,40 +4321,48 @@ Using a duration of 0 is an instantaneous crossfade, equivalent to writing direc
 Crossfades of duration 0 do not fire the finished event."""
         return _lav.crossfader_node_crossfade(node, duration, input)
 
-
     def get_finished_callback(self):
         r"""Get the finished callback.
         
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
-            cb = self._state['callbacks'].get("finished", None)
+            cb = self._state["callbacks"].get("finished", None)
             if cb is None:
                 return None
             else:
                 return cb[0]
 
-    def set_finished_callback(self, callback, additional_args = None, additional_kwargs = None):
+    def set_finished_callback(
+        self, callback, additional_args=None, additional_kwargs=None
+    ):
         r"""Set the finished callback.
         
 Called outside the audio thread when the currently scheduled crossfade finishes."""
         with self._lock:
             if callback is None:
-                #delete the key, clear the callback with Libaudioverse.
+                # delete the key, clear the callback with Libaudioverse.
                 _lav.crossfader_node_set_finished_callback(self.handle, None, None)
-                del self._state['callbacks']['finished']
+                del self._state["callbacks"]["finished"]
                 return
             if additional_args is None:
                 additionnal_args = ()
             if additional_kwargs is None:
                 additional_kwargs = dict()
-            wrapper = _CallbackWrapper(self, callback, additional_args, additional_kwargs)
+            wrapper = _CallbackWrapper(
+                self, callback, additional_args, additional_kwargs
+            )
             ctypes_callback = _libaudioverse.LavParameterlessCallback(wrapper)
-            _lav.crossfader_node_set_finished_callback(self.handle, ctypes_callback, None)
-            #if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
-            #As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
-            self._state['callbacks']["finished"] = (callback, wrapper, ctypes_callback)
+            _lav.crossfader_node_set_finished_callback(
+                self.handle, ctypes_callback, None
+            )
+            # if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
+            # As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
+            self._state["callbacks"]["finished"] = (callback, wrapper, ctypes_callback)
+
 
 _types_to_classes[ObjectTypes.crossfader_node] = CrossfaderNode
+
+
 class OnePoleFilterNode(GenericNode):
     r"""A one-pole filter section, implementing the transfer function :math:`H(Z) = rac{1}{1+A_0 Z^{-1} }`
 
@@ -3679,24 +4374,37 @@ The type of the filter is controlled via the ``is_highpass`` property.
 If said property is true, the filter becomes a highpass.
 
 Note that this filter can be swept with a-rate accuracy."""
-    
+
     def __init__(self, simulation, channels):
-        super(OnePoleFilterNode, self).__init__(_lav.create_one_pole_filter_node(simulation, channels))
+        super(OnePoleFilterNode, self).__init__(
+            _lav.create_one_pole_filter_node(simulation, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(OnePoleFilterNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["frequency"] = _libaudioverse.Lav_ONE_POLE_FILTER_FREQUENCY
-                self._state['properties']["is_highpass"] = _libaudioverse.Lav_ONE_POLE_FILTER_IS_HIGHPASS
-            self._property_instances[_libaudioverse.Lav_ONE_POLE_FILTER_FREQUENCY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_ONE_POLE_FILTER_FREQUENCY)
-            self._property_instances[_libaudioverse.Lav_ONE_POLE_FILTER_IS_HIGHPASS] = BooleanProperty(handle = self.handle, slot = _libaudioverse.Lav_ONE_POLE_FILTER_IS_HIGHPASS)
-
+                self._state["properties"][
+                    "frequency"
+                ] = _libaudioverse.Lav_ONE_POLE_FILTER_FREQUENCY
+                self._state["properties"][
+                    "is_highpass"
+                ] = _libaudioverse.Lav_ONE_POLE_FILTER_IS_HIGHPASS
+            self._property_instances[
+                _libaudioverse.Lav_ONE_POLE_FILTER_FREQUENCY
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_ONE_POLE_FILTER_FREQUENCY
+            )
+            self._property_instances[
+                _libaudioverse.Lav_ONE_POLE_FILTER_IS_HIGHPASS
+            ] = BooleanProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_ONE_POLE_FILTER_IS_HIGHPASS
+            )
 
     @property
-    def frequency(self):   
+    def frequency(self):
         """Type: float
 
 Range: dynamic
@@ -3708,12 +4416,10 @@ The range of this property is from 0 to half the sampling rate."""
 
     @frequency.setter
     def frequency(self, value):
-        self.frequency.value=value
-
-
+        self.frequency.value = value
 
     @property
-    def is_highpass(self):   
+    def is_highpass(self):
         """Type: boolean
 
 
@@ -3725,13 +4431,12 @@ If this property is false, the filter is a lowpass."""
 
     @is_highpass.setter
     def is_highpass(self, value):
-        self.is_highpass.value=value
-
-
-
+        self.is_highpass.value = value
 
 
 _types_to_classes[ObjectTypes.one_pole_filter_node] = OnePoleFilterNode
+
+
 class FirstOrderFilterNode(GenericNode):
     r"""A first order filter section, implementing the transfer function :math:`H(Z) = \frac{B_0 + B_1 Z^{-1} }{1+A_0 Z^{-1} }`
 
@@ -3742,24 +4447,37 @@ This filter is not controlled through frequency specifications.
 Instead, the position of the pole and the zero on the real axis are individually controllable with a-rate properties.
 Some helper functions exist to position them for common configurations, but other filter types do most of it better.
 The major advantage for this filter type is that it is incredibly inexpensive as compared to the :class:`IirNode` and supports automation of the pole and zero's position."""
-    
+
     def __init__(self, simulation, channels):
-        super(FirstOrderFilterNode, self).__init__(_lav.create_first_order_filter_node(simulation, channels))
+        super(FirstOrderFilterNode, self).__init__(
+            _lav.create_first_order_filter_node(simulation, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(FirstOrderFilterNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["pole"] = _libaudioverse.Lav_FIRST_ORDER_FILTER_POLE
-                self._state['properties']["zero"] = _libaudioverse.Lav_FIRST_ORDER_FILTER_ZERO
-            self._property_instances[_libaudioverse.Lav_FIRST_ORDER_FILTER_POLE] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FIRST_ORDER_FILTER_POLE)
-            self._property_instances[_libaudioverse.Lav_FIRST_ORDER_FILTER_ZERO] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FIRST_ORDER_FILTER_ZERO)
-
+                self._state["properties"][
+                    "pole"
+                ] = _libaudioverse.Lav_FIRST_ORDER_FILTER_POLE
+                self._state["properties"][
+                    "zero"
+                ] = _libaudioverse.Lav_FIRST_ORDER_FILTER_ZERO
+            self._property_instances[
+                _libaudioverse.Lav_FIRST_ORDER_FILTER_POLE
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FIRST_ORDER_FILTER_POLE
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FIRST_ORDER_FILTER_ZERO
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FIRST_ORDER_FILTER_ZERO
+            )
 
     @property
-    def pole(self):   
+    def pole(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -3772,12 +4490,10 @@ For a stable filter, the value of this property should usually between -1 and 1.
 
     @pole.setter
     def pole(self, value):
-        self.pole.value=value
-
-
+        self.pole.value = value
 
     @property
-    def zero(self):   
+    def zero(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -3787,9 +4503,7 @@ The position of the zero on the real axis."""
 
     @zero.setter
     def zero(self, value):
-        self.zero.value=value
-
-
+        self.zero.value = value
 
     def configure_allpass(node, frequency):
         r"""Configure this node as an allpass.
@@ -3808,34 +4522,60 @@ This is equivalent to the :class:`OnePoleFilterNode` lowpass configuration."""
         return _lav.first_order_filter_node_configure_lowpass(node, frequency)
 
 
-
 _types_to_classes[ObjectTypes.first_order_filter_node] = FirstOrderFilterNode
+
+
 class AllpassNode(GenericNode):
     r"""Implements a first-order allpass filter whose transfer function is :math:`\frac{c+Z^{-d} }{1 + cZ^{-d} }` where ``c`` is the coefficient and ``d`` the delay in samples.
 
 This filter is useful in various reverb designs."""
-    
+
     def __init__(self, simulation, channels, max_delay):
-        super(AllpassNode, self).__init__(_lav.create_allpass_node(simulation, channels, max_delay))
+        super(AllpassNode, self).__init__(
+            _lav.create_allpass_node(simulation, channels, max_delay)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(AllpassNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["coefficient"] = _libaudioverse.Lav_ALLPASS_COEFFICIENT
-                self._state['properties']["delay_max"] = _libaudioverse.Lav_ALLPASS_DELAY_SAMPLES_MAX
-                self._state['properties']["delay_samples"] = _libaudioverse.Lav_ALLPASS_DELAY_SAMPLES
-                self._state['properties']["interpolation_time"] = _libaudioverse.Lav_ALLPASS_INTERPOLATION_TIME
-            self._property_instances[_libaudioverse.Lav_ALLPASS_COEFFICIENT] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_ALLPASS_COEFFICIENT)
-            self._property_instances[_libaudioverse.Lav_ALLPASS_DELAY_SAMPLES_MAX] = IntProperty(handle = self.handle, slot = _libaudioverse.Lav_ALLPASS_DELAY_SAMPLES_MAX)
-            self._property_instances[_libaudioverse.Lav_ALLPASS_DELAY_SAMPLES] = IntProperty(handle = self.handle, slot = _libaudioverse.Lav_ALLPASS_DELAY_SAMPLES)
-            self._property_instances[_libaudioverse.Lav_ALLPASS_INTERPOLATION_TIME] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_ALLPASS_INTERPOLATION_TIME)
-
+                self._state["properties"][
+                    "coefficient"
+                ] = _libaudioverse.Lav_ALLPASS_COEFFICIENT
+                self._state["properties"][
+                    "delay_max"
+                ] = _libaudioverse.Lav_ALLPASS_DELAY_SAMPLES_MAX
+                self._state["properties"][
+                    "delay_samples"
+                ] = _libaudioverse.Lav_ALLPASS_DELAY_SAMPLES
+                self._state["properties"][
+                    "interpolation_time"
+                ] = _libaudioverse.Lav_ALLPASS_INTERPOLATION_TIME
+            self._property_instances[
+                _libaudioverse.Lav_ALLPASS_COEFFICIENT
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_ALLPASS_COEFFICIENT
+            )
+            self._property_instances[
+                _libaudioverse.Lav_ALLPASS_DELAY_SAMPLES_MAX
+            ] = IntProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_ALLPASS_DELAY_SAMPLES_MAX
+            )
+            self._property_instances[
+                _libaudioverse.Lav_ALLPASS_DELAY_SAMPLES
+            ] = IntProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_ALLPASS_DELAY_SAMPLES
+            )
+            self._property_instances[
+                _libaudioverse.Lav_ALLPASS_INTERPOLATION_TIME
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_ALLPASS_INTERPOLATION_TIME
+            )
 
     @property
-    def coefficient(self):   
+    def coefficient(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -3847,23 +4587,18 @@ For those not familiar with digital signal processing, this controls how quickly
 
     @coefficient.setter
     def coefficient(self, value):
-        self.coefficient.value=value
-
-
+        self.coefficient.value = value
 
     @property
-    def delay_max(self):   
+    def delay_max(self):
         """Type: int
 
 This property is read-only.
 The max delay as set at the node's creation time."""
         return self._property_instances[_libaudioverse.Lav_ALLPASS_DELAY_SAMPLES_MAX]
 
-
-
-
     @property
-    def delay_samples(self):   
+    def delay_samples(self):
         """Type: int
 
 Range: dynamic
@@ -3876,12 +4611,10 @@ Note that values less than 1 sample still introduce delay."""
 
     @delay_samples.setter
     def delay_samples(self, value):
-        self.delay_samples.value=value
-
-
+        self.delay_samples.value = value
 
     @property
-    def interpolation_time(self):   
+    def interpolation_time(self):
         """Type: float
 
 Range: [0.001, INFINITY]
@@ -3893,13 +4626,12 @@ Note that for this node, it is impossible to get rid of the crossfade completely
 
     @interpolation_time.setter
     def interpolation_time(self, value):
-        self.interpolation_time.value=value
-
-
-
+        self.interpolation_time.value = value
 
 
 _types_to_classes[ObjectTypes.allpass_node] = AllpassNode
+
+
 class NestedAllpassNetworkNode(GenericNode):
     r"""
 This node is deprecated.
@@ -3925,16 +4657,17 @@ The default configuration of this node is silence.  To return to this configurat
 
 Note that this node is extremely slow as compared to other Libaudioverse nodes.
 The primary use of this node is for experimentation purposes and the development of faster Libaudioverse nodes."""
-    
+
     def __init__(self, simulation, channels):
-        super(NestedAllpassNetworkNode, self).__init__(_lav.create_nested_allpass_network_node(simulation, channels))
+        super(NestedAllpassNetworkNode, self).__init__(
+            _lav.create_nested_allpass_network_node(simulation, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(NestedAllpassNetworkNode, self).init_with_handle(handle)
-
 
     def append_allpass(node, delay, coefficient):
         r"""Append an ordinary first-order allpass at the current nesting level."""
@@ -3943,11 +4676,15 @@ The primary use of this node is for experimentation purposes and the development
     def append_biquad(node, type, frequency, db_gain, q):
         r"""Append a biquad filter.
 This is the same as the :class:`BiquadNode`."""
-        return _lav.nested_allpass_network_node_append_biquad(node, type, frequency, db_gain, q)
+        return _lav.nested_allpass_network_node_append_biquad(
+            node, type, frequency, db_gain, q
+        )
 
     def append_one_pole(node, frequency, is_highpass):
         r"""Appenda  one-pole filter."""
-        return _lav.nested_allpass_network_node_append_one_pole(node, frequency, is_highpass)
+        return _lav.nested_allpass_network_node_append_one_pole(
+            node, frequency, is_highpass
+        )
 
     def append_reader(node, mul):
         r"""The output will include audio from wherever this is appended.
@@ -3970,38 +4707,66 @@ Behavior is undefined if this function is called without an enclosing allpass fi
         return _lav.nested_allpass_network_node_end_nesting(node)
 
 
-
 _types_to_classes[ObjectTypes.nested_allpass_network_node] = NestedAllpassNetworkNode
+
+
 class FdnReverbNode(GenericNode):
     r"""An 8 delay line FDN reverberator, based off a householder reflection.
 
 This reverb takes as its input and outputs ats its output quadraphonic audio.
 Panning effects will still be observed at the output with some bias.
 If a stereo signal is fed into the reverb and the reverb is likewise connected to a stereo output, the input signal's volume will effectively be halved."""
-    
+
     def __init__(self, simulation):
         super(FdnReverbNode, self).__init__(_lav.create_fdn_reverb_node(simulation))
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(FdnReverbNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["cutoff_frequency"] = _libaudioverse.Lav_FDN_REVERB_CUTOFF_FREQUENCY
-                self._state['properties']["delay_modulation_depth"] = _libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_DEPTH
-                self._state['properties']["delay_modulation_frequency"] = _libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_FREQUENCY
-                self._state['properties']["density"] = _libaudioverse.Lav_FDN_REVERB_DENSITY
-                self._state['properties']["t60"] = _libaudioverse.Lav_FDN_REVERB_T60
-            self._property_instances[_libaudioverse.Lav_FDN_REVERB_CUTOFF_FREQUENCY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FDN_REVERB_CUTOFF_FREQUENCY)
-            self._property_instances[_libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_DEPTH] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_DEPTH)
-            self._property_instances[_libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_FREQUENCY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_FREQUENCY)
-            self._property_instances[_libaudioverse.Lav_FDN_REVERB_DENSITY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FDN_REVERB_DENSITY)
-            self._property_instances[_libaudioverse.Lav_FDN_REVERB_T60] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_FDN_REVERB_T60)
-
+                self._state["properties"][
+                    "cutoff_frequency"
+                ] = _libaudioverse.Lav_FDN_REVERB_CUTOFF_FREQUENCY
+                self._state["properties"][
+                    "delay_modulation_depth"
+                ] = _libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_DEPTH
+                self._state["properties"][
+                    "delay_modulation_frequency"
+                ] = _libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_FREQUENCY
+                self._state["properties"][
+                    "density"
+                ] = _libaudioverse.Lav_FDN_REVERB_DENSITY
+                self._state["properties"]["t60"] = _libaudioverse.Lav_FDN_REVERB_T60
+            self._property_instances[
+                _libaudioverse.Lav_FDN_REVERB_CUTOFF_FREQUENCY
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FDN_REVERB_CUTOFF_FREQUENCY
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_DEPTH
+            ] = FloatProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_DEPTH,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_FREQUENCY
+            ] = FloatProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_FREQUENCY,
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FDN_REVERB_DENSITY
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FDN_REVERB_DENSITY
+            )
+            self._property_instances[_libaudioverse.Lav_FDN_REVERB_T60] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FDN_REVERB_T60
+            )
 
     @property
-    def cutoff_frequency(self):   
+    def cutoff_frequency(self):
         """Type: float
 
 Range: dynamic
@@ -4012,12 +4777,10 @@ Lowering this property leads to softer and less harsh reverb."""
 
     @cutoff_frequency.setter
     def cutoff_frequency(self, value):
-        self.cutoff_frequency.value=value
-
-
+        self.cutoff_frequency.value = value
 
     @property
-    def delay_modulation_depth(self):   
+    def delay_modulation_depth(self):
         """Type: float
 
 Range: [0.0, 1.0]
@@ -4025,31 +4788,31 @@ Default value: 0.0
 Controls how deep the modulation of the delay lines is.
 Increasing this property slightly makes the late reverb sound less metallic, while extremely high values add chorus-like effects.
 This property acts as a multiplier, and the correspondance between it and physical units is intentionally left unspecified."""
-        return self._property_instances[_libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_DEPTH]
+        return self._property_instances[
+            _libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_DEPTH
+        ]
 
     @delay_modulation_depth.setter
     def delay_modulation_depth(self, value):
-        self.delay_modulation_depth.value=value
-
-
+        self.delay_modulation_depth.value = value
 
     @property
-    def delay_modulation_frequency(self):   
+    def delay_modulation_frequency(self):
         """Type: float
 
 Range: [0.0, 500.0]
 Default value: 10.0
 Controls how fast the internal delay lines modulate."""
-        return self._property_instances[_libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_FREQUENCY]
+        return self._property_instances[
+            _libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_FREQUENCY
+        ]
 
     @delay_modulation_frequency.setter
     def delay_modulation_frequency(self, value):
-        self.delay_modulation_frequency.value=value
-
-
+        self.delay_modulation_frequency.value = value
 
     @property
-    def density(self):   
+    def density(self):
         """Type: float
 
 Range: [0.0, 1.0]
@@ -4060,12 +4823,10 @@ Extremely low values sound "grainy"; extremely high values tend to resonate."""
 
     @density.setter
     def density(self, value):
-        self.density.value=value
-
-
+        self.density.value = value
 
     @property
-    def t60(self):   
+    def t60(self):
         """Type: float
 
 Range: [0.0, INFINITY]
@@ -4075,39 +4836,64 @@ The ``t60`` is the time it takes the reverb to decay by 60 decibals."""
 
     @t60.setter
     def t60(self, value):
-        self.t60.value=value
-
-
-
+        self.t60.value = value
 
 
 _types_to_classes[ObjectTypes.fdn_reverb_node] = FdnReverbNode
+
+
 class BlitNode(GenericNode):
     r"""Generates bandlimited impulse trains.  These sound like a buzz, but have important applications in the  alias-free synthesis of analog waveforms."""
-    
+
     def __init__(self, simulation):
         super(BlitNode, self).__init__(_lav.create_blit_node(simulation))
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(BlitNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["frequency"] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY
-                self._state['properties']["frequency_multiplier"] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
-                self._state['properties']["harmonics"] = _libaudioverse.Lav_BLIT_HARMONICS
-                self._state['properties']["phase"] = _libaudioverse.Lav_OSCILLATOR_PHASE
-                self._state['properties']["should_normalize"] = _libaudioverse.Lav_BLIT_SHOULD_NORMALIZE
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_FREQUENCY)
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER)
-            self._property_instances[_libaudioverse.Lav_BLIT_HARMONICS] = IntProperty(handle = self.handle, slot = _libaudioverse.Lav_BLIT_HARMONICS)
-            self._property_instances[_libaudioverse.Lav_OSCILLATOR_PHASE] = FloatProperty(handle = self.handle, slot = _libaudioverse.Lav_OSCILLATOR_PHASE)
-            self._property_instances[_libaudioverse.Lav_BLIT_SHOULD_NORMALIZE] = BooleanProperty(handle = self.handle, slot = _libaudioverse.Lav_BLIT_SHOULD_NORMALIZE)
-
+                self._state["properties"][
+                    "frequency"
+                ] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY
+                self._state["properties"][
+                    "frequency_multiplier"
+                ] = _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+                self._state["properties"][
+                    "harmonics"
+                ] = _libaudioverse.Lav_BLIT_HARMONICS
+                self._state["properties"]["phase"] = _libaudioverse.Lav_OSCILLATOR_PHASE
+                self._state["properties"][
+                    "should_normalize"
+                ] = _libaudioverse.Lav_BLIT_SHOULD_NORMALIZE
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_FREQUENCY
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_OSCILLATOR_FREQUENCY
+            )
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+            ] = FloatProperty(
+                handle=self.handle,
+                slot=_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER,
+            )
+            self._property_instances[_libaudioverse.Lav_BLIT_HARMONICS] = IntProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_BLIT_HARMONICS
+            )
+            self._property_instances[
+                _libaudioverse.Lav_OSCILLATOR_PHASE
+            ] = FloatProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_OSCILLATOR_PHASE
+            )
+            self._property_instances[
+                _libaudioverse.Lav_BLIT_SHOULD_NORMALIZE
+            ] = BooleanProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_BLIT_SHOULD_NORMALIZE
+            )
 
     @property
-    def frequency(self):   
+    def frequency(self):
         """Type: float
 
 Range: [0, INFINITY]
@@ -4117,12 +4903,10 @@ The frequency of the impulse train in HZ."""
 
     @frequency.setter
     def frequency(self, value):
-        self.frequency.value=value
-
-
+        self.frequency.value = value
 
     @property
-    def frequency_multiplier(self):   
+    def frequency_multiplier(self):
         """Type: float
 
 Range: [-INFINITY, INFINITY]
@@ -4130,16 +4914,16 @@ Default value: 1.0
 An additional multiplicative factor applied to the frequency of the oscillator.
 
 This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
-        return self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER]
+        return self._property_instances[
+            _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
+        ]
 
     @frequency_multiplier.setter
     def frequency_multiplier(self, value):
-        self.frequency_multiplier.value=value
-
-
+        self.frequency_multiplier.value = value
 
     @property
-    def harmonics(self):   
+    def harmonics(self):
         """Type: int
 
 Range: [0, MAX_INT]
@@ -4150,12 +4934,10 @@ The number of harmonics to include.
 
     @harmonics.setter
     def harmonics(self, value):
-        self.harmonics.value=value
-
-
+        self.harmonics.value = value
 
     @property
-    def phase(self):   
+    def phase(self):
         """Type: float
 
 Range: [0.0, 1.0]
@@ -4166,12 +4948,10 @@ This is measured in periods, not in radians."""
 
     @phase.setter
     def phase(self, value):
-        self.phase.value=value
-
-
+        self.phase.value = value
 
     @property
-    def should_normalize(self):   
+    def should_normalize(self):
         """Type: boolean
 
 
@@ -4183,53 +4963,61 @@ The default is true."""
 
     @should_normalize.setter
     def should_normalize(self, value):
-        self.should_normalize.value=value
-
-
-
+        self.should_normalize.value = value
 
 
 _types_to_classes[ObjectTypes.blit_node] = BlitNode
+
+
 class DcBlockerNode(GenericNode):
     r"""A DC blocker.
 This is a first-order filter, the best possible within numerical limits.
 It consists of a zero at DC, and a pole as close to DC as we can put it.
 For any sampling rate, this node is the best first-order section for DC removal possible."""
-    
+
     def __init__(self, simulation, channels):
-        super(DcBlockerNode, self).__init__(_lav.create_dc_blocker_node(simulation, channels))
+        super(DcBlockerNode, self).__init__(
+            _lav.create_dc_blocker_node(simulation, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(DcBlockerNode, self).init_with_handle(handle)
 
 
-
-
 _types_to_classes[ObjectTypes.dc_blocker_node] = DcBlockerNode
+
+
 class LeakyIntegratorNode(GenericNode):
     r"""A leaky integrator.
 Leaky integrators integrate their input signals, while leaking over time.
 Introducing the leak allows for avoiding DC offset problems.
 If you feed this node a signal that is zero, it will slowly decrease the output in accordance with the Lav_LEAKY_INTEGRATOR_LEAKYNESS property."""
-    
+
     def __init__(self, simulation, channels):
-        super(LeakyIntegratorNode, self).__init__(_lav.create_leaky_integrator_node(simulation, channels))
+        super(LeakyIntegratorNode, self).__init__(
+            _lav.create_leaky_integrator_node(simulation, channels)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(LeakyIntegratorNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["leakyness"] = _libaudioverse.Lav_LEAKY_INTEGRATOR_LEAKYNESS
-            self._property_instances[_libaudioverse.Lav_LEAKY_INTEGRATOR_LEAKYNESS] = DoubleProperty(handle = self.handle, slot = _libaudioverse.Lav_LEAKY_INTEGRATOR_LEAKYNESS)
-
+                self._state["properties"][
+                    "leakyness"
+                ] = _libaudioverse.Lav_LEAKY_INTEGRATOR_LEAKYNESS
+            self._property_instances[
+                _libaudioverse.Lav_LEAKY_INTEGRATOR_LEAKYNESS
+            ] = DoubleProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_LEAKY_INTEGRATOR_LEAKYNESS
+            )
 
     @property
-    def leakyness(self):   
+    def leakyness(self):
         """Type: double
 
 Range: [0.0, 1.0]
@@ -4241,13 +5029,12 @@ If you feed the leaky integrator a constant signal of 0, then this property's va
 
     @leakyness.setter
     def leakyness(self, value):
-        self.leakyness.value=value
-
-
-
+        self.leakyness.value = value
 
 
 _types_to_classes[ObjectTypes.leaky_integrator_node] = LeakyIntegratorNode
+
+
 class FileStreamerNode(GenericNode):
     r"""Streams a file, which must be specified to the constructor and cannot be changed thereafter.
 
@@ -4257,26 +5044,45 @@ Libaudioverse plans to eventually offer a more generic streaming node that also 
 
 In order to stream a file, it must be passed through a resampler.
 Consequentlty, the position property is slightly inaccurate and the ended property and callback are slightly delayed."""
-    
+
     def __init__(self, simulation, path):
-        super(FileStreamerNode, self).__init__(_lav.create_file_streamer_node(simulation, path))
+        super(FileStreamerNode, self).__init__(
+            _lav.create_file_streamer_node(simulation, path)
+        )
 
     def init_with_handle(self, handle):
         with _object_states_lock:
-            #our super implementation adds us, so remember if we weren't there.
+            # our super implementation adds us, so remember if we weren't there.
             should_add_properties = handle.handle not in _object_states
             super(FileStreamerNode, self).init_with_handle(handle)
             if should_add_properties:
-                self._state['properties']["ended"] = _libaudioverse.Lav_FILE_STREAMER_ENDED
-                self._state['properties']["looping"] = _libaudioverse.Lav_FILE_STREAMER_LOOPING
-                self._state['properties']["position"] = _libaudioverse.Lav_FILE_STREAMER_POSITION
-            self._property_instances[_libaudioverse.Lav_FILE_STREAMER_ENDED] = BooleanProperty(handle = self.handle, slot = _libaudioverse.Lav_FILE_STREAMER_ENDED)
-            self._property_instances[_libaudioverse.Lav_FILE_STREAMER_LOOPING] = BooleanProperty(handle = self.handle, slot = _libaudioverse.Lav_FILE_STREAMER_LOOPING)
-            self._property_instances[_libaudioverse.Lav_FILE_STREAMER_POSITION] = DoubleProperty(handle = self.handle, slot = _libaudioverse.Lav_FILE_STREAMER_POSITION)
-
+                self._state["properties"][
+                    "ended"
+                ] = _libaudioverse.Lav_FILE_STREAMER_ENDED
+                self._state["properties"][
+                    "looping"
+                ] = _libaudioverse.Lav_FILE_STREAMER_LOOPING
+                self._state["properties"][
+                    "position"
+                ] = _libaudioverse.Lav_FILE_STREAMER_POSITION
+            self._property_instances[
+                _libaudioverse.Lav_FILE_STREAMER_ENDED
+            ] = BooleanProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FILE_STREAMER_ENDED
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FILE_STREAMER_LOOPING
+            ] = BooleanProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FILE_STREAMER_LOOPING
+            )
+            self._property_instances[
+                _libaudioverse.Lav_FILE_STREAMER_POSITION
+            ] = DoubleProperty(
+                handle=self.handle, slot=_libaudioverse.Lav_FILE_STREAMER_POSITION
+            )
 
     @property
-    def ended(self):   
+    def ended(self):
         """Type: boolean
 
 This property is read-only.
@@ -4284,11 +5090,8 @@ Switches from false to true once the stream has ended completely and gone silent
 This property will never go true unless looping is false."""
         return self._property_instances[_libaudioverse.Lav_FILE_STREAMER_ENDED]
 
-
-
-
     @property
-    def looping(self):   
+    def looping(self):
         """Type: boolean
 
 
@@ -4300,12 +5103,10 @@ If ended is already true, it may take until the end of the next processing block
 
     @looping.setter
     def looping(self, value):
-        self.looping.value=value
-
-
+        self.looping.value = value
 
     @property
-    def position(self):   
+    def position(self):
         """Type: double
 
 Range: dynamic
@@ -4317,42 +5118,42 @@ Note that this property may be slightly inaccurate because this node has to pass
 
     @position.setter
     def position(self, value):
-        self.position.value=value
-
-
-
+        self.position.value = value
 
     def get_end_callback(self):
         r"""Get the end callback.
         
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
-            cb = self._state['callbacks'].get("end", None)
+            cb = self._state["callbacks"].get("end", None)
             if cb is None:
                 return None
             else:
                 return cb[0]
 
-    def set_end_callback(self, callback, additional_args = None, additional_kwargs = None):
+    def set_end_callback(self, callback, additional_args=None, additional_kwargs=None):
         r"""Set the end callback.
         
 Called outside the audio threads after the stream has both reached its end and gone silent.
 When called, ended will be set to true,."""
         with self._lock:
             if callback is None:
-                #delete the key, clear the callback with Libaudioverse.
+                # delete the key, clear the callback with Libaudioverse.
                 _lav.file_streamer_node_set_end_callback(self.handle, None, None)
-                del self._state['callbacks']['end']
+                del self._state["callbacks"]["end"]
                 return
             if additional_args is None:
                 additionnal_args = ()
             if additional_kwargs is None:
                 additional_kwargs = dict()
-            wrapper = _CallbackWrapper(self, callback, additional_args, additional_kwargs)
+            wrapper = _CallbackWrapper(
+                self, callback, additional_args, additional_kwargs
+            )
             ctypes_callback = _libaudioverse.LavParameterlessCallback(wrapper)
             _lav.file_streamer_node_set_end_callback(self.handle, ctypes_callback, None)
-            #if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
-            #As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
-            self._state['callbacks']["end"] = (callback, wrapper, ctypes_callback)
+            # if we get here, we hold both objects; we succeeded in setting because no exception was thrown.
+            # As this is just for GC and the getter, we don't deal with the overhead of an object, and just use tuples.
+            self._state["callbacks"]["end"] = (callback, wrapper, ctypes_callback)
+
 
 _types_to_classes[ObjectTypes.file_streamer_node] = FileStreamerNode

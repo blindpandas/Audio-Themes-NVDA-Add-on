@@ -1,56 +1,54 @@
-# Audio Themes Add-on For NVDA
-This add-on creates a virtual audio display that plays sounds when focusing or navigating objects (such as buttons, links etc...) the audio will be played in a location that corresponds to the object's location in the visual display.
+# NVDA Add-on Scons Template #
 
-The add-on also enables you to activate, install, remove, edit, create, and distribute audio theme packages.
+This package contains a basic template structure for NVDA add-on development, building, distribution and localization.
+For details about NVDA add-on development please see the [NVDA Developer Guide](http://www.nvda-project.org/documentation/developerGuide.html).
+The NVDA addon development/discussion list [is here](https://nvda-addons.groups.io/g/nvda-addons)
 
+Copyright (C) 2012-2019 nvda addon team contributors.
+
+This package is distributed under the terms of the GNU General Public License, version 2 or later. Please see the file COPYING.txt for further details.
+
+## Features
+
+This template provides the following features you can use to help NVDA add-on development:
+
+* Automatic add-on package creation, with naming and version loaded from a centralized build variables file (buildVars.py).
+* Manifest file creation using a template (manifest.ini.tpl). Build variables are replaced on this template.
+* Compilation of gettext mo files before distribution, when needed.
+	* To generate a gettext pot file, please run scons pot. A **addon-name.pot** file will be created with all gettext messages for your add-on. You need to check the buildVars.i18nSources variable to comply with your requirements.
+* Automatic generation of manifest localization files directly from gettext po files. Please make sure buildVars.py is included in i18nFiles.
+* Automatic generation of HTML documents from markdown (.md) files, to manage documentation in different languages.
+
+## Requirements
+
+You need the following software to use this code for your NVDA add-ons development:
+
+* a Python distribution (2.7 or greater is recommended). Check the [Python Website](http://www.python.org) for Windows Installers.
+* Scons - [Website](http://www.scons.org/) - version 2.1.0 or greater. Install it using **easy_install** or grab an windows installer from the website.
+* GNU Gettext tools, if you want to have localization support for your add-on - Recommended. Any Linux distro or cygwin have those installed. You can find windows builds [here](http://gnuwin32.sourceforge.net/downlinks/gettext.php).
+* Markdown-2.0.1 or greater, if you want to convert documentation files to HTML documents. You can [Download Markdown-2.0.1 installer for Windows](https://pypi.python.org/pypi/Markdown/2.0.1) or get it using `easy_install markdown`.
 
 ## Usage
-This add-on enables you to perform three distinct tasks, including managing your installed audio themes, editing the currently active audio theme, and creating a new audio theme.
 
-You can access these functions from the add-on's menu which is found in the main NVDA menu.
+### To create a new NVDA add-on, taking advantage of this template:
 
+1. Create an empty folder to hold the files for your add-on.
+2. Copy the **site_scons** folder, and the following files, into your new empty folder: **buildVars.py**, **manifest.ini.tpl**, **manifest-translated.ini.tpl**, **sconstruct**, **.gitignore**, and **.gitattributes**
+3. Create an **addon** folder inside your new folder. Inside the **addon* folder, create needed folders for the add-on modules (e.g. appModules, synthDrivers, etc.). An add-on may have one or more module folders.
+4. In the **buildVars.py** file, change variable **addon_info** with your add-on's information (name, summary, description, version, author and url).
+5. Put your code in the usual folders for NVDA extension, under the **addon** folder. For instance: globalPlugins, synthDrivers, etc.
+6. Gettext translations must be placed into addon\locale\<lang>/LC_MESSAGES\nvda.po. 
 
-### Managing Your Audio Themes
-- The 'Manage Audio Themes' dialogue enables you to activate or deactivate audio themes, in addition to installing and removing audio themes.
-- In this dialogue there are some additional options including:
- - Play sounds in 3D mode: When you uncheck this box the add-on will play the sounds in mono mode (always in the centre of the audio display) regardless of the object location.
- - Speak role such as button, edit box , link etc.: When you uncheck this box NVDA will start announcing the role when focusing objects rather than ignoring it (which is the default behaviour when installing this add-on).
- - Use Synthesizer Volume: Checking this box will set the sound player of this add-on to use the active voice sound, thus making all audible output the same as the voice volume when ever you change that volume.
- - Audio Theme Volume Slider: Alternatively you can set the volume for the add-on using this slider. Setting it to 0 will mute all sounds, and 100 is the maximum volume.
+### To manage documentation files for your addon:
 
+1. Copy the **readme.md** file for your add-on to the first created folder, where you copied **buildVars.py**. You can also copy **style.css** to improve the presentation of HTML documents.
+2. Documentation files (named **readme.md**) must be placed into addon\doc\<lang>/.
 
-### Editing The Active Audio Theme:
-- When you click on the 'Edit the active audio theme' option, a dialogue will open with a list containing all the sounds contained in the currently active theme. From this dialogue you can:
-- Change Selected: Selecting a sound from the list and clicking this button, will  open a standard open file dialogue, select an ogg or wave audio file from your file system to replace the selected sound, and click OK to complete the process.
-- Remove Selected: This will remove the selected sound from the theme, click 'Yes' to confirm the removal process, and the selected sound will be removed.
-- Add New Sound: When clicking this button a new dialogue will be shown. From the first combo box in the newly opened dialogue select the object type you want to assign the sound to it, for example (button, link, tab, menu and so on), then click the 'Browse to an audio file' button to select the sound you want to assign for the previously selected object type. Optionally you can click the preview   button to preview the sound, and finally clicking the OK button will apply the changes and assign the selected sound to the selected object. 
-- Close: Will  exit the dialogue without performing any action.
++### To package the add-on for distribution:
 
+1. Open a command line, change to the folder that has the **sconstruct** file (usually the root of your add-on development folder) and run the **scons** command. The created add-on, if there were no errors, is placed in the current directory.
+2. You can further customize variables in the **buildVars.py** file.
 
-### Creating A New Audio Theme
-- If you have a good sound production skills you can apply them here and create an audio theme of your own, rather than editing an existing one. To do this you can follow these steps.
-- Collect your audio files in one place, they must be in ogg or wave format, and rename them to what ever make sense to you. For example when I was creating the default audio theme for this add-on, I grouped sounds according to interaction patterns, for example, the combo box, the drop down button, and the split button can all have the same sound, while the Check box, The toggle button, and the menu check item can have the same sound.
-- From the add-on menu click 'Create a new audio theme'
-- A dialogue will be opened asking you for some information about your new audio theme, including:
-*	Theme Name : The name of your theme which will be shown in the audio themes manager. This must be a valid windows folder name.
-*	Your Name: Enter your real name or a nick name.
-*	Theme description : A Brief description about your audio theme.
-- Click OK to move to the next step.
-- In the next step a dialogue similar to the 'Audio Themes Editor' will be shown, and from their the process is the same as the Theme editing process, so refer to 'Editing The Active Audio Theme' section.
+Note that this template only provides a basic add-on structure and build infrastructure. You may need to adapt it for your specific needs.
 
-
-## Copyright:
-Copyright (c) 2014-2016 Musharraf Omer<ibnomer2011@hotmail.com> and Others
-
-Although this add-on was started as an independent project, it evolved to be an enhanced version of the 'Unspoken' add-on by Austin Hicks (camlorn38@gmail.com) and Bryan Smart (bryansmart@bryansmart.com). The majority of this add-on's development went into creating the tools to manage, edit and create audio theme packages. So a big thank you to them for creating such a wonderful add-on, and making it available for us to build on top of their work.
-
-
-## A Note on Third-party audio files:
-The **Default** audio theme package in this add-on uses sounds from several sources, here is a breakdown for them:
-- Unspoken 3D Audio: An add-on for NVDA
-- TWBlue: A free and open source twitter client
-- Mushy TalkBack: An alternative talkback with better sounds.
-
-
-## Licence
-Licensed under the GNU General Public License. See the file **copying** for more details.
+If you have any issues please use the NVDA addon list mentioned above.
