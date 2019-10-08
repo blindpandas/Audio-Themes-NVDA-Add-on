@@ -16,7 +16,6 @@
 """
 
 import wx
-import config
 import globalPluginHandler
 import appModuleHandler
 import scriptHandler
@@ -26,24 +25,12 @@ import speech
 import controlTypes
 import globalCommands
 
-from .backend.unspoken import UnspokenPlayer
-from .backend import audioThemeHandler
-from .backend.audioThemeHandler import SpecialProps
+from .handler import AudioThemesHandler, SpecialProps
 from .settings import AudioThemesSettingsPanel
 
 
 import addonHandler
 addonHandler.initTranslation()
-
-
-# Configuration spec
-audiothemes_config_defaults = {
-    "active_theme": 'string(default="Default")',
-    "audio3d": "boolean(default=True)",
-    "speak_roles": "boolean(default=False)",
-    "use_synth_volume": "boolean(default=True)",
-    "volume": "integer(default=100)",
-}
 
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
@@ -52,17 +39,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        config.conf.spec["audiothemes"] = audiothemes_config_defaults
-        self.player = UnspokenPlayer()
-        self.handler = AudioThemesHandler(self, player)
+        self.handler = AudioThemesHandler()
         gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(AudioThemesSettingsPanel)
         self._previous_mouse_object = None
 
-	def terminate(self):
-		try:
-			gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(AudioThemesSettingsPanel)
-		except IndexError:
-			pass
+    def terminate(self):
+        try:
+            gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(AudioThemesSettingsPanel)
+        except IndexError:
+            pass
 
     def script_speakObject(self, gesture):
         if scriptHandler.getLastScriptRepeatCount() == 0:
@@ -94,34 +79,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         nextHandler()
 
     def event_documentLoadComplete(self, obj, nextHandler):
-        if appModuleHandler.getAppNameFromProcessID(obj.processID) in self.allowedApps:
-            location = obj.location
-            obj.location = None
+        if appModuleHandler.getAppNameFromProcessID(obj.processID) in self.browser_apps:
             self.playObject(obj)
-            obj.location = location
         nextHandler()
 
     def playObject(self, obj):
-        soundpack = self.activeTheme.soundobjects
         order = self.getOrder(obj)
         # if the object has a snd property, then play directly!
         if getattr(obj, "snd", None):
             pass
         elif 16384 in obj.states:
             obj.snd = SpecialProps.protected
-        elif order and soundpack.get(order, None):
+        elif order:
             obj.snd = order
         else:
             obj.snd = obj.role
-        if not obj.snd in soundpack:
-            return
-        if True: #helpers.getCfgVal("threeD"):
-            self.play(obj, soundpack, _3d=True)
-        else:
-            self.play(obj, soundpack, _3d=False)
-
-    def play(self, obj, soundPack, _3d):
-        self.player.play(obj, soundPack[obj.snd])
+        self.handler.play(obj, obj.snd)
 
     def getOrder(self, obj, parrole=14, chrole=15):
         if obj.parent and obj.parent.role != parrole:

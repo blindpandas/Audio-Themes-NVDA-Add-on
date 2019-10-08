@@ -14,7 +14,7 @@ import globalVars
 import speech
 import ui
 
-#from gui.settingsDialogs import VoiceSettingsSlider
+# from gui.settingsDialogs import VoiceSettingsSlider
 
 from ..backend import helpers
 from ..backend import audioThemeHandler

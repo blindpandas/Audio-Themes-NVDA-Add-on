@@ -3,7 +3,6 @@
 # Modified for use with the audio themes add-on by Musharraf Omer
 
 import os
-import sys
 import time
 import dataclasses
 import weakref
@@ -11,8 +10,6 @@ import NVDAObjects
 import speech
 import sayAllHandler
 
-
-sys.path.append(os.path.join(os.path.dirname(__file__), "deps"))
 
 # this is a hack.
 # Normally, we would modify Libaudioverse to know about Unspoken and NVDA.
@@ -22,7 +19,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "deps"))
 import ctypes
 
 file_directory = os.path.split(os.path.abspath(__file__))[0]
-libaudioverse_directory = os.path.join(file_directory, "deps", "libaudioverse")
+libaudioverse_directory = os.path.join(file_directory, "libaudioverse")
 dll_hack = [
     ctypes.cdll.LoadLibrary(os.path.join(libaudioverse_directory, "libsndfile-1.dll"))
 ]
@@ -30,7 +27,7 @@ dll_hack.append(
     ctypes.cdll.LoadLibrary(os.path.join(libaudioverse_directory, "libaudioverse.dll"))
 )
 
-import libaudioverse
+from . import libaudioverse
 
 libaudioverse.initialize()
 from . import mixer
@@ -44,10 +41,11 @@ def clamp(my_value, min_value, max_value):
 class UnspokenPlayer:
     """Wraps the funcionality of the unspoken add-on."""
 
-    sayAll: bool = True
-    speakRoles: bool = True
-    noSounds: bool = False
-    volumeAdjust: bool = True
+    audio3d: bool = True
+    use_in_say_all: bool = True
+    speak_roles: bool = True
+    use_synth_volume: bool = True
+    volume: int = 100
 
     def __post_init__(self):
         self.simulation = libaudioverse.Simulation(block_size=1024)
@@ -69,7 +67,7 @@ class UnspokenPlayer:
         self._precompute_desktop_dimentions()
 
     def make_sound_object(self, filename):
-        """Makes a sound object from libaudioverse."""
+        """Make a sound object from libaudioverse."""
         libaudioverse_object = libaudioverse.BufferNode(self.simulation)
         buffer = libaudioverse.Buffer(self.simulation)
         buffer.load_from_file(filename)
@@ -77,9 +75,9 @@ class UnspokenPlayer:
         return libaudioverse_object
 
     def shouldNukeRoleSpeech(self):
-        if self.sayAll and sayAllHandler.isRunning():
+        if self.use_in_say_all and sayAllHandler.isRunning():
             return False
-        if self.speakRoles:
+        if self.speak_roles:
             return False
         return True
 
@@ -95,16 +93,14 @@ class UnspokenPlayer:
         return self._NVDA_getSpeechTextForProperties(reason, *args, **kwargs)
 
     def _compute_volume(self):
-        if self.volumeAdjust:
-            return 1.0
+        if not self.use_synth_volume:
+            return clamp(self.volume/100, 0.0, 1.0)
         driver = speech.getSynth()
         volume = getattr(driver, "volume", 100) / 100.0  # nvda reports as percent.
         volume = clamp(volume, 0.0, 1.0)
         return volume
 
     def play(self, obj, sound):
-        if self.noSounds:
-            return
         curtime = time.time()
         _last_ref = None if not self._last_played_object else self._last_played_object()
         if (curtime - self._last_played_time < 0.1) and (obj is _last_ref):
@@ -116,7 +112,7 @@ class UnspokenPlayer:
 
     def _play_object(self, obj, sound):
         # Get location of the object.
-        if obj.location != None:
+        if self.audio3d and (obj.location is not None):
             # Object has a location. Get its center.
             obj_x = obj.location[0] + (obj.location[2] / 2.0)
             obj_y = obj.location[1] + (obj.location[3] / 2.0)
@@ -130,9 +126,7 @@ class UnspokenPlayer:
         ) * self._display_width
         # angle_y is a bit more involved.
         percent = (self.desktop_max_y - obj_y) / self.desktop_max_y
-        angle_y = (
-            self._display_height_magnitude * percent + self._display_height_min
-        )
+        angle_y = self._display_height_magnitude * percent + self._display_height_min
         # clamp these to Libaudioverse's internal ranges.
         angle_x = clamp(angle_x, -90.0, 90.0)
         angle_y = clamp(angle_y, -90.0, 90.0)
@@ -164,4 +158,3 @@ class UnspokenPlayer:
         buffer.load_from_file(filePath)
         fileNode.buffer = buffer
         fileNode.connect_simulation(0)
-
