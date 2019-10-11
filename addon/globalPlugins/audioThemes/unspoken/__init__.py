@@ -130,9 +130,7 @@ class UnspokenPlayer:
         # clamp these to Libaudioverse's internal ranges.
         angle_x = clamp(angle_x, -90.0, 90.0)
         angle_y = clamp(angle_y, -90.0, 90.0)
-        if self._last_played_sound:
-            with self.simulation:
-                self._last_played_sound.disconnect(0)
+        self._disconnect_last_sound()
         sound.connect(0, self.hrtf_panner, 0)
         sound.position = 0.0
         self.hrtf_panner.azimuth = angle_x
@@ -144,17 +142,14 @@ class UnspokenPlayer:
         self.desktop_max_x = self.desktop.location[2]
         self.desktop_max_y = self.desktop.location[3]
 
-    def play_target(target, fromFile=False):
-        if not fromFile:
-            target.disconnect(0)
-            target.position = 0.0
-            target.connect_simulation(0)
-            return
-        from .audioThemeHandler import libaudioverse, SIMULATION
+    def play_file(self, filepath):
+        self._disconnect_last_sound()
+        sound = self.make_sound_object(os.path.abspath(filepath))
+        sound.connect_simulation(0)
+        self._last_played_sound = sound
 
-        filePath = os.path.abspath(target)
-        fileNode = libaudioverse.BufferNode(SIMULATION)
-        buffer = libaudioverse.Buffer(SIMULATION)
-        buffer.load_from_file(filePath)
-        fileNode.buffer = buffer
-        fileNode.connect_simulation(0)
+
+    def _disconnect_last_sound(self):
+        if self._last_played_sound:
+            with self.simulation:
+                self._last_played_sound.disconnect(0)

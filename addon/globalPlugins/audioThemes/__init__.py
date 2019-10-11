@@ -15,6 +15,7 @@
   Licensed under the GNU General Public License.
 """
 
+from contextlib import suppress
 import wx
 import globalPluginHandler
 import appModuleHandler
@@ -27,6 +28,7 @@ import globalCommands
 
 from .handler import AudioThemesHandler, SpecialProps
 from .settings import AudioThemesSettingsPanel
+from .studio import AudioThemesStudioStartupDialog
 
 
 import addonHandler
@@ -42,12 +44,24 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         self.handler = AudioThemesHandler()
         gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(AudioThemesSettingsPanel)
         self._previous_mouse_object = None
+        # Add the menu item for the audio themes studio
+        self.studioMenuItem = gui.mainFrame.sysTrayIcon.menu.Insert(
+            2,
+            wx.ID_ANY,
+            # Translators: label for the audio themes studio menu item
+            _("&Audio Themes Studio")
+        )
+        gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.on_studio_item_clicked, self.studioMenuItem)
 
     def terminate(self):
-        try:
+        with suppress(Exception):
             gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(AudioThemesSettingsPanel)
-        except IndexError:
-            pass
+            gui.mainFrame.sysTrayIcon.menu.RemoveItem(self.studioMenuItem)
+
+    def on_studio_item_clicked(self, event):
+        # Translators: title for the audio themes studio dialog
+        with AudioThemesStudioStartupDialog(_("Audio Themes Studio")) as dlg:
+            dlg.ShowModal()
 
     def script_speakObject(self, gesture):
         if scriptHandler.getLastScriptRepeatCount() == 0:

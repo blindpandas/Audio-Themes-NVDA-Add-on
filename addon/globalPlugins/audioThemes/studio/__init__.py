@@ -1,249 +1,177 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
-# Copyright (c) 2014-2016 Musharraf Omer and Others
+# Copyright (c) 2014-2019 Musharraf Omer
 # This file is covered by the GNU General Public License.
 
-import os
-import copy
+
 import wx
-import shutil
-
+import config
 import gui
-import controlTypes
-import ui
-
-from ..backend import helpers
-from ..backend import audioThemeHandler
-from ..backend.audioThemeHandler import themeRoles
-
-import addonHandler
-
-addonHandler.initTranslation()
+from tempfile import TemporaryDirectory
+from wx.adv import CommandLinkButton
+from ..handler import AudioTheme, AudioThemesHandler, audiotheme_changed
+from .themes_blender import BaseDialog, ThemeBlenderDialog
 
 
-class NewSoundDialog(gui.SettingsDialog):
-    # Translators: The default title of a dialog used to add a new sound to the active audio theme.
-    title = _("Add A New Sound")
+WELCOME_MSG = _(
+    "Welcome To The Audio Themes Studio:\n"
+    "Here you can create new audio themes and package them for sharing with others.\n"
+    "You can also customize anyone of your installed audio themes with your own sounds."
+)
 
-    def __init__(self, parent, roleList, copyingPath):
-        self.roleList = roleList
-        self.copyingPath = copyingPath
-        self.newSoundPath = ""
-        super(NewSoundDialog, self).__init__(parent=parent)
 
-    def makeSettings(self, settingsSizer):
-        mainSizer = wx.BoxSizer(wx.VERTICAL)
-        # Translators: The text of a label for a combobox contains object roles.
-        roleListLabel = wx.StaticText(self, -1, label=_("&Select Object Type:"))
-        roleListId = wx.NewId()
-        self.roleListCombo = wx.Choice(
-            self, roleListId, choices=[label for id, label in self.roleList]
+
+class NewThemeInfoDialog(BaseDialog):
+    """Gets information from the user about  the theme."""
+
+    def addControls(self, sizer, parent):
+        # Translators: label for a text field
+        themeNameLabel = wx.StaticText(parent, -1, _("Theme Name"))
+        self.themeNameEdit = wx.TextCtrl(parent, -1, name="name")
+        # Translators: label for a text field
+        themeAuthorLabel = wx.StaticText(parent, -1, _("Theme Author"))
+        self.themeAuthorEdit = wx.TextCtrl(parent, -1, name="author")
+        # Translators: label for a text field
+        themeSummaryLabel = wx.StaticText(parent, -1, _("Theme Summary"))
+        self.themeSummaryEdit = wx.TextCtrl(
+            parent,
+            -1,
+            style=wx.TE_MULTILINE,
+            name="summary"
         )
-        self.roleListCombo.SetSelection(0)
-        btnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        browseId = wx.NewId()
-        # Translators: The label of the buttons to browse to an audio file.
-        browseBtn = wx.Button(self, browseId, _("&Browse to an audio file"))
-        previewId = wx.NewId()
-        # Translators: The label of the button to preview/play the selected audio file.
-        self.previewBtn = wx.Button(self, previewId, _("&Preview"))
-        btnSizer.Add(browseBtn)
-        btnSizer.Add(self.previewBtn)
-        mainSizer.Add(roleListLabel)
-        mainSizer.Add(self.roleListCombo)
-        mainSizer.Add(btnSizer)
-        settingsSizer.Add(mainSizer, border=10, flag=wx.BOTTOM)
-        self.Bind(wx.EVT_BUTTON, self.onBrowseClick, id=browseId)
-        self.Bind(wx.EVT_BUTTON, self.onPreviewClick, id=previewId)
+        sizer.AddMany([
+            (themeNameLabel, 0, wx.ALL, 5),
+            (self.themeNameEdit, 1, wx.BOTTOM|wx.LEFT|wx.RIGHT, 10),
+            (themeAuthorLabel, 0, wx.ALL, 5),
+            (self.themeAuthorEdit, 1, wx.BOTTOM|wx.LEFT|wx.RIGHT, 10),
+            (themeSummaryLabel, 0, wx.ALL, 5),
+            (self.themeSummaryEdit, 1, wx.BOTTOM|wx.LEFT|wx.RIGHT, 10),
+        ])
+        self.edit_fields = (self.themeNameEdit, self.themeAuthorEdit, self.themeSummaryEdit,)
 
-    def postInit(self):
-        self.roleListCombo.SetFocus()
-        self.previewBtn.Disable()
+    def get_user_input(self):
+        return {field.Name: field.GetValue().strip() for field in self.edit_fields}
 
-    def onBrowseClick(self, evt):
-        self.newSoundPath = helpers.showFileDialog(
-            self,
-            # Translators: The title of a dialog asking the user to select an audio file.
-            _("Select Audio File"),
-            audioThemeHandler.SUPPORTED_FILE_TYPES.keys(),
-            audioThemeHandler.SUPPORTED_FILE_TYPES.values(),
-        )
-        if self.newSoundPath:
-            self.previewBtn.Enable()
-
-    def onPreviewClick(self, evt):
-        if self.newSoundPath:
-            helpers.playTarget(self.newSoundPath, fromFile=True)
-
-    def onOk(self, evt):
-        if self.newSoundPath:
-            role = self.roleList[self.roleListCombo.GetSelection()][0]
-            ext = os.path.splitext(self.newSoundPath)[-1]
-            copyingFile = os.path.join(self.copyingPath, "%d%s" % (role, ext))
-            try:
-                shutil.copy(self.newSoundPath, copyingFile)
-            except IOError:
-                gui.messageBox(_("Can not copy file."), _("Error"))
-        super(NewSoundDialog, self).onOk(evt)
-
-
-class BaseEditorDialog(wx.Dialog):
-    def __init__(self, parent):
-        super(BaseEditorDialog, self).__init__(parent)
-        mainSizer = wx.BoxSizer(wx.HORIZONTAL)
-        tasksSizer = wx.BoxSizer(wx.VERTICAL)
-        # Translators: the text of the label of a listbox that shows all available themes
-        tasksLabel = wx.StaticText(self, -1, label=_("Existing  Sounds:"))
-        tasksSizer.Add(tasksLabel)
-        listId = wx.NewId()
-        self.listBox = wx.ListBox(self, listId, style=wx.LB_SINGLE, size=(500, 250))
-        tasksSizer.Add(self.listBox, proportion=8)
-        mainSizer.Add(tasksSizer)
-        buttonsSizer = wx.BoxSizer(wx.VERTICAL)
-        changeId = wx.NewId()
-        # Translators: The label of the button to edit the current sound.
-        self.changeBtn = wx.Button(self, changeId, _("&Change Selected"))
-        buttonsSizer.Add(self.changeBtn)
-        removeId = wx.NewId()
-        # Translators: The label of the buttons to remove the selected sound.
-        self.removeBtn = wx.Button(self, removeId, _("&Remove Selected"))
-        buttonsSizer.Add(self.removeBtn)
-        addId = wx.NewId()
-        # Translators: The label of the button to add a new sound.
-        self.addBtn = wx.Button(self, addId, _("&Add New Sound"))
-        buttonsSizer.Add(self.addBtn)
-        mainSizer.Add(buttonsSizer)
-        taskButtonsSizer = wx.BoxSizer(wx.HORIZONTAL)
-        if getattr(self, "isCreatingANewTheme", None):
-            packageId = wx.NewId()
-            # Translators: The text of a button used to package the audio theme and save it.
-            packageBtn = wx.Button(self, packageId, _("&Package Audio Theme"))
-            taskButtonsSizer.Add(packageBtn)
-            self.Bind(wx.EVT_BUTTON, self.onPackClick, id=packageId)
-        # Translators: The text of a button to close the dialog.
-        cancelBtn = wx.Button(self, wx.ID_CLOSE, _("&Close"))
-        taskButtonsSizer.Add(cancelBtn)
-        mainSizer.Add(taskButtonsSizer)
-        self.SetSizer(mainSizer)
-        mainSizer.Fit(self)
-        self.changeBtn.SetDefault()
-        self.Bind(wx.EVT_LISTBOX, self.OnSelectionChange, id=listId)
-        self.Bind(wx.EVT_BUTTON, self.onChangeClick, id=changeId)
-        self.Bind(wx.EVT_BUTTON, self.onRemoveClick, id=removeId)
-        self.Bind(wx.EVT_BUTTON, self.onAddClick, id=addId)
-        self.Bind(wx.EVT_CLOSE, self.onClose)
-        self.Bind(wx.EVT_BUTTON, self.onClose, cancelBtn)
-        self.EscapeId = wx.ID_CLOSE
-        self.audioTheme = self.getAudioTheme()
-        self.Title = self.makeTitle()
-        self.lastActiveTheme = audioThemeHandler.findThemeWithProp("isActive", True)
-        self.lastActiveTheme.deactivate()
-        self.refresh()
-
-    def onChangeClick(self, event):
-        selectionIndex = self.listBox.GetSelection()
-        if selectionIndex == wx.NOT_FOUND:
-            return
-        newSnd = helpers.showFileDialog(
-            self,
-            _("Select Audio File"),
-            audioThemeHandler.SUPPORTED_FILE_TYPES.keys(),
-            audioThemeHandler.SUPPORTED_FILE_TYPES.values(),
-        )
-        if not newSnd:
-            return
-        oldFile = self.getFileFromIndex(selectionIndex)
-        ext = os.path.splitext(newSnd)[-1]
-        targetFile = os.path.join(
-            self.audioTheme.directory, "%d%s" % (self.keys[selectionIndex], ext)
-        )
-        try:
-            os.remove(oldFile)
-            shutil.copy(newSnd, targetFile)
-        except IOError:
-            gui.messageBox(
-                # Translators: Message box shown to the user when the copying fails.
-                _("Can not copy the file"),
-                # Translators: The title of a message box indicating an error.
+    def should_return_id_ok(self):
+        has_content = all(self.get_user_input().values())
+        if not has_content:
+            wx.MessageBox(
+                # Translators: error message telling the user that all of the fields are required
+                _("All of the fields are required. Exiting..."),
+                # Translators: title for an error message
                 _("Error"),
+                style=wx.ICON_ERROR
             )
-        self.audioTheme.load()
+        return has_content
 
-    def onRemoveClick(self, event):
-        if self.listBox.GetSelection() == wx.NOT_FOUND:
+
+class AudioThemeSelectorDialog(BaseDialog):
+    """Allows the user to select one of the installed audio themes for editing."""
+
+    def addControls(self, sizer, parent):
+        # Translators: label for the audio theme selector choice
+        themesChoiceLabel = wx.StaticText(parent, -1, _("Audio themes"))
+        self.themeChoice = wx.Choice(parent, -1)
+        sizer.AddMany([
+            (themesChoiceLabel, 0, wx.ALL, 5),
+            (self.themeChoice, 1, wx.ALL|wx.EXPAND, 10)
+        ])
+        for theme in AudioThemesHandler.get_installed_themes():
+            self.themeChoice.Append(theme.name, theme)
+        self.themeChoice.SetSelection(0)
+
+
+    @property
+    def selected_theme(self):
+        selection = self.themeChoice.GetSelection()
+        if selection != wx.NOT_FOUND:
+            return self.themeChoice.GetClientData(selection)
+
+
+class AudioThemesStudioStartupDialog(BaseDialog):
+
+    def addControls(self, sizer, parent):
+        # Translators: instruction message in the audio themes studio startup dialog
+        dialogMessage = wx.StaticText(
+            self,
+            -1,
+            _(WELCOME_MSG)
+        )
+        self.createNewThemeButton = CommandLinkButton(
+            parent,
+            -1,
+            # Translators: the main label of a button
+            _("Create &New Audio Theme"),
+            # Translators: the note of a button
+            _("Create a new audio theme package from scratch"),
+        )
+        self.editExistingThemeButton = CommandLinkButton(
+            parent,
+            -1,
+            # Translators: the main label of a button
+            _("Customize &Existing Audio Theme"),
+            # Translators: the note of a button
+            _("Customize an installed audio theme with your prefered  sounds."),
+        )
+        sizer.AddMany([
+            (dialogMessage, 1, wx.EXPAND|wx.ALL, 10),
+            (self.createNewThemeButton, 1, wx.EXPAND|wx.ALL, 10),
+            (self.editExistingThemeButton, 1, wx.EXPAND|wx.ALL, 10),
+        ])
+        # Bind events
+        self.Bind(wx.EVT_BUTTON, self.onCreateNewTheme, self.createNewThemeButton)
+        self.Bind(wx.EVT_BUTTON, self.onEditExistingTheme, self.editExistingThemeButton)
+
+    def getButtons(self, parent):
+        btnsizer = wx.StdDialogButtonSizer()
+        # Translators: the lable of the close button in a dialog
+        closeBtn = wx.Button(parent, wx.ID_CANCEL, _("&Close"))
+        btnsizer.AddButton(closeBtn)
+        btnsizer.Realize()
+        return btnsizer
+
+    def onCreateNewTheme(self, event):
+        self.Close()
+        theme_info = None
+        # Translators: title of a dialog to supply information about a new audio theme
+        infoDlg = NewThemeInfoDialog(title=_("Enter Theme Information"))
+        with infoDlg:
+            if infoDlg.ShowModal() == wx.ID_OK:
+                theme_info = infoDlg.get_user_input()
+        if not theme_info:
             return
-        if (
-            gui.messageBox(
-                # Translators: message asking the user if he/she realy want to remove the selected sound.
-                _("Do you want to remove the %s sound?")
-                % self.listBox.GetStringSelection(),
-                # Translators: the title of the message box that ask the user if he/she realy want to remove the theme.
-                _("Confirm"),
-                wx.YES_NO | wx.ICON_WARNING,
+        with TemporaryDirectory() as tempdir:
+            new_theme = AudioTheme(directory=tempdir, **theme_info)
+            dlg = ThemeBlenderDialog(
+            # Translators: title for create new theme dialog
+                _("Creating New Theme - {name}").format(name=theme_info["name"]),
+                theme=new_theme,
+                editing=False
             )
-            == wx.NO
-        ):
-            return
-        try:
-            os.remove(self.getFileFromIndex(self.listBox.GetSelection()))
-        except WindowsError:
-            gui.messageBox(
-                # Translators: message telling the user that the deletion process was faild.
-                _("Error Removing File"),
-                # Translators: the title of the message telling that the deletion was faild
-                _("Error"),
+            with dlg:
+                dlg.ShowModal()
+
+    def onEditExistingTheme(self, event):
+        self.Close()
+        if not list(AudioThemesHandler.get_installed_themes()):
+            return wx.MessageBox(
+                # Translators: message telling the user that there are no audio themes installed
+                _("You do not have any audio themes installed.\nPlease install or create an audio theme first."),
+                # Translators: title for a message telling the user that no audio theme was found 
+                _("No Audio Themes"),
+                style=wx.ICON_ERROR
             )
-        self.refresh()
-
-    def onAddClick(self, event):
-        roleList = []
-        for id, label in themeRoles.iteritems():
-            if not id in self.keys:
-                roleList.append((id, label))
-        NewSoundDialog(
-            self, roleList=roleList, copyingPath=self.audioTheme.directory
-        ).ShowModal()
-        self.refresh()
-
-    def onClose(self, evt):
-        self.lastActiveTheme.activate()
-        tempDir = getattr(self, "baseTemp", None)
-        if tempDir:
-            try:
-                self.audioTheme.unload()
-                os.remove(tempDir)
-            except:
-                pass
-        self.Destroy()
-
-    def OnSelectionChange(self, evt):
-        selection = self.listBox.GetSelection()
-        attrToInvoke = "Disable" if selection == wx.NOT_FOUND else "Enable"
-        for b in [self.changeBtn, self.removeBtn]:
-            getattr(b, attrToInvoke)()
-        role = self.keys[selection]
-        soundObj = self.audioTheme.soundobjects[role]
-        helpers.playTarget(soundObj)
-
-    def refresh(self):
-        self.listBox.Clear()
-        self.audioTheme.load()
-        self.keys = self.audioTheme.soundobjects.keys()
-        labels = [themeRoles[k] for k in self.keys if k in themeRoles]
-        self.listBox.Set(labels)
-        if not len(labels):
-            [b.Disable() for b in [self.changeBtn, self.removeBtn]]
-
-    def makeTitle(self):
-        # Translators: The default title of a dialog used to edit audio themes.
-        return _("Audio Theme Editor")
-
-    def getFileFromIndex(self, index):
-        expected = [
-            os.path.join(self.audioTheme.directory, "%d.%s" % (self.keys[index], ext))
-            for ext in audioThemeHandler.SUPPORTED_FILE_TYPES.keys()
-        ]
-        if os.path.exists(expected[0]):
-            return expected[0]
-        else:
-            return expected[1]
+        selected_theme = None
+        # Translators: title for the theme selector dialog
+        with AudioThemeSelectorDialog(_("Select An Audio Theme")) as selectDlg:
+            if selectDlg.ShowModal() != wx.ID_OK:
+                return
+            selected_theme = selectDlg.selected_theme
+        dlg = ThemeBlenderDialog(
+            # Translators: title for create new theme dialog
+            _("Editing Audio Theme: {name}").format(name=selected_theme.name),
+            theme=selected_theme
+        )
+        with dlg:
+            dlg.ShowModal()
+        audiotheme_changed.notify()

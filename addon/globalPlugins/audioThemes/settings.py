@@ -1,5 +1,8 @@
 # coding: utf-8
 
+# Copyright (c) 2014-2019 Musharraf Omer
+# This file is covered by the GNU General Public License.
+
 import wx
 import config
 import gui
@@ -80,7 +83,8 @@ class AudioThemesSettingsPanel(gui.SettingsPanel):
     @property
     def selected_theme(self):
         selection = self.installedThemesChoice.GetSelection()
-        return None if selection == wx.NOT_FOUND else self.audio_themes[selection]
+        if selection != wx.NOT_FOUND:
+            return self.installedThemesChoice.GetClientData(selection)
 
     def _initialize_at_state(self):
         conf = config.conf["audiothemes"]
@@ -94,7 +98,8 @@ class AudioThemesSettingsPanel(gui.SettingsPanel):
     def _maintain_state(self):
         self.audio_themes = sorted(AudioThemesHandler.get_installed_themes())
         self.installedThemesChoice.Clear()
-        self.installedThemesChoice.SetItems(list(th.name for th in self.audio_themes))
+        for theme in self.audio_themes:
+            self.installedThemesChoice.Append(theme.name, theme)
         for theme in self.audio_themes:
             if theme.folder == config.conf["audiothemes"]["active_theme"]:
                 self.installedThemesChoice.SetStringSelection(theme.name)
@@ -126,14 +131,6 @@ class AudioThemesSettingsPanel(gui.SettingsPanel):
 
     def onRemove(self, event):
         theme = self.selected_theme
-        if theme.folder == config.conf["audiothemes"]["active_theme"]:
-            return wx.MessageBox(
-                # Translators: message telling the user that the active audio theme could not be removed
-                _("Could not remove the selected theme because it is the active theme.\nPlease deactivate it first and then try again."),
-                # Translators: title of a message telling the user that the active theme could not be removed
-                _("Error"),
-                style=wx.ICON_ERROR
-            )
         confirm = wx.MessageBox(
             # Translators: message asking the user to confirm the removal of an audio theme
             _("This can not be undone.\nAre you sure you  want to remove audio theme {name}?").format(name=theme.name),

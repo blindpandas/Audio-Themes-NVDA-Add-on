@@ -1,18 +1,17 @@
 # coding: utf-8
 
-# Copyright (c) 2014-2019 Musharraf Omer and Others
+# Copyright (c) 2014-2019 Musharraf Omer
 # This file is covered by the GNU General Public License.
 
 from enum import IntEnum
 from collections import OrderedDict
 from dataclasses import dataclass, field, asdict
-from zipfile import ZipFile
+from zipfile import ZipFile, ZIP_DEFLATED
 from uuid import uuid4
 import os
 import shutil
 import copy
 import json
-import winKernel
 import config
 import controlTypes
 import extensionPoints
@@ -52,11 +51,11 @@ class SpecialProps(IntEnum):
     loaded = 2504
 
 
-themeRoles = copy.copy(controlTypes.roleLabels)
-themeRoles.update(
+theme_roles = copy.copy(controlTypes.roleLabels)
+theme_roles.update(
     {
         # Translators: The label of the sound which will be played when focusing a protected edit control.
-        SpecialProps.protected: _("Protected Editable Controls"),
+        SpecialProps.protected: _("Protected Edit Field"),
         # Translators: The label of the sound which will be played when focusing the first item in a list.
         SpecialProps.first: _("First Item"),
         # Translators: The label of the sound which will be played when focusing the last item in a list.
@@ -72,18 +71,25 @@ themeRoles.update(
 @dataclass(order=True)
 class AudioTheme:
     name: str
-    folder: str
+    directory: str
     author: str
     summary: str
     is_active: bool = False
     sounds: dict = field(default_factory=dict)
 
     @property
-    def directory(self):
-        return os.path.join(THEMES_DIR, self.folder)
+    def info_file_path(self):
+        return os.path.join(self.directory, INFO_FILE_NAME)
+
+    @property
+    def folder(self):
+        return os.path.split(self.directory)[-1]
 
     def todict(self):
-        return asdict(self)
+        data =  asdict(self)
+        for unwanted_key in ("is_active", "directory", "sounds"):
+            data.pop(unwanted_key)
+        return data
 
     def load(self, player):
         if self.sounds:
@@ -92,11 +98,9 @@ class AudioTheme:
             return
         for filename in os.listdir(self.directory):
             path = os.path.join(self.directory, filename)
-            fnrole, ext = os.path.splitext(filename)
-            if os.path.isfile(path) and ext[1:] in SUPPORTED_FILE_TYPES.keys():
-                key = int(fnrole)
-                if key in themeRoles:
-                    self.sounds[key] = player.make_sound_object(path)
+            rep_role = self.is_valid_audio_file(path)
+            if rep_role is not None:
+                    self.sounds[rep_role] = player.make_sound_object(path)
 
     def unload(self):
         self.sounds.clear()
@@ -105,6 +109,19 @@ class AudioTheme:
         """Deactivate this theme"""
         self.unload()
         self.is_active = False
+
+    @staticmethod
+    def is_valid_audio_file(filepath):
+        """Return the role that this file represent (if any) else None."""
+        filename = os.path.split(filepath)[-1]
+        fnrole, ext = os.path.splitext(filename)
+        if os.path.isfile(filepath) and ext[1:] in SUPPORTED_FILE_TYPES.keys():
+            try:
+                key = int(fnrole)
+            except ValueError :
+                return
+            if key in theme_roles:
+                return key
 
 
 class AudioThemesHandler:
@@ -155,7 +172,7 @@ class AudioThemesHandler:
         info_file = os.path.join(expected, INFO_FILE_NAME)
         if os.path.isfile(info_file):
             info = cls.load_info_file(info_file)
-            return AudioTheme(folder=folderpath, **info)
+            return AudioTheme(directory=expected, **info)
 
     @classmethod
     def get_installed_themes(cls):
@@ -183,20 +200,14 @@ class AudioThemesHandler:
             return json.load(f)
 
     @staticmethod
-    def write_info_file(data, file_path):
+    def write_info_file(file_path, data):
         with open(file_path, "w", encoding="utf8") as f:
             json.dump(data, f)
 
     @staticmethod
     def make_zip_file(output_filename, source_dir):
-        # Taken from stackoverflow
-        relroot = os.path.abspath(os.path.join(source_dir, os.pardir))
-        with ZipFile(output_filename, "w", zipfile.ZIP_DEFLATED) as zip:
-            for root, dirs, files in os.walk(source_dir):
-                # add directory (needed for empty dirs)
-                zip.write(root, os.path.relpath(root, relroot))
-                for file in files:
-                    filename = os.path.join(root, file)
-                    if os.path.isfile(filename):  # regular files only
-                        arcname = os.path.join(os.path.relpath(root, relroot), file)
-                        zip.write(filename, arcname)
+        with ZipFile(output_filename, "w", ZIP_DEFLATED) as zip:
+            for filename in os.listdir(source_dir):
+                file = os.path.join(source_dir, filename)
+                if os.path.isfile(file):
+                    zip.write(file, filename)

@@ -1,10 +1,22 @@
-Version 5.1:
+## Version 6.0
+
+The add-on has been rewritten from scratch to improve performance and provide better compatability with modern\ NVDA versions. Major highlights include:
+* The minimum required NVDA version is 2019.3
+* Vast improvements to the responsiveness of the add-on
+* The add-on settings have been moved to NVDA's multi-category settings dialog
+* The audio themes studio combines the capabilities of audio theme creation and editing
+
+
+
+## Version 5.1:
+
+## Version 5.1:
 - Audible indication of the object when pressing nvda plus tab
 - Addressing nvaccess/nvda#6203
 - Several bug fixes to the audio themes manager dialog.
 
 
-Version 5.1-beta:
+## Version 5.1-beta:
 
 Changes:
 - Major security and performance enhancements
@@ -15,7 +27,7 @@ Changes:
 - Minor bug fixes.
 
 
-Version 5.0:
+## Version 5.0:
 
 - The add-on was rewritten from the scratch to enhance its performance, and generally to make things more easier.
 - Added several new options in the Themes Manager dialogue including: 
