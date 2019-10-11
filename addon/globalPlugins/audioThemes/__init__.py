@@ -106,15 +106,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
     def playObject(self, obj):
         order = self.getOrder(obj)
-        # if the object has a snd property, then play directly!
-        if getattr(obj, "snd", None):
-            pass
-        elif 16384 in obj.states:
-            obj.snd = SpecialProps.protected
-        elif order:
-            obj.snd = order
-        else:
-            obj.snd = obj.role
+        if getattr(obj, "snd", None) is None:
+            if 16384 in obj.states:
+                obj.snd = SpecialProps.protected
+            elif order:
+                obj.snd = order
+            else:
+                obj.snd = obj.role
         self.handler.play(obj, obj.snd)
 
     def getOrder(self, obj, parrole=14, chrole=15):
