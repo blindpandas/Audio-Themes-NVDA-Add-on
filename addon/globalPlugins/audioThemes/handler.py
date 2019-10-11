@@ -86,7 +86,7 @@ class AudioTheme:
         return os.path.split(self.directory)[-1]
 
     def todict(self):
-        data =  asdict(self)
+        data = asdict(self)
         for unwanted_key in ("is_active", "directory", "sounds"):
             data.pop(unwanted_key)
         return data
@@ -100,7 +100,7 @@ class AudioTheme:
             path = os.path.join(self.directory, filename)
             rep_role = self.is_valid_audio_file(path)
             if rep_role is not None:
-                    self.sounds[rep_role] = player.make_sound_object(path)
+                self.sounds[rep_role] = player.make_sound_object(path)
 
     def unload(self):
         self.sounds.clear()
@@ -118,14 +118,14 @@ class AudioTheme:
         if os.path.isfile(filepath) and ext[1:] in SUPPORTED_FILE_TYPES.keys():
             try:
                 key = int(fnrole)
-            except ValueError :
+            except ValueError:
                 return
             if key in theme_roles:
                 return key
 
 
 class AudioThemesHandler:
-    """Query and manage audio themes.""" 
+    """Query and manage audio themes."""
 
     def __init__(self):
         config.conf.spec["audiothemes"] = audiothemes_config_defaults
@@ -133,9 +133,13 @@ class AudioThemesHandler:
         self.player = UnspokenPlayer()
         self.active_theme = None
         self.configure()
-        for action in (post_configSave, post_configReset, post_configProfileSwitch, audiotheme_changed):
+        for action in (
+            post_configSave,
+            post_configReset,
+            post_configProfileSwitch,
+            audiotheme_changed,
+        ):
             action.register(self.configure)
-
 
     def get_active_theme(self):
         if not config.conf["audiothemes"]["enable_audio_themes"]:
@@ -152,7 +156,7 @@ class AudioThemesHandler:
             self.active_theme.deactivate()
         self.enabled = user_config["enable_audio_themes"]
         self.active_theme = self.get_active_theme()
-        self.player.audio3d =user_config["audio3d"]
+        self.player.audio3d = user_config["audio3d"]
         self.player.use_in_say_all = user_config["use_in_say_all"]
         self.player.speak_roles = user_config["speak_roles"]
         self.player.use_synth_volume = user_config["use_synth_volume"]

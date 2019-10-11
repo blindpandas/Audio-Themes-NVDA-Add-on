@@ -94,7 +94,7 @@ class UnspokenPlayer:
 
     def _compute_volume(self):
         if not self.use_synth_volume:
-            return clamp(self.volume/100, 0.0, 1.0)
+            return clamp(self.volume / 100, 0.0, 1.0)
         driver = speech.getSynth()
         volume = getattr(driver, "volume", 100) / 100.0  # nvda reports as percent.
         volume = clamp(volume, 0.0, 1.0)
@@ -147,7 +147,6 @@ class UnspokenPlayer:
         sound = self.make_sound_object(os.path.abspath(filepath))
         sound.connect_simulation(0)
         self._last_played_sound = sound
-
 
     def _disconnect_last_sound(self):
         if self._last_played_sound:

@@ -5,7 +5,7 @@
 
 from typing import List, Tuple
 from dataclasses import dataclass, field, asdict
-from contextlib import suppress 
+from contextlib import suppress
 import os
 import shutil
 import wx
@@ -30,11 +30,11 @@ def _show_audio_file_dialog(parent):
     if openFileDlg.ShowModal() == wx.ID_OK:
         filename = openFileDlg.GetPath().strip()
         openFileDlg.Destroy()
-        if filename:
+        if filename.strip():
             return filename
 
 
-@dataclass(order=True, eq=True, frozen=True)
+@dataclass(order=True)
 class SoundFileInfo:
     role: int
     src: os.PathLike
@@ -61,29 +61,31 @@ class ThemeState:
 
     def __post_init__(self):
         _init_state = []
-        basedir= self.theme.directory
+        basedir = self.theme.directory
         for file in os.listdir(basedir):
             filepath = os.path.join(basedir, file)
             if AudioTheme.is_valid_audio_file(filepath):
-                _init_state.append(SoundFileInfo(
-                    role=int(os.path.splitext(file)[0]),
-                    src=filepath,
-                    dst=filepath
-                ))
+                _init_state.append(
+                    SoundFileInfo(
+                        role=int(os.path.splitext(file)[0]), src=filepath, dst=filepath
+                    )
+                )
         self.initial_state = tuple(_init_state)
         self.state = list(self.initial_state)
 
     def apply_diff(self):
         for fileinfo in self.state:
-            if fileinfo not in self.initial_state:
+            if fileinfo.src != fileinfo.dst:
                 result = fileinfo.reconcile()
                 if not result:
                     wx.MessageBox(
                         # Translators: message indicating failure in copying files
-                        _("Could not copy file {fileinfo.src} to directory {fileinfo.dst}."),
+                        _(
+                            "Could not copy file {fileinfo.src} to directory {fileinfo.dst}."
+                        ),
                         # Translators: title for a message indicating an error
                         _("Error"),
-                        style=wx.ICON_ERROR
+                        style=wx.ICON_ERROR,
                     )
 
 
@@ -100,7 +102,9 @@ class BaseDialog(wx.Dialog):
         buttons = self.getButtons(panel)
         if buttons is not None:
             line = wx.StaticLine(panel, -1, size=(20, -1), style=wx.LI_HORIZONTAL)
-            sizer.Add(line, 0, wx.GROW | wx.ALIGN_CENTER_VERTICAL | wx.RIGHT | wx.TOP, 10)
+            sizer.Add(
+                line, 0, wx.GROW | wx.ALIGN_CENTER_VERTICAL | wx.RIGHT | wx.TOP, 10
+            )
             sizer.Add(buttons, 0, wx.ALIGN_CENTER | wx.ALL, 10)
 
         panel.SetSizer(sizer)
@@ -124,6 +128,7 @@ class BaseDialog(wx.Dialog):
         btnsizer = wx.StdDialogButtonSizer()
         # Translators: the lable of the close button in a dialog
         okBtn = wx.Button(parent, wx.ID_OK, _("OK"))
+        okBtn.SetDefault()
         # Translators: the lable of the close button in a dialog
         cancelBtn = wx.Button(parent, wx.ID_CANCEL, _("Cancel"))
         btnsizer.AddButton(okBtn)
@@ -154,7 +159,7 @@ class ThemeBlenderDialog(BaseDialog):
     def addControls(self, sizer, parent):
         # Translators: label for a list containing theme's audio files
         themeEntriesLabel = wx.StaticText(parent, -1, _("Theme Sounds"))
-        self.themeEntriesList  = wx.ListBox(parent, -1)
+        self.themeEntriesList = wx.ListBox(parent, -1)
         # Translators: label for a button to change the audio file
         self.editButton = wx.Button(parent, wx.ID_EDIT, _("&Change..."))
         # Translators: label for a button to remove the audio file
@@ -164,19 +169,22 @@ class ThemeBlenderDialog(BaseDialog):
         mainSizer = wx.BoxSizer(wx.HORIZONTAL)
         listSizer = wx.BoxSizer(wx.VERTICAL)
         actionButtonSizer = wx.BoxSizer(wx.VERTICAL)
-        listSizer.AddMany([
-            (themeEntriesLabel, 1, wx.ALL, 5),
-            (self.themeEntriesList, 2, wx.ALL|wx.EXPAND, 5),
-        ])
-        actionButtonSizer.AddMany([
-            (self.editButton, 1, wx.ALL, 5),
-            (self.removeButton, 1, wx.ALL, 5),
-            (self.addButton, 1, wx.ALL, 5),
-        ])
-        mainSizer.AddMany([
-            (listSizer, 1, wx.ALL|wx.EXPAND, 10),
-            (actionButtonSizer, 1, wx.ALL, 10),
-        ])
+        listSizer.AddMany(
+            [
+                (themeEntriesLabel, 1, wx.ALL, 5),
+                (self.themeEntriesList, 2, wx.ALL | wx.EXPAND, 5),
+            ]
+        )
+        actionButtonSizer.AddMany(
+            [
+                (self.editButton, 1, wx.ALL, 5),
+                (self.removeButton, 1, wx.ALL, 5),
+                (self.addButton, 1, wx.ALL, 5),
+            ]
+        )
+        mainSizer.AddMany(
+            [(listSizer, 1, wx.ALL | wx.EXPAND, 10), (actionButtonSizer, 1, wx.ALL, 10)]
+        )
         sizer.Add(mainSizer, 1, wx.EXPAND)
         parent.SetMinSize((500, 700))
         parent.Layout()
@@ -201,7 +209,9 @@ class ThemeBlenderDialog(BaseDialog):
         self.Bind(wx.EVT_BUTTON, self.onEdit, self.editButton)
         self.Bind(wx.EVT_BUTTON, self.onAdd, self.addButton)
         self.Bind(wx.EVT_BUTTON, self.onRemove, self.removeButton)
-        self.Bind(wx.EVT_LISTBOX, self.onEntriesListSelectionChanged, self.themeEntriesList)
+        self.Bind(
+            wx.EVT_LISTBOX, self.onEntriesListSelectionChanged, self.themeEntriesList
+        )
 
     def _maintain_state(self):
         self.themeEntriesList.Clear()
@@ -220,19 +230,19 @@ class ThemeBlenderDialog(BaseDialog):
             return self.themeEntriesList.GetClientData(selection)
 
     def is_dirty(self):
-        return set(self.theme_state.state) == set(self.theme_state.initial_state)
+        return self.theme_state.state == self.theme_state.initial_state
 
     def onSave(self, event):
         self.theme_state.apply_diff()
         if not self.editing:
             saveFileDlg = wx.FileDialog(
                 self,
-                # Translators: title for a dialog to save an audio theme package 
+                # Translators: title for a dialog to save an audio theme package
                 _("Save Audio Theme Package"),
                 # Translators: filetype description for audio theme packages
                 wildcard=_("Audio Theme Package (*.atp)|*.atp"),
                 defaultFile=f"{self.theme_state.theme.name}.atp",
-                style=wx.FD_SAVE
+                style=wx.FD_SAVE,
             )
             if saveFileDlg.ShowModal() == wx.ID_OK:
                 filename = saveFileDlg.GetPath().strip()
@@ -247,10 +257,12 @@ class ThemeBlenderDialog(BaseDialog):
         if not confirmed:
             result = wx.MessageBox(
                 # Translators: message asking the user if he/she really want to discard changes
-                _("You will lose all of the changes you have made.\nAre you sure you want to quit this dialog?"),
+                _(
+                    "You will lose all of the changes you have made.\nAre you sure you want to quit this dialog?"
+                ),
                 # Translators: title for a message asking the user if he/she really want to discard changes
                 _("Confirm Quit"),
-                style=wx.YES_NO|wx.ICON_WARNING
+                style=wx.YES_NO | wx.ICON_WARNING,
             )
             if result == wx.YES:
                 confirmed = True
@@ -263,9 +275,7 @@ class ThemeBlenderDialog(BaseDialog):
         if selected_sound:
             filepath = _show_audio_file_dialog(self)
             if filepath is not None:
-                data = asdict(selected_sound) 
-                data["src"] = filepath
-                self.theme_state.state[self.themeEntriesList.GetSelection()] = SoundFileInfo(**data)
+                selected_sound.src = filepath
 
     def onAdd(self, event):
         # Translators: title for a dialog to add a new sound to the audio theme
@@ -294,7 +304,6 @@ class ThemeBlenderDialog(BaseDialog):
 
 
 class AudioSelectorDialog(BaseDialog):
-
     def __init__(self, *args, **kwargs):
         self.selected_audio = None
         super().__init__(*args, **kwargs)
@@ -308,24 +317,24 @@ class AudioSelectorDialog(BaseDialog):
         # Translators: label for a button to preview the selected sound
         self.previewButton = wx.Button(parent, -1, _("&Preview"))
         choiceSizer = wx.BoxSizer(wx.HORIZONTAL)
-        choiceSizer.AddMany([
-            (roleChoiceLabel, 1, wx.LEFT|wx.BOTTOM|wx.TOP, 5),
-            (self.roleChoice, 2, wx.ALL|wx.EXPAND, 5),
-        ])
+        choiceSizer.AddMany(
+            [
+                (roleChoiceLabel, 1, wx.LEFT | wx.BOTTOM | wx.TOP, 5),
+                (self.roleChoice, 2, wx.ALL | wx.EXPAND, 5),
+            ]
+        )
         btnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        btnSizer.AddMany([
-            (self.browseButton, 1, wx.ALL, 5),
-            (self.previewButton, 1, wx.ALL, 5),
-        ])
-        sizer.AddMany([
-            (choiceSizer, 1, wx.ALL, 10),
-            (btnSizer, 1, wx.ALL, 10),
-        ])
+        btnSizer.AddMany(
+            [(self.browseButton, 1, wx.ALL, 5), (self.previewButton, 1, wx.ALL, 5)]
+        )
+        sizer.AddMany([(choiceSizer, 1, wx.ALL, 10), (btnSizer, 1, wx.ALL, 10)])
         self.Bind(wx.EVT_BUTTON, self.onBrowseClicked, self.browseButton)
         self.Bind(wx.EVT_BUTTON, self.onPreviewClicked, self.previewButton)
         self.Bind(wx.EVT_BUTTON, self.onOkClicked, id=wx.ID_OK)
         existing_roles = [finf.role for finf in self.Parent.theme_state.state]
-        nonexisting_roles  = [(r, l) for r, l in theme_roles.items() if r not in existing_roles]
+        nonexisting_roles = [
+            (r, l) for r, l in theme_roles.items() if r not in existing_roles
+        ]
         for role, label in nonexisting_roles:
             self.roleChoice.Append(label, role)
         self.roleChoice.SetSelection(0)
@@ -353,5 +362,7 @@ class AudioSelectorDialog(BaseDialog):
         return SoundFileInfo(
             role=self.selected_role,
             src=self.selected_audio,
-            dst=os.path.join(self.Parent.theme_state.theme.directory, f"{self.selected_role}{ext}")
+            dst=os.path.join(
+                self.Parent.theme_state.theme.directory, f"{self.selected_role}{ext}"
+            ),
         )

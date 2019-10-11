@@ -20,7 +20,6 @@ WELCOME_MSG = _(
 )
 
 
-
 class NewThemeInfoDialog(BaseDialog):
     """Gets information from the user about  the theme."""
 
@@ -34,20 +33,23 @@ class NewThemeInfoDialog(BaseDialog):
         # Translators: label for a text field
         themeSummaryLabel = wx.StaticText(parent, -1, _("Theme Summary"))
         self.themeSummaryEdit = wx.TextCtrl(
-            parent,
-            -1,
-            style=wx.TE_MULTILINE,
-            name="summary"
+            parent, -1, style=wx.TE_MULTILINE, name="summary"
         )
-        sizer.AddMany([
-            (themeNameLabel, 0, wx.ALL, 5),
-            (self.themeNameEdit, 1, wx.BOTTOM|wx.LEFT|wx.RIGHT, 10),
-            (themeAuthorLabel, 0, wx.ALL, 5),
-            (self.themeAuthorEdit, 1, wx.BOTTOM|wx.LEFT|wx.RIGHT, 10),
-            (themeSummaryLabel, 0, wx.ALL, 5),
-            (self.themeSummaryEdit, 1, wx.BOTTOM|wx.LEFT|wx.RIGHT, 10),
-        ])
-        self.edit_fields = (self.themeNameEdit, self.themeAuthorEdit, self.themeSummaryEdit,)
+        sizer.AddMany(
+            [
+                (themeNameLabel, 0, wx.ALL, 5),
+                (self.themeNameEdit, 1, wx.BOTTOM | wx.LEFT | wx.RIGHT, 10),
+                (themeAuthorLabel, 0, wx.ALL, 5),
+                (self.themeAuthorEdit, 1, wx.BOTTOM | wx.LEFT | wx.RIGHT, 10),
+                (themeSummaryLabel, 0, wx.ALL, 5),
+                (self.themeSummaryEdit, 1, wx.BOTTOM | wx.LEFT | wx.RIGHT, 10),
+            ]
+        )
+        self.edit_fields = (
+            self.themeNameEdit,
+            self.themeAuthorEdit,
+            self.themeSummaryEdit,
+        )
 
     def get_user_input(self):
         return {field.Name: field.GetValue().strip() for field in self.edit_fields}
@@ -60,7 +62,7 @@ class NewThemeInfoDialog(BaseDialog):
                 _("All of the fields are required. Exiting..."),
                 # Translators: title for an error message
                 _("Error"),
-                style=wx.ICON_ERROR
+                style=wx.ICON_ERROR,
             )
         return has_content
 
@@ -72,14 +74,15 @@ class AudioThemeSelectorDialog(BaseDialog):
         # Translators: label for the audio theme selector choice
         themesChoiceLabel = wx.StaticText(parent, -1, _("Audio themes"))
         self.themeChoice = wx.Choice(parent, -1)
-        sizer.AddMany([
-            (themesChoiceLabel, 0, wx.ALL, 5),
-            (self.themeChoice, 1, wx.ALL|wx.EXPAND, 10)
-        ])
+        sizer.AddMany(
+            [
+                (themesChoiceLabel, 0, wx.ALL, 5),
+                (self.themeChoice, 1, wx.ALL | wx.EXPAND, 10),
+            ]
+        )
         for theme in AudioThemesHandler.get_installed_themes():
             self.themeChoice.Append(theme.name, theme)
         self.themeChoice.SetSelection(0)
-
 
     @property
     def selected_theme(self):
@@ -89,14 +92,9 @@ class AudioThemeSelectorDialog(BaseDialog):
 
 
 class AudioThemesStudioStartupDialog(BaseDialog):
-
     def addControls(self, sizer, parent):
         # Translators: instruction message in the audio themes studio startup dialog
-        dialogMessage = wx.StaticText(
-            self,
-            -1,
-            _(WELCOME_MSG)
-        )
+        dialogMessage = wx.StaticText(self, -1, _(WELCOME_MSG))
         self.createNewThemeButton = CommandLinkButton(
             parent,
             -1,
@@ -113,11 +111,13 @@ class AudioThemesStudioStartupDialog(BaseDialog):
             # Translators: the note of a button
             _("Customize an installed audio theme with your prefered  sounds."),
         )
-        sizer.AddMany([
-            (dialogMessage, 1, wx.EXPAND|wx.ALL, 10),
-            (self.createNewThemeButton, 1, wx.EXPAND|wx.ALL, 10),
-            (self.editExistingThemeButton, 1, wx.EXPAND|wx.ALL, 10),
-        ])
+        sizer.AddMany(
+            [
+                (dialogMessage, 1, wx.EXPAND | wx.ALL, 10),
+                (self.createNewThemeButton, 1, wx.EXPAND | wx.ALL, 10),
+                (self.editExistingThemeButton, 1, wx.EXPAND | wx.ALL, 10),
+            ]
+        )
         # Bind events
         self.Bind(wx.EVT_BUTTON, self.onCreateNewTheme, self.createNewThemeButton)
         self.Bind(wx.EVT_BUTTON, self.onEditExistingTheme, self.editExistingThemeButton)
@@ -143,10 +143,10 @@ class AudioThemesStudioStartupDialog(BaseDialog):
         with TemporaryDirectory() as tempdir:
             new_theme = AudioTheme(directory=tempdir, **theme_info)
             dlg = ThemeBlenderDialog(
-            # Translators: title for create new theme dialog
+                # Translators: title for create new theme dialog
                 _("Creating New Theme - {name}").format(name=theme_info["name"]),
                 theme=new_theme,
-                editing=False
+                editing=False,
             )
             with dlg:
                 dlg.ShowModal()
@@ -156,10 +156,12 @@ class AudioThemesStudioStartupDialog(BaseDialog):
         if not list(AudioThemesHandler.get_installed_themes()):
             return wx.MessageBox(
                 # Translators: message telling the user that there are no audio themes installed
-                _("You do not have any audio themes installed.\nPlease install or create an audio theme first."),
-                # Translators: title for a message telling the user that no audio theme was found 
+                _(
+                    "You do not have any audio themes installed.\nPlease install or create an audio theme first."
+                ),
+                # Translators: title for a message telling the user that no audio theme was found
                 _("No Audio Themes"),
-                style=wx.ICON_ERROR
+                style=wx.ICON_ERROR,
             )
         selected_theme = None
         # Translators: title for the theme selector dialog
@@ -170,7 +172,7 @@ class AudioThemesStudioStartupDialog(BaseDialog):
         dlg = ThemeBlenderDialog(
             # Translators: title for create new theme dialog
             _("Editing Audio Theme: {name}").format(name=selected_theme.name),
-            theme=selected_theme
+            theme=selected_theme,
         )
         with dlg:
             dlg.ShowModal()

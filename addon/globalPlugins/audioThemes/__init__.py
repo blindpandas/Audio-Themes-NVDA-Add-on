@@ -32,30 +32,37 @@ from .studio import AudioThemesStudioStartupDialog
 
 
 import addonHandler
+
 addonHandler.initTranslation()
 
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
-    browser_apps  = ["firefox", "iexplore", "chrome", "opera", "edge"]
+    browser_apps = ["firefox", "iexplore", "chrome", "opera", "edge"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.handler = AudioThemesHandler()
-        gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(AudioThemesSettingsPanel)
+        gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(
+            AudioThemesSettingsPanel
+        )
         self._previous_mouse_object = None
         # Add the menu item for the audio themes studio
         self.studioMenuItem = gui.mainFrame.sysTrayIcon.menu.Insert(
             2,
             wx.ID_ANY,
             # Translators: label for the audio themes studio menu item
-            _("&Audio Themes Studio")
+            _("&Audio Themes Studio"),
         )
-        gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.on_studio_item_clicked, self.studioMenuItem)
+        gui.mainFrame.sysTrayIcon.Bind(
+            wx.EVT_MENU, self.on_studio_item_clicked, self.studioMenuItem
+        )
 
     def terminate(self):
         with suppress(Exception):
-            gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(AudioThemesSettingsPanel)
+            gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(
+                AudioThemesSettingsPanel
+            )
             gui.mainFrame.sysTrayIcon.menu.RemoveItem(self.studioMenuItem)
 
     def on_studio_item_clicked(self, event):
