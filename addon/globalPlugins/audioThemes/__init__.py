@@ -1,5 +1,8 @@
 # coding: utf-8
 
+# Copyright (c) 2014-2019 Musharraf Omer
+# This file is covered by the GNU General Public License.
+
 """
   Audio Themes Add-on
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -12,7 +15,6 @@
 
   The development of this addon is happening on GitHub <http://github.com/mush42/Audio-Themes-NVDA-Add-on>
   Crafted by Musharraf Omer <ibnomer2011@hotmail.com> using code published by  others from the NVDA community.
-  Licensed under the GNU General Public License.
 """
 
 from contextlib import suppress
@@ -64,6 +66,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
                 AudioThemesSettingsPanel
             )
             gui.mainFrame.sysTrayIcon.menu.RemoveItem(self.studioMenuItem)
+            self.handler.close()
 
     def on_studio_item_clicked(self, event):
         # Translators: title for the audio themes studio dialog

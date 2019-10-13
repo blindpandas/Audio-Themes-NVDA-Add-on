@@ -143,7 +143,7 @@ class BaseDialog(wx.Dialog):
         self.Close()
 
     def should_return_id_ok(self):
-        """Override to indicate if this dialog was canceled."""
+        """Override to indicate if this dialog was not canceled."""
         return True
 
 

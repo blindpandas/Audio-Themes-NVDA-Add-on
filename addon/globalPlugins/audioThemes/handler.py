@@ -9,6 +9,7 @@ from dataclasses import dataclass, field, asdict
 from zipfile import ZipFile, ZIP_DEFLATED
 from uuid import uuid4
 import os
+import ctypes
 import shutil
 import copy
 import json
@@ -16,7 +17,7 @@ import config
 import controlTypes
 import extensionPoints
 from config import post_configSave, post_configReset, post_configProfileSwitch
-from .unspoken import UnspokenPlayer
+from .unspoken import UnspokenPlayer, libaudioverse, dll_hack
 
 
 THEMES_DIR = os.path.join(os.path.dirname(__file__), "Themes")
@@ -141,6 +142,12 @@ class AudioThemesHandler:
         ):
             action.register(self.configure)
 
+    def close(self):
+        if self.active_theme is not None:
+            self.active_theme.deactivate()
+        for _dll in dll_hack:
+            ctypes.windll.kernel32.FreeLibrary(_dll._handle)
+
     def get_active_theme(self):
         if not config.conf["audiothemes"]["enable_audio_themes"]:
             return
@@ -186,11 +193,29 @@ class AudioThemesHandler:
                 continue
             yield theme
 
-    @staticmethod
-    def install_audio_themePackage(theme_pack):
+    @classmethod
+    def install_audio_themePackage(cls, theme_pack):
         identified_path = os.path.join(THEMES_DIR, uuid4().hex).lower()
         with ZipFile(theme_pack, "r") as pack:
+            if pack.infolist()[0].is_dir():
+                # Legacy theme package
+                return cls._install_legacy(pack, identified_path)
             pack.extractall(path=identified_path)
+
+    @classmethod
+    def _install_legacy(cls, pack, final_dst):
+        pack_infolist = pack.infolist()
+        theme_name = pack_infolist[0].orig_filename
+        os.mkdir(final_dst)
+        for zinfo in pack_infolist[1:]:
+            filename = os.path.split(zinfo.filename)[1]
+            with open(os.path.join(final_dst, filename), "wb") as soundfile:
+                soundfile.write(pack.read(zinfo))
+        info_file = os.path.join(final_dst, INFO_FILE_NAME)
+        theme_info = cls.load_info_file(info_file)
+        if "name" not in theme_info:
+            theme_info["name"] = theme_name
+            cls.write_info_file(info_file, theme_info)
 
     @staticmethod
     def remove_audio_theme(theme):
