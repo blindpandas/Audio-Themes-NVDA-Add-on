@@ -5,7 +5,7 @@ from __future__ import absolute_import
 from . import _lav
 from . import _libaudioverse
 import weakref
-import collections
+import collections.abc
 import ctypes
 import enum
 import functools
@@ -1055,7 +1055,7 @@ class BufferProperty(LibaudioverseProperty):
 class VectorProperty(LibaudioverseProperty):
     r"""class to act as a base for  float3 and float6 properties.
     
-    This class knows how to marshal anything that is a collections.sized and will error if length constraints are not met."""
+    This class knows how to marshal anything that is a collections.abc.Sized and will error if length constraints are not met."""
 
     def __init__(self, handle, slot, getter, setter, length):
         super(VectorProperty, self).__init__(
@@ -1066,8 +1066,8 @@ class VectorProperty(LibaudioverseProperty):
     # Override setter:
     @LibaudioverseProperty.value.setter
     def value(self, val):
-        if not isinstance(val, collections.Sized):
-            raise ValueError("Expected a collections.sized subclass")
+        if not isinstance(val, collections.abc.Sized):
+            raise ValueError("Expected a collections.abc.Sized subclass")
         if len(val) != self._length:
             raise ValueError("Expected a {}-element list".format(self._length))
         self._setter(self._handle, self._slot, *val)

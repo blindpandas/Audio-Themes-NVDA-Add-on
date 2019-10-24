@@ -230,7 +230,7 @@ class ThemeBlenderDialog(BaseDialog):
             return self.themeEntriesList.GetClientData(selection)
 
     def is_dirty(self):
-        return self.theme_state.state == self.theme_state.initial_state
+        return tuple(self.theme_state.state) == self.theme_state.initial_state
 
     def onSave(self, event):
         self.theme_state.apply_diff()

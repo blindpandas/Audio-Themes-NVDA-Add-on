@@ -2,7 +2,7 @@
 # among other things, the implementation heree enables calling functions with keyword arguments and raises exceptions on error, rather than dealing with ctypes directly.
 from __future__ import absolute_import
 import ctypes
-import collections
+import collections.abc
 import functools
 from . import _libaudioverse
 import six
@@ -114,7 +114,7 @@ def error_get_line():
 
 
 def free(ptr):
-    if isinstance(ptr, collections.Sized):
+    if isinstance(ptr, collections.abc.Sized):
         if not (isinstance(ptr, six.binary_type) or isinstance(ptr, six.text_type)):
             ptr_t = None * len(ptr)
             # Try to use the buffer interfaces, if we can.
@@ -271,7 +271,7 @@ def simulation_get_block_size(simulationHandle):
 def simulation_get_block(simulationHandle, channels, mayApplyMixingMatrix, buffer):
     simulationHandle = getattr(simulationHandle, "handle", simulationHandle)
     simulationHandle = getattr(simulationHandle, "handle", simulationHandle)
-    if isinstance(buffer, collections.Sized):
+    if isinstance(buffer, collections.abc.Sized):
         if not (
             isinstance(buffer, six.binary_type) or isinstance(buffer, six.text_type)
         ):
@@ -348,7 +348,7 @@ def simulation_unlock(simulationHandle):
 def simulation_set_block_callback(simulationHandle, callback, userdata):
     simulationHandle = getattr(simulationHandle, "handle", simulationHandle)
     simulationHandle = getattr(simulationHandle, "handle", simulationHandle)
-    if isinstance(userdata, collections.Sized):
+    if isinstance(userdata, collections.abc.Sized):
         if not (
             isinstance(userdata, six.binary_type) or isinstance(userdata, six.text_type)
         ):
@@ -410,7 +410,7 @@ def simulation_get_threads(simulationHandle):
 def simulation_call_in(simulationHandle, when, inAudioThread, cb, userdata):
     simulationHandle = getattr(simulationHandle, "handle", simulationHandle)
     simulationHandle = getattr(simulationHandle, "handle", simulationHandle)
-    if isinstance(userdata, collections.Sized):
+    if isinstance(userdata, collections.abc.Sized):
         if not (
             isinstance(userdata, six.binary_type) or isinstance(userdata, six.text_type)
         ):
@@ -470,7 +470,7 @@ def buffer_load_from_file(bufferHandle, path):
 def buffer_load_from_array(bufferHandle, sr, channels, frames, data):
     bufferHandle = getattr(bufferHandle, "handle", bufferHandle)
     bufferHandle = getattr(bufferHandle, "handle", bufferHandle)
-    if isinstance(data, collections.Sized):
+    if isinstance(data, collections.abc.Sized):
         if not (isinstance(data, six.binary_type) or isinstance(data, six.text_type)):
             data_t = ctypes.c_float * len(data)
             # Try to use the buffer interfaces, if we can.
@@ -863,7 +863,7 @@ def node_get_property_has_dynamic_range(nodeHandle, propertyIndex):
 def node_replace_float_array_property(nodeHandle, propertyIndex, length, values):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(values, collections.Sized):
+    if isinstance(values, collections.abc.Sized):
         if not (
             isinstance(values, six.binary_type) or isinstance(values, six.text_type)
         ):
@@ -903,7 +903,7 @@ def node_read_float_array_property(nodeHandle, propertyIndex, index):
 def node_write_float_array_property(nodeHandle, propertyIndex, start, stop, values):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(values, collections.Sized):
+    if isinstance(values, collections.abc.Sized):
         if not (
             isinstance(values, six.binary_type) or isinstance(values, six.text_type)
         ):
@@ -943,7 +943,7 @@ def node_get_float_array_property_length(nodeHandle, propertyIndex):
 def node_replace_int_array_property(nodeHandle, propertyIndex, length, values):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(values, collections.Sized):
+    if isinstance(values, collections.abc.Sized):
         if not (
             isinstance(values, six.binary_type) or isinstance(values, six.text_type)
         ):
@@ -983,7 +983,7 @@ def node_read_int_array_property(nodeHandle, propertyIndex, index):
 def node_write_int_array_property(nodeHandle, propertyIndex, start, stop, values):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(values, collections.Sized):
+    if isinstance(values, collections.abc.Sized):
         if not (
             isinstance(values, six.binary_type) or isinstance(values, six.text_type)
         ):
@@ -1088,7 +1088,7 @@ def automation_set(nodeHandle, slot, time, value):
 def automation_envelope(nodeHandle, slot, time, duration, valuesLength, values):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(values, collections.Sized):
+    if isinstance(values, collections.abc.Sized):
         if not (
             isinstance(values, six.binary_type) or isinstance(values, six.text_type)
         ):
@@ -1282,7 +1282,7 @@ def create_push_node(simulationHandle, sr, channels):
 def push_node_feed(nodeHandle, length, frames):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(frames, collections.Sized):
+    if isinstance(frames, collections.abc.Sized):
         if not (
             isinstance(frames, six.binary_type) or isinstance(frames, six.text_type)
         ):
@@ -1308,7 +1308,7 @@ def push_node_feed(nodeHandle, length, frames):
 def push_node_set_low_callback(nodeHandle, callback, userdata):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(userdata, collections.Sized):
+    if isinstance(userdata, collections.abc.Sized):
         if not (
             isinstance(userdata, six.binary_type) or isinstance(userdata, six.text_type)
         ):
@@ -1333,7 +1333,7 @@ def push_node_set_low_callback(nodeHandle, callback, userdata):
 def push_node_set_underrun_callback(nodeHandle, callback, userdata):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(userdata, collections.Sized):
+    if isinstance(userdata, collections.abc.Sized):
         if not (
             isinstance(userdata, six.binary_type) or isinstance(userdata, six.text_type)
         ):
@@ -1382,7 +1382,7 @@ def create_pull_node(simulationHandle, sr, channels):
 def pull_node_set_audio_callback(nodeHandle, callback, userdata):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(userdata, collections.Sized):
+    if isinstance(userdata, collections.abc.Sized):
         if not (
             isinstance(userdata, six.binary_type) or isinstance(userdata, six.text_type)
         ):
@@ -1419,7 +1419,7 @@ def create_graph_listener_node(simulationHandle, channels):
 def graph_listener_node_set_listening_callback(nodeHandle, callback, userdata):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(userdata, collections.Sized):
+    if isinstance(userdata, collections.abc.Sized):
         if not (
             isinstance(userdata, six.binary_type) or isinstance(userdata, six.text_type)
         ):
@@ -1465,7 +1465,7 @@ def create_custom_node(
 def custom_node_set_processing_callback(nodeHandle, callback, userdata):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(userdata, collections.Sized):
+    if isinstance(userdata, collections.abc.Sized):
         if not (
             isinstance(userdata, six.binary_type) or isinstance(userdata, six.text_type)
         ):
@@ -1535,7 +1535,7 @@ def iir_node_set_coefficients(
 ):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(numerator, collections.Sized):
+    if isinstance(numerator, collections.abc.Sized):
         if not (
             isinstance(numerator, six.binary_type)
             or isinstance(numerator, six.text_type)
@@ -1554,7 +1554,7 @@ def iir_node_set_coefficients(
                 ctypes.create_string_buffer(numerator, len(numerator)),
                 ctypes.POINTER(ctypes.c_double),
             )
-    if isinstance(denominator, collections.Sized):
+    if isinstance(denominator, collections.abc.Sized):
         if not (
             isinstance(denominator, six.binary_type)
             or isinstance(denominator, six.text_type)
@@ -1636,7 +1636,7 @@ def create_buffer_node(simulationHandle):
 def buffer_node_set_end_callback(nodeHandle, callback, userdata):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(userdata, collections.Sized):
+    if isinstance(userdata, collections.abc.Sized):
         if not (
             isinstance(userdata, six.binary_type) or isinstance(userdata, six.text_type)
         ):
@@ -1740,7 +1740,7 @@ def create_fft_convolver_node(simulationHandle, channels):
 def fft_convolver_node_set_response(nodeHandle, channel, length, response):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(response, collections.Sized):
+    if isinstance(response, collections.abc.Sized):
         if not (
             isinstance(response, six.binary_type) or isinstance(response, six.text_type)
         ):
@@ -1827,7 +1827,7 @@ def crossfader_node_crossfade(nodeHandle, duration, input):
 def crossfader_node_set_finished_callback(nodeHandle, callback, userdata):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(userdata, collections.Sized):
+    if isinstance(userdata, collections.abc.Sized):
         if not (
             isinstance(userdata, six.binary_type) or isinstance(userdata, six.text_type)
         ):
@@ -2053,7 +2053,7 @@ def create_file_streamer_node(simulationHandle, path):
 def file_streamer_node_set_end_callback(nodeHandle, callback, userdata):
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
     nodeHandle = getattr(nodeHandle, "handle", nodeHandle)
-    if isinstance(userdata, collections.Sized):
+    if isinstance(userdata, collections.abc.Sized):
         if not (
             isinstance(userdata, six.binary_type) or isinstance(userdata, six.text_type)
         ):
