@@ -1,3 +1,5 @@
+# coding: utf-8
+
 # Unspoken user interface feedback for NVDA
 # By Bryan Smart (bryansmart@bryansmart.com) and Austin Hicks (camlorn38@gmail.com)
 # Modified for use with the audio themes add-on by Musharraf Omer
@@ -53,8 +55,8 @@ class UnspokenPlayer:
         self.hrtf_panner.should_crossfade = False
         self.hrtf_panner.connect_simulation(0)
         # Hook to keep NVDA from announcing roles.
-        self._NVDA_getSpeechTextForProperties = speech.getSpeechTextForProperties
-        speech.getSpeechTextForProperties = self._hook_getSpeechTextForProperties
+        self._NVDA_getSpeechTextForProperties = speech.getPropertiesSpeech
+        speech.getPropertiesSpeech = self._hook_getPropertiesSpeech
         self._last_played_object = None
         self._last_played_time = 0
         self._last_played_sound = None
@@ -81,7 +83,7 @@ class UnspokenPlayer:
             return False
         return True
 
-    def _hook_getSpeechTextForProperties(
+    def _hook_getPropertiesSpeech(
         self, reason=NVDAObjects.controlTypes.REASON_QUERY, *args, **kwargs
     ):
         role = kwargs.get("role", None)

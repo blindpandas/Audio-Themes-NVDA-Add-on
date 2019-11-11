@@ -34,7 +34,7 @@ def _show_audio_file_dialog(parent):
             return filename
 
 
-@dataclass(order=True)
+@dataclass(order=True, eq=True)
 class SoundFileInfo:
     role: int
     src: os.PathLike

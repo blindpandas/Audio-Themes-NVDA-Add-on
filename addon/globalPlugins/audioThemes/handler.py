@@ -152,10 +152,12 @@ class AudioThemesHandler:
         if not config.conf["audiothemes"]["enable_audio_themes"]:
             return
         theme = self.get_theme_from_folder(config.conf["audiothemes"]["active_theme"])
-        if theme:
-            theme.load(self.player)
-            theme.is_active = True
-            return theme
+        if not theme:
+            config.conf["audiothemes"]["active_theme"] = "Default"
+            theme = self.get_theme_from_folder("Default")
+        theme.load(self.player)
+        theme.is_active = True
+        return theme
 
     def configure(self, *args, **kwargs):
         user_config = config.conf["audiothemes"]
@@ -205,7 +207,7 @@ class AudioThemesHandler:
     @classmethod
     def _install_legacy(cls, pack, final_dst):
         pack_infolist = pack.infolist()
-        theme_name = pack_infolist[0].orig_filename
+        theme_name = pack_infolist[0].orig_filename.strip("/")
         os.mkdir(final_dst)
         for zinfo in pack_infolist[1:]:
             filename = os.path.split(zinfo.filename)[1]

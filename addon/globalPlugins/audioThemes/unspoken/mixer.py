@@ -1,3 +1,5 @@
+# coding: utf-8
+
 # very simple mixer using Libaudioverse.
 # wraps a Simulation object
 import queue
