@@ -3,7 +3,7 @@
 # Copyright (c) 2014-2019 Musharraf Omer
 # This file is covered by the GNU General Public License.
 
-from typing import List, Tuple
+from typing import Sequence
 from dataclasses import dataclass, field, asdict
 from contextlib import suppress
 import os
@@ -56,8 +56,8 @@ class SoundFileInfo:
 @dataclass
 class ThemeState:
     theme: AudioTheme
-    initial_state: Tuple[SoundFileInfo] = None
-    state: List[SoundFileInfo] = None
+    initial_state: Sequence[SoundFileInfo] = None
+    state: Sequence[SoundFileInfo] = None
 
     def __post_init__(self):
         _init_state = []
