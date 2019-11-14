@@ -12,7 +12,11 @@ from wx.adv import CommandLinkButton
 from ..handler import AudioTheme, AudioThemesHandler, audiotheme_changed
 from .themes_blender import BaseDialog, ThemeBlenderDialog
 
+import addonHandler
+addonHandler.initTranslation()
 
+
+# Translators: the welcome message of the audio theme studio dialog
 WELCOME_MSG = _(
     "Welcome To The Audio Themes Studio:\n"
     "Here you can create new audio themes and package them for sharing with others.\n"

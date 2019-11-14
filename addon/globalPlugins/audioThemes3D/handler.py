@@ -19,6 +19,8 @@ import extensionPoints
 from config import post_configSave, post_configReset, post_configProfileSwitch
 from .unspoken import UnspokenPlayer, libaudioverse, dll_hack
 
+import addonHandler
+addonHandler.initTranslation()
 
 THEMES_DIR = os.path.join(os.path.dirname(__file__), "Themes")
 INFO_FILE_NAME = "info.json"

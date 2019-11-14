@@ -34,7 +34,6 @@ from .studio import AudioThemesStudioStartupDialog
 
 
 import addonHandler
-
 addonHandler.initTranslation()
 
 

@@ -10,7 +10,6 @@ from .handler import AudioThemesHandler, audiotheme_changed
 
 
 import addonHandler
-
 addonHandler.initTranslation()
 
 

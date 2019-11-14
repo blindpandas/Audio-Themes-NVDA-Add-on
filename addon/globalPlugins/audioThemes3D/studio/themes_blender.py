@@ -13,6 +13,9 @@ import gui
 from ..unspoken import UnspokenPlayer
 from ..handler import AudioTheme, AudioThemesHandler, theme_roles, SUPPORTED_FILE_TYPES
 
+import addonHandler
+addonHandler.initTranslation()
+
 
 def _show_audio_file_dialog(parent):
     # Translators: label for all supported file types found in an open dialog
@@ -126,10 +129,10 @@ class BaseDialog(wx.Dialog):
 
     def getButtons(self, parent):
         btnsizer = wx.StdDialogButtonSizer()
-        # Translators: the lable of the close button in a dialog
+        # Translators: the label of the close button in a dialog
         okBtn = wx.Button(parent, wx.ID_OK, _("OK"))
         okBtn.SetDefault()
-        # Translators: the lable of the close button in a dialog
+        # Translators: the label of the close button in a dialog
         cancelBtn = wx.Button(parent, wx.ID_CANCEL, _("Cancel"))
         btnsizer.AddButton(okBtn)
         btnsizer.AddButton(cancelBtn)
@@ -143,7 +146,7 @@ class BaseDialog(wx.Dialog):
         self.Close()
 
     def should_return_id_ok(self):
-        """Override to indicate if this dialog was not canceled."""
+        """Override to indicate if this dialog was not cancelled."""
         return True
 
 
@@ -193,10 +196,10 @@ class ThemeBlenderDialog(BaseDialog):
 
     def getButtons(self, parent):
         btnsizer = wx.StdDialogButtonSizer()
-        # Translators: the lable of the OK button in a dialog
+        # Translators: the label of the OK button in a dialog
         saveBtn = wx.Button(parent, wx.ID_SAVE, _("&Save"))
         saveBtn.SetDefault()
-        # Translators: the lable of the cancel button in a dialog
+        # Translators: the label of the cancel button in a dialog
         cancelBtn = wx.Button(parent, wx.ID_CANCEL, _("Cancel"))
         for btn in (saveBtn, cancelBtn):
             btnsizer.AddButton(btn)
