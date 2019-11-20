@@ -84,8 +84,8 @@ class ThemeState:
                     wx.MessageBox(
                         # Translators: message indicating failure in copying files
                         _(
-                            "Could not copy file {fileinfo.src} to directory {fileinfo.dst}."
-                        ),
+                            "Could not copy file {src} to directory {dst}."
+                        ).format(src=fileinfo.src, dst=fileinfo.dst),
                         # Translators: title for a message indicating an error
                         _("Error"),
                         style=wx.ICON_ERROR,

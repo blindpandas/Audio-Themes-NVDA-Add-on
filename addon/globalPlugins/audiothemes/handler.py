@@ -88,6 +88,9 @@ class AudioTheme:
     def folder(self):
         return os.path.split(self.directory)[-1]
 
+    def exists(self):
+        return os.path.isdir(self.directory)
+
     def todict(self):
         data = asdict(self)
         for unwanted_key in ("is_active", "directory", "sounds"):
@@ -157,9 +160,10 @@ class AudioThemesHandler:
         if not theme:
             config.conf["audiothemes"]["active_theme"] = "Default"
             theme = self.get_theme_from_folder("Default")
-        theme.load(self.player)
-        theme.is_active = True
-        return theme
+        if theme.exists():
+            theme.load(self.player)
+            theme.is_active = True
+            return theme
 
     def configure(self, *args, **kwargs):
         user_config = config.conf["audiothemes"]
@@ -167,6 +171,8 @@ class AudioThemesHandler:
             self.active_theme.deactivate()
         self.enabled = user_config["enable_audio_themes"]
         self.active_theme = self.get_active_theme()
+        if self.active_theme is None:
+            return
         self.player.audio3d = user_config["audio3d"]
         self.player.use_in_say_all = user_config["use_in_say_all"]
         self.player.speak_roles = user_config["speak_roles"]
