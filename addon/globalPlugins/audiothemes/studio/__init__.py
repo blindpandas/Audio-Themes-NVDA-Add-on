@@ -7,6 +7,7 @@
 import wx
 import config
 import gui
+from contextlib import contextmanager
 from tempfile import TemporaryDirectory
 from wx.adv import CommandLinkButton
 from ..handler import AudioTheme, AudioThemesHandler, audiotheme_changed
@@ -35,7 +36,7 @@ class NewThemeInfoDialog(BaseDialog):
         themeAuthorLabel = wx.StaticText(parent, -1, _("Theme Author"))
         self.themeAuthorEdit = wx.TextCtrl(parent, -1, name="author")
         # Translators: label for a text field
-        themeSummaryLabel = wx.StaticText(parent, -1, _("Theme Summary"))
+        themeSummaryLabel = wx.StaticText(parent, -1, _("Theme Description"))
         self.themeSummaryEdit = wx.TextCtrl(
             parent, -1, style=wx.TE_MULTILINE, name="summary"
         )
@@ -96,6 +97,11 @@ class AudioThemeSelectorDialog(BaseDialog):
 
 
 class AudioThemesStudioStartupDialog(BaseDialog):
+
+    def __init__(self, plugin, *args, **kwargs):
+        self.plugin = plugin
+        super().__init__(*args, **kwargs)
+
     def addControls(self, sizer, parent):
         # Translators: instruction message in the audio themes studio startup dialog
         dialogMessage = wx.StaticText(self, -1, _(WELCOME_MSG))
@@ -134,6 +140,15 @@ class AudioThemesStudioStartupDialog(BaseDialog):
         btnsizer.Realize()
         return btnsizer
 
+    @contextmanager
+    def audio_theme_muted(self):
+        theme_state = self.plugin.handler.enabled
+        self.plugin.handler.enabled = False
+        try:
+            yield
+        finally:
+            self.plugin.handler.enabled = theme_state
+
     def onCreateNewTheme(self, event):
         self.Close()
         theme_info = None
@@ -152,8 +167,9 @@ class AudioThemesStudioStartupDialog(BaseDialog):
                 theme=new_theme,
                 editing=False,
             )
-            with dlg:
-                dlg.ShowModal()
+            with self.audio_theme_muted():
+                with dlg:
+                    dlg.ShowModal()
 
     def onEditExistingTheme(self, event):
         self.Close()
@@ -178,6 +194,7 @@ class AudioThemesStudioStartupDialog(BaseDialog):
             _("Editing Audio Theme: {name}").format(name=selected_theme.name),
             theme=selected_theme,
         )
-        with dlg:
-            dlg.ShowModal()
+        with self.audio_theme_muted():
+            with dlg:
+                dlg.ShowModal()
         audiotheme_changed.notify()

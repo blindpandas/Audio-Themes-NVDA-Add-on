@@ -69,7 +69,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
     def on_studio_item_clicked(self, event):
         # Translators: title for the audio themes studio dialog
-        with AudioThemesStudioStartupDialog(_("Audio Themes Studio")) as dlg:
+        with AudioThemesStudioStartupDialog(self, _("Audio Themes Studio")) as dlg:
             dlg.ShowModal()
 
     def script_speakObject(self, gesture):
