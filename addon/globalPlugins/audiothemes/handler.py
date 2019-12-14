@@ -16,13 +16,14 @@ import json
 import config
 import controlTypes
 import extensionPoints
+import globalVars
 from config import post_configSave, post_configReset, post_configProfileSwitch
 from .unspoken import UnspokenPlayer, libaudioverse, dll_hack
 
 import addonHandler
 addonHandler.initTranslation()
 
-THEMES_DIR = os.path.join(os.path.dirname(__file__), "Themes")
+THEMES_HOME = os.path.join(globalVars.appArgs.configPath, "audio-themes")
 INFO_FILE_NAME = "info.json"
 SUPPORTED_FILE_TYPES = OrderedDict()
 # Translators: The file type to be shown in a dialog used to browse for audio files.
@@ -189,7 +190,7 @@ class AudioThemesHandler:
 
     @classmethod
     def get_theme_from_folder(cls, folderpath):
-        expected = os.path.join(THEMES_DIR, folderpath)
+        expected = os.path.join(THEMES_HOME, folderpath)
         info_file = os.path.join(expected, INFO_FILE_NAME)
         if os.path.isfile(info_file):
             info = cls.load_info_file(info_file)
@@ -197,7 +198,7 @@ class AudioThemesHandler:
 
     @classmethod
     def get_installed_themes(cls):
-        for folder in os.listdir(THEMES_DIR):
+        for folder in os.listdir(THEMES_HOME):
             theme = cls.get_theme_from_folder(folder)
             if theme is None:
                 continue
@@ -205,7 +206,7 @@ class AudioThemesHandler:
 
     @classmethod
     def install_audio_themePackage(cls, theme_pack):
-        identified_path = os.path.join(THEMES_DIR, uuid4().hex).lower()
+        identified_path = os.path.join(THEMES_HOME, uuid4().hex).lower()
         with ZipFile(theme_pack, "r") as pack:
             if pack.infolist()[0].is_dir():
                 # Legacy theme package
