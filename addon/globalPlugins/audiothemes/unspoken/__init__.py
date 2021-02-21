@@ -13,6 +13,9 @@ import speech
 import sayAllHandler
 
 
+# for compatibility
+REASON_QUERY = NVDAObjects.controlTypes.OutputReason.QUERY if hasattr(NVDAObjects.controlTypes, "OutputReason") else NVDAObjects.controlTypes.REASON_QUERY
+
 # this is a hack.
 # Normally, we would modify Libaudioverse to know about Unspoken and NVDA.
 # But if Windows sees a DLL is already loaded, it doesn't reload it.
@@ -84,7 +87,7 @@ class UnspokenPlayer:
         return True
 
     def _hook_getPropertiesSpeech(
-        self, reason=NVDAObjects.controlTypes.REASON_QUERY, *args, **kwargs
+        self, reason=REASON_QUERY, *args, **kwargs
     ):
         role = kwargs.get("role", None)
         if role:
