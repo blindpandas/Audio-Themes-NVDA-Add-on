@@ -18,7 +18,11 @@
 """
 
 from contextlib import suppress
+import sys
+import os
 import wx
+import tones
+import api
 import globalPluginHandler
 import appModuleHandler
 import scriptHandler
@@ -27,10 +31,18 @@ import gui
 import speech
 import controlTypes
 import globalCommands
+import browseMode
 
 from .handler import AudioThemesHandler, SpecialProps
 from .settings import AudioThemesSettingsPanel
 from .studio import AudioThemesStudioStartupDialog
+
+
+PLUGIN_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
+LIB_DIRECTORY = os.path.join(PLUGIN_DIRECTORY, "lib")
+sys.path.insert(0, LIB_DIRECTORY)
+import unsync
+sys.path.remove(LIB_DIRECTORY)
 
 
 import addonHandler
@@ -43,6 +55,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Patched functions
+        self.original_speech_speakTextInfo = speech.speakTextInfo
+        speech.speakTextInfo = self.audio_themes_speech_speakTextInfo
+        # Normal instantiate
         self.handler = AudioThemesHandler()
         gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(
             AudioThemesSettingsPanel
@@ -81,6 +97,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         globalCommands.GlobalCommands.script_reportCurrentFocus.__doc__
     )
 
+    def audio_themes_speech_speakTextInfo(self, info, *args, **kwargs):
+        current_tree_interceptor = api.getFocusObject().treeInterceptor
+        if (current_tree_interceptor is None)  or not isinstance(current_tree_interceptor, browseMode.BrowseModeDocumentTreeInterceptor):
+            return self.original_speech_speakTextInfo(info, *args, **kwargs)
+        obj = info.NVDAObjectAtStart
+        if obj.role is controlTypes.ROLE_TABLE:
+            tones.beep(100, 100)
+        gui.cinfo = obj
+        if obj.role  is controlTypes.ROLE_REDUNDANTOBJECT:
+            obj = obj.parent
+        self.playObject(obj)
+        return self.original_speech_speakTextInfo(info, *args, **kwargs)
+
     def event_gainFocus(self, obj, nextHandler):
         self.playObject(obj)
         nextHandler()
@@ -106,7 +135,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             self.playObject(obj)
         nextHandler()
 
+    @unsync.unsync
     def playObject(self, obj):
+        if obj is None:
+            return
         order = self.getOrder(obj)
         if getattr(obj, "snd", None) is None:
             if 16384 in obj.states:

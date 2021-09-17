@@ -22,7 +22,7 @@ addon_info = {
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
 	"addon_description" : _("""This add-on creates a virtual audio display that plays sounds when focusing or navigating objects, the audio will be played in a location that corresponds to the object's location in the visual display. The add-on also enables you to add, remove, edit, create, and distribute audio theme packages."""),
 	# version
-	"addon_version" : "6.0",
+	"addon_version" : "7.0",
 	# Author(s)
 	"addon_author" : "Musharraf Omer<ibnomer2011@hotmail.com>",
 	# URL for the add-on documentation support
@@ -30,9 +30,9 @@ addon_info = {
 	# Documentation file name
 	"addon_docFileName" : "readme.html",
 	# Minimum NVDA version supported (e.g. "2018.3.0", minor version is optional)
-	"addon_minimumNVDAVersion" : "2019.3",
+	"addon_minimumNVDAVersion" : "2021.1",
 	# Last NVDA version supported/tested (e.g. "2018.4.0", ideally more recent than minimum version)
-	"addon_lastTestedNVDAVersion" : "2019.3",
+	"addon_lastTestedNVDAVersion" : "2021.2",
 	# Add-on update channel (default is None, denoting stable releases, and for development releases, use "dev"; do not change unless you know what you are doing)
 	"addon_updateChannel" : None,
 }

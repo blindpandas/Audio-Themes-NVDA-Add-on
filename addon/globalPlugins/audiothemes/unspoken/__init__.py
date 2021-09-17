@@ -8,9 +8,11 @@ import os
 import time
 import dataclasses
 import weakref
+import controlTypes
 import NVDAObjects
+import synthDriverHandler
 import speech
-import sayAllHandler
+import speech.sayAll as sayAllHandler
 
 
 # this is a hack.
@@ -84,7 +86,7 @@ class UnspokenPlayer:
         return True
 
     def _hook_getPropertiesSpeech(
-        self, reason=NVDAObjects.controlTypes.REASON_QUERY, *args, **kwargs
+        self, reason=controlTypes.OutputReason.QUERY, *args, **kwargs
     ):
         role = kwargs.get("role", None)
         if role:
@@ -97,7 +99,7 @@ class UnspokenPlayer:
     def _compute_volume(self):
         if not self.use_synth_volume:
             return clamp(self.volume / 100, 0.0, 1.0)
-        driver = speech.getSynth()
+        driver = synthDriverHandler.getSynth()
         volume = getattr(driver, "volume", 100) / 100.0  # nvda reports as percent.
         volume = clamp(volume, 0.0, 1.0)
         return volume
