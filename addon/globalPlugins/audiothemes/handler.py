@@ -21,6 +21,7 @@ from config import post_configSave, post_configReset, post_configProfileSwitch
 from .unspoken import UnspokenPlayer, libaudioverse, dll_hack
 
 import addonHandler
+
 addonHandler.initTranslation()
 
 THEMES_HOME = os.path.join(globalVars.appArgs.configPath, "audio-themes")

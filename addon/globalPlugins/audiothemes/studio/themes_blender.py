@@ -14,6 +14,7 @@ from ..unspoken import UnspokenPlayer
 from ..handler import AudioTheme, AudioThemesHandler, theme_roles, SUPPORTED_FILE_TYPES
 
 import addonHandler
+
 addonHandler.initTranslation()
 
 
@@ -83,9 +84,9 @@ class ThemeState:
                 if not result:
                     wx.MessageBox(
                         # Translators: message indicating failure in copying files
-                        _(
-                            "Could not copy file {src} to directory {dst}."
-                        ).format(src=fileinfo.src, dst=fileinfo.dst),
+                        _("Could not copy file {src} to directory {dst}.").format(
+                            src=fileinfo.src, dst=fileinfo.dst
+                        ),
                         # Translators: title for a message indicating an error
                         _("Error"),
                         style=wx.ICON_ERROR,

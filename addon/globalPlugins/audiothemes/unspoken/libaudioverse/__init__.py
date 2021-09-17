@@ -51,7 +51,7 @@ class BiquadTypes(enum.IntEnum):
 
 class DistanceModels(enum.IntEnum):
     """used in the 3D components of this library.
-Indicates how sound should become quieter as objects move away from the listener."""
+    Indicates how sound should become quieter as objects move away from the listener."""
 
     delegate = 0
     """Delegate to another node, if we can.  Otherwise, fall back to ``Lav_DISTANCE_MODEL_LINEAR``."""
@@ -65,7 +65,7 @@ Indicates how sound should become quieter as objects move away from the listener
 
 class PanningStrategies(enum.IntEnum):
     """Indicates a strategy to use for panning.
-This is mostly for the :class:`MultipannerNode` and the 3D components of this library."""
+    This is mostly for the :class:`MultipannerNode` and the 3D components of this library."""
 
     delegate = 0
     """Delegate the decision. Used for 3D sources.  If there is nowhere to delegate to, assumes ``Lav_PANNING_STRATEGY_STEREO``."""
@@ -126,7 +126,7 @@ class ChannelInterpretations(enum.IntEnum):
 
 class NodeStates(enum.IntEnum):
     """used to indicate the state of a node.
-This is the value of the node's state property and determins how the node is processed."""
+    This is the value of the node's state property and determins how the node is processed."""
 
     paused = 0
     """This node is paused."""
@@ -138,7 +138,7 @@ This is the value of the node's state property and determins how the node is pro
 
 class PanningStrategies(enum.IntEnum):
     """Indicates a strategy to use for panning.
-This is mostly for the :class:`MultipannerNode` and the 3D components of this library."""
+    This is mostly for the :class:`MultipannerNode` and the 3D components of this library."""
 
     delegate = 0
     """Delegate the decision. Used for 3D sources.  If there is nowhere to delegate to, assumes ``Lav_PANNING_STRATEGY_STEREO``."""
@@ -167,7 +167,7 @@ class NoiseTypes(enum.IntEnum):
 
 class DistanceModels(enum.IntEnum):
     """used in the 3D components of this library.
-Indicates how sound should become quieter as objects move away from the listener."""
+    Indicates how sound should become quieter as objects move away from the listener."""
 
     delegate = 0
     """Delegate to another node, if we can.  Otherwise, fall back to ``Lav_DISTANCE_MODEL_LINEAR``."""
@@ -181,7 +181,7 @@ Indicates how sound should become quieter as objects move away from the listener
 
 class PanningStrategies(enum.IntEnum):
     """Indicates a strategy to use for panning.
-This is mostly for the :class:`MultipannerNode` and the 3D components of this library."""
+    This is mostly for the :class:`MultipannerNode` and the 3D components of this library."""
 
     delegate = 0
     """Delegate the decision. Used for 3D sources.  If there is nowhere to delegate to, assumes ``Lav_PANNING_STRATEGY_STEREO``."""
@@ -591,7 +591,7 @@ _initialized = False
 
 def initialize():
     r"""Corresponds to Lav_initialize, plus binding specific setup.
-    
+
     Call this before using anything from Libaudioverse."""
     global _initialized
     _lav.initialize()
@@ -600,7 +600,7 @@ def initialize():
 
 def shutdown():
     r"""Corresponds to Lav_shutdown.
-    
+
     Call this at the end of your application.
     You must call it before the interpreter shuts down. Failure to do so will allow Libaudioverse to call your code during Python's shutdown procedures."""
     global _initialized
@@ -633,9 +633,9 @@ class _CallbackWrapper(object):
 
 class DeviceInfo(object):
     r"""Represents info on a audio device.
-    
+
     Channels is the number of channels for the device.  Name is a unicode string containing a human-readable name.  Identifier should be used with Simulation.set_output_device.
-    
+
     The caveat from the Libaudioverse manual should be  summarized here:
     channels is not reliable, and your application should default to stereo while providing the user the option to change it."""
 
@@ -680,9 +680,9 @@ class _HandleComparer(object):
 class Simulation(_HandleComparer):
     r"""Represents a running simulation.  All libaudioverse nodes must be passed a simulation at creation time and cannot migrate between them.  Furthermore, it is an error to try to connect objects from different simulations.
 
-Instances of this class are context managers.  Using the with statement on an instance of this class invoke's Libaudioverse's atomic block support.
+    Instances of this class are context managers.  Using the with statement on an instance of this class invoke's Libaudioverse's atomic block support.
 
-For full details of this class, see the Libaudioverse manual."""
+    For full details of this class, see the Libaudioverse manual."""
 
     def __init__(self, sample_rate=44100, block_size=1024):
         r"""Creates a simulation."""
@@ -713,9 +713,9 @@ For full details of this class, see the Libaudioverse manual."""
 
     def get_block(self, channels, may_apply_mixing_matrix=True):
         r"""Returns a block of data.
-        
+
         This function wraps Lav_getBlock.  Note that calling this on a simulation configured to output audio is an error.
-        
+
         If may_apply_mixing_matrix is True, audio will be automatically converted to the output channel type.  If it is false, channels are either dropped or padded with zeros."""
         with self._lock:
             length = _lav.simulation_get_block_size(self.handle) * channels
@@ -741,9 +741,9 @@ For full details of this class, see the Libaudioverse manual."""
         self, callback, additional_args=None, additional_kwargs=None
     ):
         r"""Set a callback to be called every block.
-        
+
         This callback is called as though inside a with block, and takes two positional argguments: the simulation and the simulations' time.
-        
+
         Wraps lav_simulationSetBlockCallback."""
         with self._lock:
             if callback is not None:
@@ -766,9 +766,9 @@ For full details of this class, see the Libaudioverse manual."""
         self, when, callback, extra_args=None, extra_kwargs=None, in_audio_thread=False
     ):
         r"""Schedule a fucntion to run in the future.
-        
+
         If in_audio_thread is false, it is safe to call the Libaudioverse API.
-        
+
         Wraps Lav_simulationCallIn."""
         with self._lock:
             wrapped = _CallbackWrapper(
@@ -779,15 +779,13 @@ For full details of this class, see the Libaudioverse manual."""
                 self._state["scheduled_callbacks"],
             )
             ct = _libaudioverse.LavTimeCallback(wrapped)
-            wrapped.ctypes = (
-                ct
-            )  # Ugly, but works and everything else was worse than this at time of writing.
+            wrapped.ctypes = ct  # Ugly, but works and everything else was worse than this at time of writing.
             _lav.simulation_call_in(self.handle, when, in_audio_thread, ct, None)
             self._state["scheduled_callbacks"].add(wrapped)
 
     def write_file(self, path, channels, duration, may_apply_mixing_matrix=True):
         r"""Write blocks of data to a file.
-        
+
         This function wraps Lav_simulationWriteFile."""
         _lav.simulation_write_file(
             self, path, channels, duration, may_apply_mixing_matrix
@@ -796,7 +794,7 @@ For full details of this class, see the Libaudioverse manual."""
     @property
     def threads(self):
         r"""The number of threads the simulation is using for processing.
-        
+
         This wraps Lav_simulationGetThreads and Lav_simulationSetThreads."""
         return _lav.simulation_get_threads(self)
 
@@ -811,7 +809,7 @@ _types_to_classes[ObjectTypes.simulation] = Simulation
 class Buffer(_HandleComparer):
     r"""An audio buffer.
 
-Use load_from_file to read a file or load_from_array to load an iterable."""
+    Use load_from_file to read a file or load_from_array to load an iterable."""
 
     def __init__(self, simulation):
         handle = _lav.create_buffer(simulation)
@@ -832,32 +830,32 @@ Use load_from_file to read a file or load_from_array to load an iterable."""
 
     def load_from_file(self, path):
         r"""Load an audio file.
-        
+
         Wraps Lav_bufferLoadFromFile."""
         _lav.buffer_load_from_file(self, path)
 
     def load_from_array(self, sr, channels, frames, data):
         r"""Load from an array of interleaved floats.
-        
+
         Wraps Lav_bufferLoadFromArray."""
         _lav.buffer_load_from_array(self, sr, channels, frames, data)
 
     def get_duration(self):
         r"""Get the duration of the buffer in seconds.
-        
+
         Wraps Lav_bufferGetDuration."""
         return _lav.buffer_get_duration(self)
 
     def get_length_in_samples(self):
         r"""Returns the length of the buffer in samples.
-        
+
         Wraps Lav_bufferGetLengthInSamples."""
         return _lav.buffer_get_length_in_samples(self)
 
     def normalize(self):
         r"""Normalizes the buffer.
-        
-        
+
+
         Wraps Lav_bufferNormalize."""
         _lav.buffer_normalize(self)
 
@@ -869,7 +867,7 @@ _types_to_classes[ObjectTypes.buffer] = Buffer
 
 class LibaudioverseProperty(object):
     r"""Proxy to Libaudioverse properties.
-    
+
     All properties support resetting and type query."""
 
     def __init__(self, handle, slot, getter, setter):
@@ -900,7 +898,7 @@ class LibaudioverseProperty(object):
 
 class BooleanProperty(LibaudioverseProperty):
     r"""Represents a boolean property.
-    
+
     Note that boolean properties show up as int properties when their type is queried.
     This class adds extra marshalling to make sure that boolean properties show up as booleans on the Python side, as the C API does not distinguish between boolean properties and int properties with range [0, 1]."""
 
@@ -932,8 +930,8 @@ class IntProperty(LibaudioverseProperty):
 class EnumProperty(LibaudioverseProperty):
     r"""Proxy to an integer property taking an enum.
 
-This class is like IntProperty, but it will error if you try to yuse the wrong enum or a regular integer constant.
-In the C API, the distinction between these classes does not exist: both use Lav_nodeGetIntProperty and Lav_nodeSetIntProperty."""
+    This class is like IntProperty, but it will error if you try to yuse the wrong enum or a regular integer constant.
+    In the C API, the distinction between these classes does not exist: both use Lav_nodeGetIntProperty and Lav_nodeSetIntProperty."""
 
     def __init__(self, handle, slot, enum):
         super(EnumProperty, self).__init__(
@@ -962,17 +960,17 @@ class AutomatedProperty(LibaudioverseProperty):
 
     def linear_ramp_to_value(self, time, value):
         """Schedule a linear automator.
-        
+
         The property's value will change to the specified value by the specified time, starting at the end of the previous automator
-        
+
         This function wraps Lav_automationLinearRampToValue."""
         _lav.automation_linear_ramp_to_value(self._handle, self._slot, time, value)
 
     def envelope(self, time, duration, values):
         r"""Run an envelope.
-        
+
         The property's value will stay where it was after the last automator until the specified time is reached, whereupon it will follow the envelope until time+duration.
-        
+
         This function wraps Lav_automationEnvelope."""
         values_length = len(values)
         _lav.automation_envelope(
@@ -981,13 +979,13 @@ class AutomatedProperty(LibaudioverseProperty):
 
     def set(self, time, value):
         r"""Sets the property's value to a specific value at a specific time.
-        
+
         Wraps Lav_automationSet."""
         _lav.automation_set(self._handle, self._slot, time, value)
 
     def cancel_automators(self, time):
         r"""Cancel all automators scheduled to start after time.
-        
+
         Wraps Lav_automationCancelAutomators."""
         _lav.automation_cancel_automators(self._handle, self._slot, time)
 
@@ -1030,7 +1028,7 @@ class StringProperty(LibaudioverseProperty):
 
 class BufferProperty(LibaudioverseProperty):
     r"""Proxy to a buffer property.
-    
+
     It is safe to set this property to None."""
 
     def __init__(self, handle, slot):
@@ -1054,7 +1052,7 @@ class BufferProperty(LibaudioverseProperty):
 
 class VectorProperty(LibaudioverseProperty):
     r"""class to act as a base for  float3 and float6 properties.
-    
+
     This class knows how to marshal anything that is a collections.abc.Sized and will error if length constraints are not met."""
 
     def __init__(self, handle, slot, getter, setter, length):
@@ -1159,7 +1157,7 @@ class FloatArrayProperty(ArrayProperty):
 # GenericNode is at the bottom, and we should never see one; and GenericObject should hold most implementation.
 class GenericNode(_HandleComparer):
     r"""Base class for all Libaudioverse nodes.
-    
+
     All properties and functionality on this class is available to all Libaudioverse nodes without exception."""
 
     def __init__(self, handle):
@@ -1218,22 +1216,22 @@ class GenericNode(_HandleComparer):
 
     def connect(self, output, node, input):
         r"""Connect the specified output of this node to the specified input of another node.
-        
+
         Nodes are kept alive if another node's input is connected to one of their outputs.
         So long as some node which this node is connected to is alive, this node will also be alive."""
         _lav.node_connect(self, output, node, input)
 
     def connect_simulation(self, output):
         r"""Connect the specified output of this node to  this node's simulation.
-        
+
         Nodes which are connected to the simulation are kept alive as long as they are connected to the simulation."""
         _lav.node_connect_simulation(self, output)
 
     def connect_property(self, output, property):
         r"""Connect an output of this node to an automatable property.
-        
+
         Example: n.connect_property(0, mySineNode.frequency).
-        
+
         As usual, this connection keeps this node alive as long as the destination is also alive."""
         other = property._handle
         slot = property._slot
@@ -1241,9 +1239,9 @@ class GenericNode(_HandleComparer):
 
     def disconnect(self, output, node=None, input=0):
         r"""Disconnect from other nodes.
-        
+
         If node is None, all connections involving output are cleared.
-        
+
         if node is not None, then we are disconnecting from a specific node and input combination."""
         if node is None:
             node = 0  # Force this translation.
@@ -1257,9 +1255,9 @@ class GenericNode(_HandleComparer):
     def add(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 0.0
-After mul is applied, we add the value to which this property is set to the node's result."""
+        Range: [-INFINITY, INFINITY]
+        Default value: 0.0
+        After mul is applied, we add the value to which this property is set to the node's result."""
         return self._property_instances[_libaudioverse.Lav_NODE_ADD]
 
     @add.setter
@@ -1270,15 +1268,15 @@ After mul is applied, we add the value to which this property is set to the node
     def channel_interpretation(self):
         """Type: int
 
-Range: :any:`ChannelInterpretations`
-Default value: :any:`ChannelInterpretations.speakers`
-How to treat channel count mismatches.
-The default is to apply mixing matrices when possible.
+        Range: :any:`ChannelInterpretations`
+        Default value: :any:`ChannelInterpretations.speakers`
+        How to treat channel count mismatches.
+        The default is to apply mixing matrices when possible.
 
-If set to :class:`ChannelInterpretationSpeakers`, mixing matrices are applied to inputs.
-Otherwise, when set to :class:`ChannelInterpretationDiscrete`, they are not.
+        If set to :class:`ChannelInterpretationSpeakers`, mixing matrices are applied to inputs.
+        Otherwise, when set to :class:`ChannelInterpretationDiscrete`, they are not.
 
-This property is almost never needed."""
+        This property is almost never needed."""
         return self._property_instances[_libaudioverse.Lav_NODE_CHANNEL_INTERPRETATION]
 
     @channel_interpretation.setter
@@ -1289,12 +1287,12 @@ This property is almost never needed."""
     def mul(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 1.0
-After this node processes, the value to which mul is set is used as a multiplier on the result.
-The most notable effect of this is to change the node's volume.
-A variety of other uses exist, however, especially as regards to nodes which are connected to properties.
-Mul is applied before add."""
+        Range: [-INFINITY, INFINITY]
+        Default value: 1.0
+        After this node processes, the value to which mul is set is used as a multiplier on the result.
+        The most notable effect of this is to change the node's volume.
+        A variety of other uses exist, however, especially as regards to nodes which are connected to properties.
+        Mul is applied before add."""
         return self._property_instances[_libaudioverse.Lav_NODE_MUL]
 
     @mul.setter
@@ -1305,10 +1303,10 @@ Mul is applied before add."""
     def state(self):
         """Type: int
 
-Range: :any:`NodeStates`
-Default value: :any:`NodeStates.playing`
-The node's state.  See the basics section in the Libaudioverse manual for details.
-The default is usually what you want."""
+        Range: :any:`NodeStates`
+        Default value: :any:`NodeStates.playing`
+        The node's state.  See the basics section in the Libaudioverse manual for details.
+        The default is usually what you want."""
         return self._property_instances[_libaudioverse.Lav_NODE_STATE]
 
     @state.setter
@@ -1317,7 +1315,7 @@ The default is usually what you want."""
 
     def reset(self):
         r"""Perform the node-specific reset operation.
-        
+
         This directly wraps Lav_nodeReset."""
         _lav.node_reset(self)
 
@@ -1327,12 +1325,12 @@ _types_to_classes[ObjectTypes.generic_node] = GenericNode
 
 class EnvironmentNode(GenericNode):
     r"""This is the entry point to the 3D simulation capabilities.
-Environment nodes hold the information needed to pan sources, as well as acting as an aggregate output for all sources that use this environment.
+    Environment nodes hold the information needed to pan sources, as well as acting as an aggregate output for all sources that use this environment.
 
 
-Note that the various properties for default values do not affect already created sources.
-It is best to configure these first.
-Any functionality to change a property on all sources needs to be implemented by the app, and is not offered by Libaudioverse."""
+    Note that the various properties for default values do not affect already created sources.
+    It is best to configure these first.
+    Any functionality to change a property on all sources needs to be implemented by the app, and is not offered by Libaudioverse."""
 
     def __init__(self, simulation, hrtf_path):
         super(EnvironmentNode, self).__init__(
@@ -1416,10 +1414,10 @@ Any functionality to change a property on all sources needs to be implemented by
     def default_max_distance(self):
         """Type: float
 
-Range: [0.0, INFINITY]
-Default value: 50.0
-The default max distance for new sources.
-The max distance of a source is the maximum distance at which that source will be audible."""
+        Range: [0.0, INFINITY]
+        Default value: 50.0
+        The default max distance for new sources.
+        The max distance of a source is the maximum distance at which that source will be audible."""
         return self._property_instances[
             _libaudioverse.Lav_ENVIRONMENT_DEFAULT_MAX_DISTANCE
         ]
@@ -1432,11 +1430,11 @@ The max distance of a source is the maximum distance at which that source will b
     def default_reverb_distance(self):
         """Type: float
 
-Range: [0.0, INFINITY]
-Default value: 30.0
-The default distance at which a source will be heard only in the reverb.
+        Range: [0.0, INFINITY]
+        Default value: 30.0
+        The default distance at which a source will be heard only in the reverb.
 
-See documentation on the :class:`SourceNode` node."""
+        See documentation on the :class:`SourceNode` node."""
         return self._property_instances[
             _libaudioverse.Lav_ENVIRONMENT_DEFAULT_REVERB_DISTANCE
         ]
@@ -1449,11 +1447,11 @@ See documentation on the :class:`SourceNode` node."""
     def default_size(self):
         """Type: float
 
-Range: [0.0, INFINITY]
-Default value: 0.0
-The default size for new sources.
-Sources aare approximated as spheres, with 0 being the special case of a point source.
-Size is used to determine the listener's distance from a source."""
+        Range: [0.0, INFINITY]
+        Default value: 0.0
+        The default size for new sources.
+        Sources aare approximated as spheres, with 0 being the special case of a point source.
+        Size is used to determine the listener's distance from a source."""
         return self._property_instances[_libaudioverse.Lav_ENVIRONMENT_DEFAULT_SIZE]
 
     @default_size.setter
@@ -1464,17 +1462,17 @@ Size is used to determine the listener's distance from a source."""
     def distance_model(self):
         """Type: int
 
-Range: :any:`DistanceModels`
-Default value: :any:`DistanceModels.linear`
-The distance model for any source configured to delegate to the environment.
-Sources are configured to delegate to the environment by default.
+        Range: :any:`DistanceModels`
+        Default value: :any:`DistanceModels.linear`
+        The distance model for any source configured to delegate to the environment.
+        Sources are configured to delegate to the environment by default.
 
-Distance models control how quickly sources get quieter as they move away from the listener.
+        Distance models control how quickly sources get quieter as they move away from the listener.
 
-Note that it is possible to set this property to ``Lav_DISTANCE_MODEL_DELEGATE``.
-Due to internal limitations, this does not generate an error.
-Instead, this case is equivalent to a linear distance model.
-Do not rely on this behavior.  The internal ilimitations preventing this will be lifted in future."""
+        Note that it is possible to set this property to ``Lav_DISTANCE_MODEL_DELEGATE``.
+        Due to internal limitations, this does not generate an error.
+        Instead, this case is equivalent to a linear distance model.
+        Do not rely on this behavior.  The internal ilimitations preventing this will be lifted in future."""
         return self._property_instances[_libaudioverse.Lav_ENVIRONMENT_DISTANCE_MODEL]
 
     @distance_model.setter
@@ -1486,21 +1484,21 @@ Do not rely on this behavior.  The internal ilimitations preventing this will be
         """Type: float6
 
 
-Default value: [0.0, 0.0, -1.0, 0.0, 1.0, 0.0]
-The orientation of the listener.
-The first three elements are a vector representing the direction in which the listener is looking
-and the second 3 a vector representing the direction in which a rod pointing out of the top of the listener's head would be pointing
+        Default value: [0.0, 0.0, -1.0, 0.0, 1.0, 0.0]
+        The orientation of the listener.
+        The first three elements are a vector representing the direction in which the listener is looking
+        and the second 3 a vector representing the direction in which a rod pointing out of the top of the listener's head would be pointing
 
-This property packs these vectors because they must never be modified separately.
-Additionally, they should both be unit vectors and must also be orthoganal.
+        This property packs these vectors because they must never be modified separately.
+        Additionally, they should both be unit vectors and must also be orthoganal.
 
-the default situates the listener such that positive x is right, positive y is up, and positive z is behind the listener.
-The setting (0, 1, 0, 0, 0, 1) will situate the listener such that
-positive x is right and positive y is forward.
-For those not familiar with trigonometry and who wish to consider positive x east and positivve y north, the following formula
-will turn the listener to face a scertain direction specified in radians clockwise of north:
-(sin(theta), cos(theta), 0, 0, 0, 1).
-As usual, note that radians=degrees*PI/180."""
+        the default situates the listener such that positive x is right, positive y is up, and positive z is behind the listener.
+        The setting (0, 1, 0, 0, 0, 1) will situate the listener such that
+        positive x is right and positive y is forward.
+        For those not familiar with trigonometry and who wish to consider positive x east and positivve y north, the following formula
+        will turn the listener to face a scertain direction specified in radians clockwise of north:
+        (sin(theta), cos(theta), 0, 0, 0, 1).
+        As usual, note that radians=degrees*PI/180."""
         return self._property_instances[_libaudioverse.Lav_3D_ORIENTATION]
 
     @orientation.setter
@@ -1511,14 +1509,14 @@ As usual, note that radians=degrees*PI/180."""
     def output_channels(self):
         """Type: int
 
-Range: [0, 8]
-Default value: 2
-Environments are not smart enough to determine the number of channels their output needs to have.
-If you are using something greater than stereo, i.e. 5.1, you need to change this property.
-The specific issue solved by this property is the case in which one source is set to something different than all others,
-or where the app changes the panning strategies of sources after creation.
+        Range: [0, 8]
+        Default value: 2
+        Environments are not smart enough to determine the number of channels their output needs to have.
+        If you are using something greater than stereo, i.e. 5.1, you need to change this property.
+        The specific issue solved by this property is the case in which one source is set to something different than all others,
+        or where the app changes the panning strategies of sources after creation.
 
-Values besides 2, 4, 6, or 8 do not usually have much meaning."""
+        Values besides 2, 4, 6, or 8 do not usually have much meaning."""
         return self._property_instances[_libaudioverse.Lav_ENVIRONMENT_OUTPUT_CHANNELS]
 
     @output_channels.setter
@@ -1529,14 +1527,14 @@ Values besides 2, 4, 6, or 8 do not usually have much meaning."""
     def panning_strategy(self):
         """Type: int
 
-Range: :any:`PanningStrategies`
-Default value: :any:`PanningStrategies.stereo`
-The panning strategy for any source configured to delegate to the environment.
-All new sources delegate to the environment by default.
+        Range: :any:`PanningStrategies`
+        Default value: :any:`PanningStrategies.stereo`
+        The panning strategy for any source configured to delegate to the environment.
+        All new sources delegate to the environment by default.
 
-Note that it is possible to set this property to the delgate panning strategy.
-Due to internal limitations, this case does not error but is instead equivalent to using stereo panning.
-These limitations will be lifted in future; do not rely on this behavior."""
+        Note that it is possible to set this property to the delgate panning strategy.
+        Due to internal limitations, this case does not error but is instead equivalent to using stereo panning.
+        These limitations will be lifted in future; do not rely on this behavior."""
         return self._property_instances[_libaudioverse.Lav_ENVIRONMENT_PANNING_STRATEGY]
 
     @panning_strategy.setter
@@ -1548,8 +1546,8 @@ These limitations will be lifted in future; do not rely on this behavior."""
         """Type: float3
 
 
-Default value: [0.0, 0.0, 0.0]
-The position of the listener, in world coordinates."""
+        Default value: [0.0, 0.0, 0.0]
+        The position of the listener, in world coordinates."""
         return self._property_instances[_libaudioverse.Lav_3D_POSITION]
 
     @position.setter
@@ -1559,30 +1557,30 @@ The position of the listener, in world coordinates."""
     def add_effect_send(node, channels, is_reverb, connect_by_default):
         r"""Add an effect send.
 
-Effect sends are aggregates of all sources configured to make use of them.
-This function's return value is the index of the newly created effecct send.
+        Effect sends are aggregates of all sources configured to make use of them.
+        This function's return value is the index of the newly created effecct send.
 
-The world gains an additional output for every added effect send.
-This output aggregates all audio of sources configured to send to it, including the panning effects on those sources.
-The returned index is the number of the newly created output.
+        The world gains an additional output for every added effect send.
+        This output aggregates all audio of sources configured to send to it, including the panning effects on those sources.
+        The returned index is the number of the newly created output.
 
-Two special cases are worth noting.
+        Two special cases are worth noting.
 
-First, a mono effect send includes all sources with only attenuation applied.
+        First, a mono effect send includes all sources with only attenuation applied.
 
-Second, if the effect send has 4 channels, it may be configured to be a reverb effect send with the *is_reverb* parameter.
-Reverb effect sends are treated differently in terms of attenuation:
-as sources move away from the listener, their dry path becomes less but the audio sent to the reverb effect send becomes greater.
+        Second, if the effect send has 4 channels, it may be configured to be a reverb effect send with the *is_reverb* parameter.
+        Reverb effect sends are treated differently in terms of attenuation:
+        as sources move away from the listener, their dry path becomes less but the audio sent to the reverb effect send becomes greater.
 
-No effect send can include occlusion effects."""
+        No effect send can include occlusion effects."""
         return _lav.environment_node_add_effect_send(
             node, channels, is_reverb, connect_by_default
         )
 
     def play_async(node, buffer, x, y, z, is_dry):
         r"""Play a buffer, using the specified position and the currently set defaults on the world for distance model and panning strategy.
-This is the same as creating a buffer and a source, but Libaudioverse retains control of these objects.
-When the buffer finishes playing, the source is automatically disposed of."""
+        This is the same as creating a buffer and a source, but Libaudioverse retains control of these objects.
+        When the buffer finishes playing, the source is automatically disposed of."""
         return _lav.environment_node_play_async(node, buffer, x, y, z, is_dry)
 
 
@@ -1591,13 +1589,13 @@ _types_to_classes[ObjectTypes.environment_node] = EnvironmentNode
 
 class SourceNode(GenericNode):
     r"""The source node allows the spatialization of sound that passes through it.
-Sources have one input which is mono, to which a node should be connected.
-The audio from the input is spatialized according both to the source's properties and those on its environment, and passed directly to the environment.
-Sources have no outputs.
-To hear a source, you must connect its environment to something instead.
+    Sources have one input which is mono, to which a node should be connected.
+    The audio from the input is spatialized according both to the source's properties and those on its environment, and passed directly to the environment.
+    Sources have no outputs.
+    To hear a source, you must connect its environment to something instead.
 
-Since the source communicates with the environment through a nonstandard mechanism, environments do not keep their sources alive.
-If you are in a garbage collected language, failure to hold on to the source nodes will cause them to go silent."""
+    Since the source communicates with the environment through a nonstandard mechanism, environments do not keep their sources alive.
+    If you are in a garbage collected language, failure to hold on to the source nodes will cause them to go silent."""
 
     def __init__(self, simulation, environment):
         super(SourceNode, self).__init__(
@@ -1699,11 +1697,11 @@ If you are in a garbage collected language, failure to hold on to the source nod
     def distance_model(self):
         """Type: int
 
-Range: :any:`DistanceModels`
-Default value: :any:`DistanceModels.delegate`
-The distance model determines how quickly sources get quieter as they move away from the listener.
+        Range: :any:`DistanceModels`
+        Default value: :any:`DistanceModels.delegate`
+        The distance model determines how quickly sources get quieter as they move away from the listener.
 
-By default, this property is set to delegate, and sources consequently read from the environment."""
+        By default, this property is set to delegate, and sources consequently read from the environment."""
         return self._property_instances[_libaudioverse.Lav_SOURCE_DISTANCE_MODEL]
 
     @distance_model.setter
@@ -1715,12 +1713,12 @@ By default, this property is set to delegate, and sources consequently read from
         """Type: boolean
 
 
-Default value: False
-Whether or not to consider this source's position to always be relative to the listener.
+        Default value: False
+        Whether or not to consider this source's position to always be relative to the listener.
 
-Sources which are head relative interpret their positions in the default coordinate system, relative to the listener.
-Positive x is right, positive y is up, and positive z is behind the listener.
-The orientation and position properties of an environment do not affect head relative sources, making them ideal for such things as footsteps and/or HUD effects that should be panned."""
+        Sources which are head relative interpret their positions in the default coordinate system, relative to the listener.
+        Positive x is right, positive y is up, and positive z is behind the listener.
+        The orientation and position properties of an environment do not affect head relative sources, making them ideal for such things as footsteps and/or HUD effects that should be panned."""
         return self._property_instances[_libaudioverse.Lav_SOURCE_HEAD_RELATIVE]
 
     @head_relative.setter
@@ -1731,10 +1729,10 @@ The orientation and position properties of an environment do not affect head rel
     def max_distance(self):
         """Type: float
 
-Range: [0.0, INFINITY]
-Default value: 50.0
-The maximum distance from the listener at which the source will be audible.
-This property's default value is copied from the environment at source creation."""
+        Range: [0.0, INFINITY]
+        Default value: 50.0
+        The maximum distance from the listener at which the source will be audible.
+        This property's default value is copied from the environment at source creation."""
         return self._property_instances[_libaudioverse.Lav_SOURCE_MAX_DISTANCE]
 
     @max_distance.setter
@@ -1745,11 +1743,11 @@ This property's default value is copied from the environment at source creation.
     def max_reverb_level(self):
         """Type: float
 
-Range: [0.0, 1.0]
-Default value: 0.6
-The maximum amount of audio to be diverted to reverb sends, if any.
+        Range: [0.0, 1.0]
+        Default value: 0.6
+        The maximum amount of audio to be diverted to reverb sends, if any.
 
-Behavior is undefined if this property is ever less than Lav_SOURCE_MIN_REVERB_LEVEL."""
+        Behavior is undefined if this property is ever less than Lav_SOURCE_MIN_REVERB_LEVEL."""
         return self._property_instances[_libaudioverse.Lav_SOURCE_MAX_REVERB_LEVEL]
 
     @max_reverb_level.setter
@@ -1760,13 +1758,13 @@ Behavior is undefined if this property is ever less than Lav_SOURCE_MIN_REVERB_L
     def min_reverb_level(self):
         """Type: float
 
-Range: [0.0, 1.0]
-Default value: 0.15
-The minimum reverb level allowed.
+        Range: [0.0, 1.0]
+        Default value: 0.15
+        The minimum reverb level allowed.
 
-if a send is configured to be a reverb send, this is the minimum amount of audio that will be diverted to it.
+        if a send is configured to be a reverb send, this is the minimum amount of audio that will be diverted to it.
 
-Behavior is undefined if this property is ever greater than the value you give to Lav_SOURCE_MAX_REVERB_LEVEL."""
+        Behavior is undefined if this property is ever greater than the value you give to Lav_SOURCE_MAX_REVERB_LEVEL."""
         return self._property_instances[_libaudioverse.Lav_SOURCE_MIN_REVERB_LEVEL]
 
     @min_reverb_level.setter
@@ -1777,16 +1775,16 @@ Behavior is undefined if this property is ever greater than the value you give t
     def occlusion(self):
         """Type: float
 
-Range: [0.0, 1.0]
-Default value: 0.0
-A scalar representing how occluded this source is.
+        Range: [0.0, 1.0]
+        Default value: 0.0
+        A scalar representing how occluded this source is.
 
-This property controls internal filters of the source that make occluded objects sound muffled.
-A value of 1.0 is a fully occluded source, which will be all but silent; a value of 0.0 has no effect.
+        This property controls internal filters of the source that make occluded objects sound muffled.
+        A value of 1.0 is a fully occluded source, which will be all but silent; a value of 0.0 has no effect.
 
-It is extremely difficult to map occlusion to a physical quantity.
-In the real world, occlusion depends on mass, density, molecular structure, and a huge number of other factors.
-Libaudioverse therefore chooses to use this scalar quantity and to attempt to do the right thing."""
+        It is extremely difficult to map occlusion to a physical quantity.
+        In the real world, occlusion depends on mass, density, molecular structure, and a huge number of other factors.
+        Libaudioverse therefore chooses to use this scalar quantity and to attempt to do the right thing."""
         return self._property_instances[_libaudioverse.Lav_SOURCE_OCCLUSION]
 
     @occlusion.setter
@@ -1798,13 +1796,13 @@ Libaudioverse therefore chooses to use this scalar quantity and to attempt to do
         """Type: float6
 
 
-Default value: [0.0, 0.0, -1.0, 0.0, 1.0, 0.0]
-The orientation of the source.
-This is not currently used.
-In future, it will be used for sound cones and filters on sources facing away.
-The interpretation is the same as that for the listener: the first 3 values are the direction of the front and the second 3 the direction of the top.
-Note that these must both be unit vectors and that they must be orthoganal.
-They are packed because, also like the listener, they must never be modified separately."""
+        Default value: [0.0, 0.0, -1.0, 0.0, 1.0, 0.0]
+        The orientation of the source.
+        This is not currently used.
+        In future, it will be used for sound cones and filters on sources facing away.
+        The interpretation is the same as that for the listener: the first 3 values are the direction of the front and the second 3 the direction of the top.
+        Note that these must both be unit vectors and that they must be orthoganal.
+        They are packed because, also like the listener, they must never be modified separately."""
         return self._property_instances[_libaudioverse.Lav_3D_ORIENTATION]
 
     @orientation.setter
@@ -1815,10 +1813,10 @@ They are packed because, also like the listener, they must never be modified sep
     def panning_strategy(self):
         """Type: int
 
-Range: :any:`PanningStrategies`
-Default value: :any:`PanningStrategies.delegate`
-The strategy for the internal multipanner.
-By default, this delegates to the environment."""
+        Range: :any:`PanningStrategies`
+        Default value: :any:`PanningStrategies.delegate`
+        The strategy for the internal multipanner.
+        By default, this delegates to the environment."""
         return self._property_instances[_libaudioverse.Lav_SOURCE_PANNING_STRATEGY]
 
     @panning_strategy.setter
@@ -1830,8 +1828,8 @@ By default, this delegates to the environment."""
         """Type: float3
 
 
-Default value: [0.0, 0.0, 0.0]
-The position of the source in world coordinates."""
+        Default value: [0.0, 0.0, 0.0]
+        The position of the source in world coordinates."""
         return self._property_instances[_libaudioverse.Lav_3D_POSITION]
 
     @position.setter
@@ -1842,14 +1840,14 @@ The position of the source in world coordinates."""
     def reverb_distance(self):
         """Type: float
 
-Range: [0.0, INFINITY]
-Default value: 30.0
-The distance at which the source will only be heard through the reverb effect sends.
+        Range: [0.0, INFINITY]
+        Default value: 30.0
+        The distance at which the source will only be heard through the reverb effect sends.
 
-If this source is not feeding any effect sends configured as reverbs, this property has no effect.
+        If this source is not feeding any effect sends configured as reverbs, this property has no effect.
 
-For values greater than Lav_SOURCE_MAX_DISTANCE, the source will always be heard at least somewhat in the dry path.
-Lav_SOURCE_DISTANCE_MODEL controls how this crossfading takes place."""
+        For values greater than Lav_SOURCE_MAX_DISTANCE, the source will always be heard at least somewhat in the dry path.
+        Lav_SOURCE_DISTANCE_MODEL controls how this crossfading takes place."""
         return self._property_instances[_libaudioverse.Lav_SOURCE_REVERB_DISTANCE]
 
     @reverb_distance.setter
@@ -1860,12 +1858,12 @@ Lav_SOURCE_DISTANCE_MODEL controls how this crossfading takes place."""
     def size(self):
         """Type: float
 
-Range: [0.0, INFINITY]
-Default value: 0.0
-The size of the source.
-Sources are approximated as spheres.
-The size is used to determine the closest point on the source to the listener, and is the radius of this sphere.
-Size currently has no other effect."""
+        Range: [0.0, INFINITY]
+        Default value: 0.0
+        The size of the source.
+        Sources are approximated as spheres.
+        The size is used to determine the closest point on the source to the listener, and is the radius of this sphere.
+        Size currently has no other effect."""
         return self._property_instances[_libaudioverse.Lav_SOURCE_SIZE]
 
     @size.setter
@@ -1886,8 +1884,8 @@ _types_to_classes[ObjectTypes.source_node] = SourceNode
 
 class HrtfNode(GenericNode):
     r"""This node implements an HRTF panner.
-You can use either Libaudioverse's internal HRTF (The Diffuse MIT Kemar Dataset) by passing "default" as the HRTf file name,
-or an HRTF of your own."""
+    You can use either Libaudioverse's internal HRTF (The Diffuse MIT Kemar Dataset) by passing "default" as the HRTf file name,
+    or an HRTF of your own."""
 
     def __init__(self, simulation, hrtf_path):
         super(HrtfNode, self).__init__(_lav.create_hrtf_node(simulation, hrtf_path))
@@ -1923,10 +1921,10 @@ or an HRTF of your own."""
     def azimuth(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 0.0
-The horizontal angle of the panner in degrees.
-0 is straight ahead and positive values are clockwise."""
+        Range: [-INFINITY, INFINITY]
+        Default value: 0.0
+        The horizontal angle of the panner in degrees.
+        0 is straight ahead and positive values are clockwise."""
         return self._property_instances[_libaudioverse.Lav_PANNER_AZIMUTH]
 
     @azimuth.setter
@@ -1937,10 +1935,10 @@ The horizontal angle of the panner in degrees.
     def elevation(self):
         """Type: float
 
-Range: [-90.0, 90.0]
-Default value: 0.0
-The vertical angle of the panner in degrees.
-0 is horizontal and positive values move upward."""
+        Range: [-90.0, 90.0]
+        Default value: 0.0
+        The vertical angle of the panner in degrees.
+        0 is horizontal and positive values move upward."""
         return self._property_instances[_libaudioverse.Lav_PANNER_ELEVATION]
 
     @elevation.setter
@@ -1952,11 +1950,11 @@ The vertical angle of the panner in degrees.
         """Type: boolean
 
 
-Default value: True
-By default, panners crossfade their output.
-This property allows such functionality to be disabled.
-Note that for HRTF nodes, crossfading is more important than for other panner types.
-Unlike other panner types, the audio artifacts produced by disabling crossfading are noticeable, even for updates of only a few degrees."""
+        Default value: True
+        By default, panners crossfade their output.
+        This property allows such functionality to be disabled.
+        Note that for HRTF nodes, crossfading is more important than for other panner types.
+        Unlike other panner types, the audio artifacts produced by disabling crossfading are noticeable, even for updates of only a few degrees."""
         return self._property_instances[_libaudioverse.Lav_PANNER_SHOULD_CROSSFADE]
 
     @should_crossfade.setter
@@ -2007,9 +2005,9 @@ class SineNode(GenericNode):
     def frequency(self):
         """Type: float
 
-Range: [0, INFINITY]
-Default value: 440.0
-The frequency of the sine wave in HZ."""
+        Range: [0, INFINITY]
+        Default value: 440.0
+        The frequency of the sine wave in HZ."""
         return self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY]
 
     @frequency.setter
@@ -2020,11 +2018,11 @@ The frequency of the sine wave in HZ."""
     def frequency_multiplier(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 1.0
-An additional multiplicative factor applied to the frequency of the oscillator.
+        Range: [-INFINITY, INFINITY]
+        Default value: 1.0
+        An additional multiplicative factor applied to the frequency of the oscillator.
 
-This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
+        This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
         return self._property_instances[
             _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
         ]
@@ -2037,10 +2035,10 @@ This is useful for creating instruments, as the notes of the standard musical sc
     def phase(self):
         """Type: float
 
-Range: [0.0, 1.0]
-Default value: 0.0
-The phase of the sine node.
-This is measured in periods, not in radians."""
+        Range: [0.0, 1.0]
+        Default value: 0.0
+        The phase of the sine node.
+        This is measured in periods, not in radians."""
         return self._property_instances[_libaudioverse.Lav_OSCILLATOR_PHASE]
 
     @phase.setter
@@ -2053,8 +2051,8 @@ _types_to_classes[ObjectTypes.sine_node] = SineNode
 
 class HardLimiterNode(GenericNode):
     r"""The input to this node is hard limited: values less than -1.0 are set to -1.0 and values above 1.0 are set to 1.0.
-Use the hard limiter in order to prevent oddities with audio hardware; it should usually be the last piece in your pipeline before the simulation.
-Note that the 3D API handles hard limiting appropriately, and you do not need to worry about this there."""
+    Use the hard limiter in order to prevent oddities with audio hardware; it should usually be the last piece in your pipeline before the simulation.
+    Note that the 3D API handles hard limiting appropriately, and you do not need to worry about this there."""
 
     def __init__(self, simulation, channels):
         super(HardLimiterNode, self).__init__(
@@ -2073,7 +2071,7 @@ _types_to_classes[ObjectTypes.hard_limiter_node] = HardLimiterNode
 
 class CrossfadingDelayNode(GenericNode):
     r"""Implements a crossfading delay line.
-Delay lines have uses in echo and reverb, as well as many more esoteric effects."""
+    Delay lines have uses in echo and reverb, as well as many more esoteric effects."""
 
     def __init__(self, simulation, max_delay, channels):
         super(CrossfadingDelayNode, self).__init__(
@@ -2117,12 +2115,12 @@ Delay lines have uses in echo and reverb, as well as many more esoteric effects.
     def delay(self):
         """Type: float
 
-Range: dynamic
-Default value: 0.0
-The delay of the delay line in seconds.
-The range of this property depends on the maxDelay parameter to the constructor.
+        Range: dynamic
+        Default value: 0.0
+        The delay of the delay line in seconds.
+        The range of this property depends on the maxDelay parameter to the constructor.
 
-Note that values less than 1 sample still introduce delay."""
+        Note that values less than 1 sample still introduce delay."""
         return self._property_instances[_libaudioverse.Lav_DELAY_DELAY]
 
     @delay.setter
@@ -2133,19 +2131,19 @@ Note that values less than 1 sample still introduce delay."""
     def delay_max(self):
         """Type: float
 
-This property is read-only.
-The max delay as set at the node's creation time."""
+        This property is read-only.
+        The max delay as set at the node's creation time."""
         return self._property_instances[_libaudioverse.Lav_DELAY_DELAY_MAX]
 
     @property
     def feedback(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 0.0
-The feedback coefficient.
-The output of the delay line is fed back into the delay line, multiplied by this coefficient.
-Setting feedback to small values can make echoes, comb filters, and a variety of other effects."""
+        Range: [-INFINITY, INFINITY]
+        Default value: 0.0
+        The feedback coefficient.
+        The output of the delay line is fed back into the delay line, multiplied by this coefficient.
+        Setting feedback to small values can make echoes, comb filters, and a variety of other effects."""
         return self._property_instances[_libaudioverse.Lav_DELAY_FEEDBACK]
 
     @feedback.setter
@@ -2156,11 +2154,11 @@ Setting feedback to small values can make echoes, comb filters, and a variety of
     def interpolation_time(self):
         """Type: float
 
-Range: [0.001, INFINITY]
-Default value: 0.001
-When the delay property is changed, the delay line crossfades between the old position and the new one.
-This property sets how long this crossfade will take.
-Note that for this node, it is impossible to get rid of the crossfade completely."""
+        Range: [0.001, INFINITY]
+        Default value: 0.001
+        When the delay property is changed, the delay line crossfades between the old position and the new one.
+        This property sets how long this crossfade will take.
+        Note that for this node, it is impossible to get rid of the crossfade completely."""
         return self._property_instances[_libaudioverse.Lav_DELAY_INTERPOLATION_TIME]
 
     @interpolation_time.setter
@@ -2173,7 +2171,7 @@ _types_to_classes[ObjectTypes.crossfading_delay_node] = CrossfadingDelayNode
 
 class DoppleringDelayNode(GenericNode):
     r"""Implements a dopplering delay line, an interpolated delay line that intensionally bends pitch when the delay changes.
-Delay lines have uses in echo and reverb, as well as many more esoteric effects."""
+    Delay lines have uses in echo and reverb, as well as many more esoteric effects."""
 
     def __init__(self, simulation, max_delay, channels):
         super(DoppleringDelayNode, self).__init__(
@@ -2211,12 +2209,12 @@ Delay lines have uses in echo and reverb, as well as many more esoteric effects.
     def delay(self):
         """Type: float
 
-Range: dynamic
-Default value: 0.0
-The delay of the delay line in seconds.
-The range of this property depends on the maxDelay parameter to the constructor.
+        Range: dynamic
+        Default value: 0.0
+        The delay of the delay line in seconds.
+        The range of this property depends on the maxDelay parameter to the constructor.
 
-Note that values less than 1 sample still introduce delay."""
+        Note that values less than 1 sample still introduce delay."""
         return self._property_instances[_libaudioverse.Lav_DELAY_DELAY]
 
     @delay.setter
@@ -2227,21 +2225,21 @@ Note that values less than 1 sample still introduce delay."""
     def delay_max(self):
         """Type: float
 
-This property is read-only.
-The max delay as set at the node's creation time."""
+        This property is read-only.
+        The max delay as set at the node's creation time."""
         return self._property_instances[_libaudioverse.Lav_DELAY_DELAY_MAX]
 
     @property
     def interpolation_time(self):
         """Type: float
 
-Range: [0.001, INFINITY]
-Default value: 0.01
-When the delay property is changed, the delay line moves the delay to the new position.
-This property sets how long this  will take.
-Note that for this node, it is impossible to get rid of the crossfade completely.
+        Range: [0.001, INFINITY]
+        Default value: 0.01
+        When the delay property is changed, the delay line moves the delay to the new position.
+        This property sets how long this  will take.
+        Note that for this node, it is impossible to get rid of the crossfade completely.
 
-On this delay line, the interpolation time is the total duration of a pitch bend caused by moving the delay."""
+        On this delay line, the interpolation time is the total duration of a pitch bend caused by moving the delay."""
         return self._property_instances[_libaudioverse.Lav_DELAY_INTERPOLATION_TIME]
 
     @interpolation_time.setter
@@ -2254,9 +2252,9 @@ _types_to_classes[ObjectTypes.dopplering_delay_node] = DoppleringDelayNode
 
 class AmplitudePannerNode(GenericNode):
     r"""This panner pans for a set of regular speakers without any additional effects applied.
-Additionally, it understands surround sound speaker layouts and allows for the assignment of custom speaker mappings.
-The default configuration provides a stereo panner that can be used without any additional steps.
-The additional function Lav_amplitudePannerNodeConfigureStandardChannelMap can set the panner to output for a variety of standard configurations, so be sure to see its documentation."""
+    Additionally, it understands surround sound speaker layouts and allows for the assignment of custom speaker mappings.
+    The default configuration provides a stereo panner that can be used without any additional steps.
+    The additional function Lav_amplitudePannerNodeConfigureStandardChannelMap can set the panner to output for a variety of standard configurations, so be sure to see its documentation."""
 
     def __init__(self, simulation):
         super(AmplitudePannerNode, self).__init__(
@@ -2304,10 +2302,10 @@ The additional function Lav_amplitudePannerNodeConfigureStandardChannelMap can s
     def azimuth(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 0.0
-The horizontal angle of the panner in degrees.
-0 is directly ahead, and positive values are clockwise."""
+        Range: [-INFINITY, INFINITY]
+        Default value: 0.0
+        The horizontal angle of the panner in degrees.
+        0 is directly ahead, and positive values are clockwise."""
         return self._property_instances[_libaudioverse.Lav_PANNER_AZIMUTH]
 
     @azimuth.setter
@@ -2318,14 +2316,14 @@ The horizontal angle of the panner in degrees.
     def channel_map(self):
         """Type: float_array
 
-Range: [-INFINITY, INFINITY]
-Default value: [-90, 90]
-The angles of the speakers in the order in which they are to be mapped to channels.
-The first speaker will be mapped to the first channel, the second to the second, etc.
-These channels are then combined and produced as the single output of the panner.
+        Range: [-INFINITY, INFINITY]
+        Default value: [-90, 90]
+        The angles of the speakers in the order in which they are to be mapped to channels.
+        The first speaker will be mapped to the first channel, the second to the second, etc.
+        These channels are then combined and produced as the single output of the panner.
 
-You can use floating point infinity to indicate a channel should be skipped.
-This functionality is used by all of the standard channel maps to skip the center and LFE channels."""
+        You can use floating point infinity to indicate a channel should be skipped.
+        This functionality is used by all of the standard channel maps to skip the center and LFE channels."""
         return self._property_instances[_libaudioverse.Lav_PANNER_CHANNEL_MAP]
 
     @channel_map.setter
@@ -2336,11 +2334,11 @@ This functionality is used by all of the standard channel maps to skip the cente
     def elevation(self):
         """Type: float
 
-Range: [-90.0, 90.0]
-Default value: 0.0
-The vertical angle of the panner in degrees.
-0 is horizontal and positive values are upwards.
-Note that, for amplitude panners, this has no effect and exists only to allow swapping with the HRTF panner without changing code."""
+        Range: [-90.0, 90.0]
+        Default value: 0.0
+        The vertical angle of the panner in degrees.
+        0 is horizontal and positive values are upwards.
+        Note that, for amplitude panners, this has no effect and exists only to allow swapping with the HRTF panner without changing code."""
         return self._property_instances[_libaudioverse.Lav_PANNER_ELEVATION]
 
     @elevation.setter
@@ -2352,11 +2350,11 @@ Note that, for amplitude panners, this has no effect and exists only to allow sw
         """Type: boolean
 
 
-Default value: True
-Whether or not to instantly move to the new position.
-If crossfading is disabled, large movements of the panner will cause audible clicks.
-Disabling crossfading can aid performance under heavy workloads, especially with the HRTF panner.
-If crossfading is enabled, moving the panner will slowly fade it to the new position over the next block."""
+        Default value: True
+        Whether or not to instantly move to the new position.
+        If crossfading is disabled, large movements of the panner will cause audible clicks.
+        Disabling crossfading can aid performance under heavy workloads, especially with the HRTF panner.
+        If crossfading is enabled, moving the panner will slowly fade it to the new position over the next block."""
         return self._property_instances[_libaudioverse.Lav_PANNER_SHOULD_CROSSFADE]
 
     @should_crossfade.setter
@@ -2365,7 +2363,7 @@ If crossfading is enabled, moving the panner will slowly fade it to the new posi
 
     def configure_standard_map(node, channels):
         r"""Sets the channel map and other properties on this node to match a standard configuration.
-The possible standard configurations are found in the :class:`PanningStrategies` enumeration."""
+        The possible standard configurations are found in the :class:`PanningStrategies` enumeration."""
         return _lav.amplitude_panner_node_configure_standard_map(node, channels)
 
 
@@ -2374,10 +2372,10 @@ _types_to_classes[ObjectTypes.amplitude_panner_node] = AmplitudePannerNode
 
 class PushNode(GenericNode):
     r"""The purpose of this node is the same as the pull node, but it is used in situations wherein we do not know when we are going to get audio.
-Audio is queued as it is pushed to this node and then played as fast as possible.
-This node can be used to avoid writing a queue of audio yourself, as it essentially implements said functionality.
-If you need low latency audio or the ability to run something like the Opus encoder's
-ability to cover for missing frames, you need a pull node."""
+    Audio is queued as it is pushed to this node and then played as fast as possible.
+    This node can be used to avoid writing a queue of audio yourself, as it essentially implements said functionality.
+    If you need low latency audio or the ability to run something like the Opus encoder's
+    ability to cover for missing frames, you need a pull node."""
 
     def __init__(self, simulation, sr, channels):
         super(PushNode, self).__init__(_lav.create_push_node(simulation, sr, channels))
@@ -2399,9 +2397,9 @@ ability to cover for missing frames, you need a pull node."""
     def threshold(self):
         """Type: float
 
-Range: [0.0, INFINITY]
-Default value: 0.03
-When the remaining audio in the push node has a duration less than this property, the low callback is called."""
+        Range: [0.0, INFINITY]
+        Default value: 0.03
+        When the remaining audio in the push node has a duration less than this property, the low callback is called."""
         return self._property_instances[_libaudioverse.Lav_PUSH_THRESHOLD]
 
     @threshold.setter
@@ -2414,7 +2412,7 @@ When the remaining audio in the push node has a duration less than this property
 
     def get_low_callback(self):
         r"""Get the low callback.
-        
+
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
             cb = self._state["callbacks"].get("low", None)
@@ -2425,8 +2423,8 @@ When the remaining audio in the push node has a duration less than this property
 
     def set_low_callback(self, callback, additional_args=None, additional_kwargs=None):
         r"""Set the low callback.
-        
-Called once per block and outside the audio thread when there is less than the specified threshold audio remaining."""
+
+        Called once per block and outside the audio thread when there is less than the specified threshold audio remaining."""
         with self._lock:
             if callback is None:
                 # delete the key, clear the callback with Libaudioverse.
@@ -2448,7 +2446,7 @@ Called once per block and outside the audio thread when there is less than the s
 
     def get_underrun_callback(self):
         r"""Get the underrun callback.
-        
+
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
             cb = self._state["callbacks"].get("underrun", None)
@@ -2461,8 +2459,8 @@ Called once per block and outside the audio thread when there is less than the s
         self, callback, additional_args=None, additional_kwargs=None
     ):
         r"""Set the underrun callback.
-        
-Called exactly once and outside the audio thread when the node runs out of audio completely."""
+
+        Called exactly once and outside the audio thread when the node runs out of audio completely."""
         with self._lock:
             if callback is None:
                 # delete the key, clear the callback with Libaudioverse.
@@ -2488,10 +2486,10 @@ _types_to_classes[ObjectTypes.push_node] = PushNode
 
 class BiquadNode(GenericNode):
     r"""Implementation of a biquad filter section, as defined by the Audio EQ Cookbook by Robert Bristo-Johnson.
-This node is capable of implementing almost every filter needed for basic audio effects, including equalizers.
-For the specific equations used, see the Audio EQ Cookbook.
-It may be found at:
-http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt"""
+    This node is capable of implementing almost every filter needed for basic audio effects, including equalizers.
+    For the specific equations used, see the Audio EQ Cookbook.
+    It may be found at:
+    http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt"""
 
     def __init__(self, simulation, channels):
         super(BiquadNode, self).__init__(_lav.create_biquad_node(simulation, channels))
@@ -2533,10 +2531,10 @@ http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt"""
     def dbgain(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 0.0
-This property is a the gain in decibals to be used with the peaking and shelving filters.
-It measures the gain that these filters apply to the part of the signal they boost."""
+        Range: [-INFINITY, INFINITY]
+        Default value: 0.0
+        This property is a the gain in decibals to be used with the peaking and shelving filters.
+        It measures the gain that these filters apply to the part of the signal they boost."""
         return self._property_instances[_libaudioverse.Lav_BIQUAD_DBGAIN]
 
     @dbgain.setter
@@ -2547,10 +2545,10 @@ It measures the gain that these filters apply to the part of the signal they boo
     def filter_type(self):
         """Type: int
 
-Range: :any:`BiquadTypes`
-Default value: :any:`BiquadTypes.lowpass`
-The type of the filter.
-This determines the interpretations of the other properties on this node."""
+        Range: :any:`BiquadTypes`
+        Default value: :any:`BiquadTypes.lowpass`
+        The type of the filter.
+        This determines the interpretations of the other properties on this node."""
         return self._property_instances[_libaudioverse.Lav_BIQUAD_FILTER_TYPE]
 
     @filter_type.setter
@@ -2561,10 +2559,10 @@ This determines the interpretations of the other properties on this node."""
     def frequency(self):
         """Type: float
 
-Range: [0, INFINITY]
-Default value: 2000.0
-This is the frequency of interest.
-What specifically this means depends on the selected filter type; for example, it is the cutoff frequency for lowpass and highpass."""
+        Range: [0, INFINITY]
+        Default value: 2000.0
+        This is the frequency of interest.
+        What specifically this means depends on the selected filter type; for example, it is the cutoff frequency for lowpass and highpass."""
         return self._property_instances[_libaudioverse.Lav_BIQUAD_FREQUENCY]
 
     @frequency.setter
@@ -2575,19 +2573,19 @@ What specifically this means depends on the selected filter type; for example, i
     def q(self):
         """Type: float
 
-Range: [0.001, INFINITY]
-Default value: 0.5
-Q is a mathematically complex parameter, a full description of which is beyond the scope of this manual.
-Naively, Q can be interpreted as a measure of resonation.
-For ``Q<=0.5``, the filter is said to be damped:
-it will cut frequencies.
-For Q>0.5, however, some frequencies are likely to be boosted.
+        Range: [0.001, INFINITY]
+        Default value: 0.5
+        Q is a mathematically complex parameter, a full description of which is beyond the scope of this manual.
+        Naively, Q can be interpreted as a measure of resonation.
+        For ``Q<=0.5``, the filter is said to be damped:
+        it will cut frequencies.
+        For Q>0.5, however, some frequencies are likely to be boosted.
 
-Q controls the bandwidth for the bandpass and peaking filter types
-For everything except the peaking filter, this property follows the normal definition of Q in the electrical engineering literature.
-For more specifics, see the Audio EQ Cookbook.
-It is found here:
-http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt"""
+        Q controls the bandwidth for the bandpass and peaking filter types
+        For everything except the peaking filter, this property follows the normal definition of Q in the electrical engineering literature.
+        For more specifics, see the Audio EQ Cookbook.
+        It is found here:
+        http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt"""
         return self._property_instances[_libaudioverse.Lav_BIQUAD_Q]
 
     @q.setter
@@ -2600,7 +2598,7 @@ _types_to_classes[ObjectTypes.biquad_node] = BiquadNode
 
 class PullNode(GenericNode):
     r"""This node calls the audio callback whenever it needs more audio.
-The purpose of this node is to inject audio from an external source that Libaudioverse does not support, for example a custom network protocol."""
+    The purpose of this node is to inject audio from an external source that Libaudioverse does not support, for example a custom network protocol."""
 
     def __init__(self, simulation, sr, channels):
         super(PullNode, self).__init__(_lav.create_pull_node(simulation, sr, channels))
@@ -2613,7 +2611,7 @@ The purpose of this node is to inject audio from an external source that Libaudi
 
     def get_audio_callback(self):
         r"""Get the audio callback.
-        
+
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
             cb = self._state["callbacks"].get("audio", None)
@@ -2626,8 +2624,8 @@ The purpose of this node is to inject audio from an external source that Libaudi
         self, callback, additional_args=None, additional_kwargs=None
     ):
         r"""Set the audio callback.
-        
-Called when the node needs more audio."""
+
+        Called when the node needs more audio."""
         with self._lock:
             if callback is None:
                 # delete the key, clear the callback with Libaudioverse.
@@ -2653,8 +2651,8 @@ _types_to_classes[ObjectTypes.pull_node] = PullNode
 
 class GraphListenerNode(GenericNode):
     r"""This node defines a callback which is called every block.
-The callback is passed pointers to the audio data passing through this node for the current block.
-The effect is that this node allows observing audio passing through any location in the audio graph."""
+    The callback is passed pointers to the audio data passing through this node for the current block.
+    The effect is that this node allows observing audio passing through any location in the audio graph."""
 
     def __init__(self, simulation, channels):
         super(GraphListenerNode, self).__init__(
@@ -2669,7 +2667,7 @@ The effect is that this node allows observing audio passing through any location
 
     def get_listening_callback(self):
         r"""Get the listening callback.
-        
+
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
             cb = self._state["callbacks"].get("listening", None)
@@ -2682,9 +2680,9 @@ The effect is that this node allows observing audio passing through any location
         self, callback, additional_args=None, additional_kwargs=None
     ):
         r"""Set the listening callback.
-        
-When set, audio is passed to this callback every block.
-This callback is called inside the audio threads; do not block."""
+
+        When set, audio is passed to this callback every block.
+        This callback is called inside the audio threads; do not block."""
         with self._lock:
             if callback is None:
                 # delete the key, clear the callback with Libaudioverse.
@@ -2714,9 +2712,9 @@ _types_to_classes[ObjectTypes.graph_listener_node] = GraphListenerNode
 
 class CustomNode(GenericNode):
     r"""This node's processing depends solely on a user-defined callback.
-It has a specific number of inputs and outputs which are aggregated into individual channels.
-The callback is then called for every block of audio.
-If implementing a custom node, it is required that you handle all communication yourself."""
+    It has a specific number of inputs and outputs which are aggregated into individual channels.
+    The callback is then called for every block of audio.
+    If implementing a custom node, it is required that you handle all communication yourself."""
 
     def __init__(
         self, simulation, inputs, channels_per_input, outputs, channels_per_output
@@ -2735,7 +2733,7 @@ If implementing a custom node, it is required that you handle all communication 
 
     def get_processing_callback(self):
         r"""Get the processing callback.
-        
+
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
             cb = self._state["callbacks"].get("processing", None)
@@ -2748,9 +2746,9 @@ If implementing a custom node, it is required that you handle all communication 
         self, callback, additional_args=None, additional_kwargs=None
     ):
         r"""Set the processing callback.
-        
-Called to process audio.
-If implementing a custom node, the custom node behaves as identity until this callback is set."""
+
+        Called to process audio.
+        If implementing a custom node, the custom node behaves as identity until this callback is set."""
         with self._lock:
             if callback is None:
                 # delete the key, clear the callback with Libaudioverse.
@@ -2780,7 +2778,7 @@ _types_to_classes[ObjectTypes.custom_node] = CustomNode
 
 class RingmodNode(GenericNode):
     r"""This node has two inputs and one output.
-The two inputs will be converted to mono and then multiplied, before being sent to the output."""
+    The two inputs will be converted to mono and then multiplied, before being sent to the output."""
 
     def __init__(self, simulation):
         super(RingmodNode, self).__init__(_lav.create_ringmod_node(simulation))
@@ -2797,8 +2795,8 @@ _types_to_classes[ObjectTypes.ringmod_node] = RingmodNode
 
 class MultipannerNode(GenericNode):
     r"""A panner which can have the algorithm it uses changed at runtime.
-The use for multipanners is for applications in which we may wish to change the speaker configuration at runtime.
-Capabilities include switching from HRTF to stereo and back, a useful property for games wherein the user might or might not be using headphones."""
+    The use for multipanners is for applications in which we may wish to change the speaker configuration at runtime.
+    Capabilities include switching from HRTF to stereo and back, a useful property for games wherein the user might or might not be using headphones."""
 
     def __init__(self, simulation, hrtf_path):
         super(MultipannerNode, self).__init__(
@@ -2844,10 +2842,10 @@ Capabilities include switching from HRTF to stereo and back, a useful property f
     def azimuth(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 0.0
-The horizontal angle of the panner, in degrees.
-0 is straight ahead and positive values are clockwise."""
+        Range: [-INFINITY, INFINITY]
+        Default value: 0.0
+        The horizontal angle of the panner, in degrees.
+        0 is straight ahead and positive values are clockwise."""
         return self._property_instances[_libaudioverse.Lav_PANNER_AZIMUTH]
 
     @azimuth.setter
@@ -2858,10 +2856,10 @@ The horizontal angle of the panner, in degrees.
     def elevation(self):
         """Type: float
 
-Range: [-90.0, 90.0]
-Default value: 0.0
-The vertical angle of the panner, in degrees.
-0 is horizontal and positive values are upward."""
+        Range: [-90.0, 90.0]
+        Default value: 0.0
+        The vertical angle of the panner, in degrees.
+        0 is horizontal and positive values are upward."""
         return self._property_instances[_libaudioverse.Lav_PANNER_ELEVATION]
 
     @elevation.setter
@@ -2873,10 +2871,10 @@ The vertical angle of the panner, in degrees.
         """Type: boolean
 
 
-Default value: True
-Whether or not this panner should crossfade.
-Lack of crossfading introduces audible artifacts when the panner is moved.
-You usually want this on."""
+        Default value: True
+        Whether or not this panner should crossfade.
+        Lack of crossfading introduces audible artifacts when the panner is moved.
+        You usually want this on."""
         return self._property_instances[_libaudioverse.Lav_PANNER_SHOULD_CROSSFADE]
 
     @should_crossfade.setter
@@ -2887,11 +2885,11 @@ You usually want this on."""
     def strategy(self):
         """Type: int
 
-Range: :any:`PanningStrategies`
-Default value: :any:`PanningStrategies.stereo`
-What type of panning to use.
-Possibilities include HRTF, stereo, 5.1, and 7.1 speaker configurations.
-For something more nontraditional, use an amplitude panner."""
+        Range: :any:`PanningStrategies`
+        Default value: :any:`PanningStrategies.stereo`
+        What type of panning to use.
+        Possibilities include HRTF, stereo, 5.1, and 7.1 speaker configurations.
+        For something more nontraditional, use an amplitude panner."""
         return self._property_instances[_libaudioverse.Lav_PANNER_STRATEGY]
 
     @strategy.setter
@@ -2904,11 +2902,11 @@ _types_to_classes[ObjectTypes.multipanner_node] = MultipannerNode
 
 class FeedbackDelayNetworkNode(GenericNode):
     r"""Implements a feedback delay network.
-This is possibly the single-most complicated node in Libaudioverse, and full documentation of it goes well beyond the manual.
-Unless you know  what a  feedback delay network is and have a specific reason for using one, this node will probably not help you.
+    This is possibly the single-most complicated node in Libaudioverse, and full documentation of it goes well beyond the manual.
+    Unless you know  what a  feedback delay network is and have a specific reason for using one, this node will probably not help you.
 
-This node has `n` inputs and outputs, where `n` is the `lines` parameter to the constructor.
-Each input and output pair represent the input and output of a specific delay line, respectively."""
+    This node has `n` inputs and outputs, where `n` is the `lines` parameter to the constructor.
+    Each input and output pair represent the input and output of a specific delay line, respectively."""
 
     def __init__(self, simulation, max_delay, channels):
         super(FeedbackDelayNetworkNode, self).__init__(
@@ -2976,9 +2974,9 @@ Each input and output pair represent the input and output of a specific delay li
 
 
 
-The lengths of the delay lines in seconds.
-This array must be ``channels`` long.
-All values must be positive and no more than the maximum delay specified to the constructor."""
+        The lengths of the delay lines in seconds.
+        This array must be ``channels`` long.
+        All values must be positive and no more than the maximum delay specified to the constructor."""
         return self._property_instances[_libaudioverse.Lav_FDN_DELAYS]
 
     @delays.setter
@@ -2991,8 +2989,8 @@ All values must be positive and no more than the maximum delay specified to the 
 
 
 
-The frequencies of the filters.
-The range of this property is 0 to Nyquist, or half the sampling rate."""
+        The frequencies of the filters.
+        The range of this property is 0 to Nyquist, or half the sampling rate."""
         return self._property_instances[_libaudioverse.Lav_FDN_FILTER_FREQUENCIES]
 
     @filter_frequencies.setter
@@ -3003,10 +3001,10 @@ The range of this property is 0 to Nyquist, or half the sampling rate."""
     def filter_types(self):
         """Type: int_array
 
-Range: :any:`FdnFilterTypes`
+        Range: :any:`FdnFilterTypes`
 
-Allows insertion of filters in the feedback paths.
-These filters can be individually enabled and disabled; the default is disabled."""
+        Allows insertion of filters in the feedback paths.
+        These filters can be individually enabled and disabled; the default is disabled."""
         return self._property_instances[_libaudioverse.Lav_FDN_FILTER_TYPES]
 
     @filter_types.setter
@@ -3019,13 +3017,13 @@ These filters can be individually enabled and disabled; the default is disabled.
 
 
 
-The feedback matrix.
+        The feedback matrix.
 
-A column vector is formed by reading all delay lines.
-This vector is multiplied by this matrix, and then fed back into the delay lines.
+        A column vector is formed by reading all delay lines.
+        This vector is multiplied by this matrix, and then fed back into the delay lines.
 
-The matrix is stored in row-major order.
-The supplied array must have a length equal to the square of the channels specified to the constructor."""
+        The matrix is stored in row-major order.
+        The supplied array must have a length equal to the square of the channels specified to the constructor."""
         return self._property_instances[_libaudioverse.Lav_FDN_MATRIX]
 
     @matrix.setter
@@ -3036,8 +3034,8 @@ The supplied array must have a length equal to the square of the channels specif
     def max_delay(self):
         """Type: float
 
-This property is read-only.
-The maximum delay any of the internal delay lines may be set to."""
+        This property is read-only.
+        The maximum delay any of the internal delay lines may be set to."""
         return self._property_instances[_libaudioverse.Lav_FDN_MAX_DELAY]
 
     @property
@@ -3046,9 +3044,9 @@ The maximum delay any of the internal delay lines may be set to."""
 
 
 
-Allows control of the individual gains of the output.
-These gains do not apply to the feedback path and are only for controlling relative output levels.
-The array for this property allows any floating point values, and must be exactly `channels` long."""
+        Allows control of the individual gains of the output.
+        These gains do not apply to the feedback path and are only for controlling relative output levels.
+        The array for this property allows any floating point values, and must be exactly `channels` long."""
         return self._property_instances[_libaudioverse.Lav_FDN_OUTPUT_GAINS]
 
     @output_gains.setter
@@ -3062,13 +3060,13 @@ _types_to_classes[ObjectTypes.feedback_delay_network_node] = FeedbackDelayNetwor
 class AdditiveSquareNode(GenericNode):
     r"""The most accurate, least featureful, and slowest square oscillator.
 
-This oscillator uses additive synthesis to produce square waves.
-The efficiency therefore depends on the frequency.
-Sweeping this oscillator will perform poorly if you do not set the harmonics to a nonzero value.
+    This oscillator uses additive synthesis to produce square waves.
+    The efficiency therefore depends on the frequency.
+    Sweeping this oscillator will perform poorly if you do not set the harmonics to a nonzero value.
 
-This oscillator is slightly under the range -1 to 1.
-For this reason, it is probably not suitable as a control signal.
-This is not fixable using additive synthesis and is a frequency dependent effect."""
+    This oscillator is slightly under the range -1 to 1.
+    For this reason, it is probably not suitable as a control signal.
+    This is not fixable using additive synthesis and is a frequency dependent effect."""
 
     def __init__(self, simulation):
         super(AdditiveSquareNode, self).__init__(
@@ -3115,9 +3113,9 @@ This is not fixable using additive synthesis and is a frequency dependent effect
     def frequency(self):
         """Type: float
 
-Range: [0, INFINITY]
-Default value: 440.0
-The frequency of the square wave, in hertz."""
+        Range: [0, INFINITY]
+        Default value: 440.0
+        The frequency of the square wave, in hertz."""
         return self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY]
 
     @frequency.setter
@@ -3128,11 +3126,11 @@ The frequency of the square wave, in hertz."""
     def frequency_multiplier(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 1.0
-An additional multiplicative factor applied to the frequency of the oscillator.
+        Range: [-INFINITY, INFINITY]
+        Default value: 1.0
+        An additional multiplicative factor applied to the frequency of the oscillator.
 
-This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
+        This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
         return self._property_instances[
             _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
         ]
@@ -3145,14 +3143,14 @@ This is useful for creating instruments, as the notes of the standard musical sc
     def harmonics(self):
         """Type: int
 
-Range: [0, MAX_INT]
-Default value: 0
-The number of harmonics.
-0 requests automatic adjustment.
-Use a nonzero value if you intend to sweep the square wave.
+        Range: [0, MAX_INT]
+        Default value: 0
+        The number of harmonics.
+        0 requests automatic adjustment.
+        Use a nonzero value if you intend to sweep the square wave.
 
-While this property has no max value, any combination of frequency and harmonics that leads to aliasing will alias.
-To avoid this, make sure that ``2*frequency*(2*harmonics-1)`` never goes over half your chosen sampling rate."""
+        While this property has no max value, any combination of frequency and harmonics that leads to aliasing will alias.
+        To avoid this, make sure that ``2*frequency*(2*harmonics-1)`` never goes over half your chosen sampling rate."""
         return self._property_instances[_libaudioverse.Lav_SQUARE_HARMONICS]
 
     @harmonics.setter
@@ -3163,10 +3161,10 @@ To avoid this, make sure that ``2*frequency*(2*harmonics-1)`` never goes over ha
     def phase(self):
         """Type: float
 
-Range: [0.0, 1.0]
-Default value: 0.0
-The phase of the square wave.
-This is measured in periods, not in radians."""
+        Range: [0.0, 1.0]
+        Default value: 0.0
+        The phase of the square wave.
+        This is measured in periods, not in radians."""
         return self._property_instances[_libaudioverse.Lav_OSCILLATOR_PHASE]
 
     @phase.setter
@@ -3180,14 +3178,14 @@ _types_to_classes[ObjectTypes.additive_square_node] = AdditiveSquareNode
 class AdditiveTriangleNode(GenericNode):
     r"""The most accurate, least featureful, and slowest triangle oscillator.
 
-This oscillator uses additive synthesis to produce triangle waves.
-The efficiency therefore depends on the frequency.
-Sweeping this oscillator will perform poorly if you do not set the harmonics to a nonzero value.
+    This oscillator uses additive synthesis to produce triangle waves.
+    The efficiency therefore depends on the frequency.
+    Sweeping this oscillator will perform poorly if you do not set the harmonics to a nonzero value.
 
-This oscillator is slightly under the range -1 to 1.
-Calibration scripts show that the worst case is -0.9 to 0.9, with the error increasing as frequency increases.
-For this reason, it is probably not suitable as a control signal.
-This is not fixable using additive synthesis and is a frequency dependent effect."""
+    This oscillator is slightly under the range -1 to 1.
+    Calibration scripts show that the worst case is -0.9 to 0.9, with the error increasing as frequency increases.
+    For this reason, it is probably not suitable as a control signal.
+    This is not fixable using additive synthesis and is a frequency dependent effect."""
 
     def __init__(self, simulation):
         super(AdditiveTriangleNode, self).__init__(
@@ -3236,9 +3234,9 @@ This is not fixable using additive synthesis and is a frequency dependent effect
     def frequency(self):
         """Type: float
 
-Range: [0, INFINITY]
-Default value: 440.0
-The frequency of the triangle wave, in hertz."""
+        Range: [0, INFINITY]
+        Default value: 440.0
+        The frequency of the triangle wave, in hertz."""
         return self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY]
 
     @frequency.setter
@@ -3249,11 +3247,11 @@ The frequency of the triangle wave, in hertz."""
     def frequency_multiplier(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 1.0
-An additional multiplicative factor applied to the frequency of the oscillator.
+        Range: [-INFINITY, INFINITY]
+        Default value: 1.0
+        An additional multiplicative factor applied to the frequency of the oscillator.
 
-This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
+        This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
         return self._property_instances[
             _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
         ]
@@ -3266,14 +3264,14 @@ This is useful for creating instruments, as the notes of the standard musical sc
     def harmonics(self):
         """Type: int
 
-Range: [0, MAX_INT]
-Default value: 0
-The number of harmonics.
-0 requests automatic adjustment.
-Use a nonzero value if you intend to sweep the triangle wave.
+        Range: [0, MAX_INT]
+        Default value: 0
+        The number of harmonics.
+        0 requests automatic adjustment.
+        Use a nonzero value if you intend to sweep the triangle wave.
 
-While this property has no max value, any combination of frequency and harmonics that leads to aliasing will alias.
-To avoid this, make sure that ``2*frequency*(2*harmonics-1)`` never goes over half your chosen sampling rate."""
+        While this property has no max value, any combination of frequency and harmonics that leads to aliasing will alias.
+        To avoid this, make sure that ``2*frequency*(2*harmonics-1)`` never goes over half your chosen sampling rate."""
         return self._property_instances[_libaudioverse.Lav_TRIANGLE_HARMONICS]
 
     @harmonics.setter
@@ -3284,10 +3282,10 @@ To avoid this, make sure that ``2*frequency*(2*harmonics-1)`` never goes over ha
     def phase(self):
         """Type: float
 
-Range: [0.0, 1.0]
-Default value: 0.0
-The phase of the triangle wave.
-This is measured in periods, not in radians."""
+        Range: [0.0, 1.0]
+        Default value: 0.0
+        The phase of the triangle wave.
+        This is measured in periods, not in radians."""
         return self._property_instances[_libaudioverse.Lav_OSCILLATOR_PHASE]
 
     @phase.setter
@@ -3301,14 +3299,14 @@ _types_to_classes[ObjectTypes.additive_triangle_node] = AdditiveTriangleNode
 class AdditiveSawNode(GenericNode):
     r"""The most accurate, least featureful, and slowest saw oscillator.
 
-This oscillator uses additive synthesis to produce saw waves.
-The efficiency therefore depends on the frequency.
-Sweeping this oscillator will perform poorly if you do not set the harmonics to a nonzero value.
+    This oscillator uses additive synthesis to produce saw waves.
+    The efficiency therefore depends on the frequency.
+    Sweeping this oscillator will perform poorly if you do not set the harmonics to a nonzero value.
 
-This oscillator is slightly under the range -1 to 1.
-Of the additive oscillators, the sawtooth wave is the worst in this respect.
-For this reason, it is probably not suitable as a control signal.
-This is not fixable using additive synthesis and is a frequency dependent effect."""
+    This oscillator is slightly under the range -1 to 1.
+    Of the additive oscillators, the sawtooth wave is the worst in this respect.
+    For this reason, it is probably not suitable as a control signal.
+    This is not fixable using additive synthesis and is a frequency dependent effect."""
 
     def __init__(self, simulation):
         super(AdditiveSawNode, self).__init__(_lav.create_additive_saw_node(simulation))
@@ -3353,9 +3351,9 @@ This is not fixable using additive synthesis and is a frequency dependent effect
     def frequency(self):
         """Type: float
 
-Range: [0, INFINITY]
-Default value: 440.0
-The frequency of the saw wave, in hertz."""
+        Range: [0, INFINITY]
+        Default value: 440.0
+        The frequency of the saw wave, in hertz."""
         return self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY]
 
     @frequency.setter
@@ -3366,11 +3364,11 @@ The frequency of the saw wave, in hertz."""
     def frequency_multiplier(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 1.0
-An additional multiplicative factor applied to the frequency of the oscillator.
+        Range: [-INFINITY, INFINITY]
+        Default value: 1.0
+        An additional multiplicative factor applied to the frequency of the oscillator.
 
-This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
+        This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
         return self._property_instances[
             _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
         ]
@@ -3383,14 +3381,14 @@ This is useful for creating instruments, as the notes of the standard musical sc
     def harmonics(self):
         """Type: int
 
-Range: [0, MAX_INT]
-Default value: 0
-The number of harmonics.
-0 requests automatic adjustment.
-Use a nonzero value if you intend to sweep the saw wave.
+        Range: [0, MAX_INT]
+        Default value: 0
+        The number of harmonics.
+        0 requests automatic adjustment.
+        Use a nonzero value if you intend to sweep the saw wave.
 
-While this property has no max value, any combination of frequency and harmonics that leads to aliasing will alias.
-To avoid this, make sure that ``frequency*harmonics`` never goes over half your chosen sampling rate."""
+        While this property has no max value, any combination of frequency and harmonics that leads to aliasing will alias.
+        To avoid this, make sure that ``frequency*harmonics`` never goes over half your chosen sampling rate."""
         return self._property_instances[_libaudioverse.Lav_SAW_HARMONICS]
 
     @harmonics.setter
@@ -3401,10 +3399,10 @@ To avoid this, make sure that ``frequency*harmonics`` never goes over half your 
     def phase(self):
         """Type: float
 
-Range: [0.0, 1.0]
-Default value: 0.0
-The phase of the saw wave.
-This is measured in periods, not in radians."""
+        Range: [0.0, 1.0]
+        Default value: 0.0
+        The phase of the saw wave.
+        This is measured in periods, not in radians."""
         return self._property_instances[_libaudioverse.Lav_OSCILLATOR_PHASE]
 
     @phase.setter
@@ -3450,9 +3448,9 @@ class NoiseNode(GenericNode):
     def noise_type(self):
         """Type: int
 
-Range: :any:`NoiseTypes`
-Default value: :any:`NoiseTypes.white`
-The type of noise to generate."""
+        Range: :any:`NoiseTypes`
+        Default value: :any:`NoiseTypes.white`
+        The type of noise to generate."""
         return self._property_instances[_libaudioverse.Lav_NOISE_NOISE_TYPE]
 
     @noise_type.setter
@@ -3464,10 +3462,10 @@ The type of noise to generate."""
         """Type: boolean
 
 
-Default value: False
-Whether or not to normalize the output.
-Some types of noise are quieter without this enabled.
-Turning it on is sometimes helpful and sometimes not."""
+        Default value: False
+        Whether or not to normalize the output.
+        Some types of noise are quieter without this enabled.
+        Turning it on is sometimes helpful and sometimes not."""
         return self._property_instances[_libaudioverse.Lav_NOISE_SHOULD_NORMALIZE]
 
     @should_normalize.setter
@@ -3480,8 +3478,8 @@ _types_to_classes[ObjectTypes.noise_node] = NoiseNode
 
 class IirNode(GenericNode):
     r"""Implements arbetrary IIR filters.
-The only restriction on the filter is that the first element of the denominator must be nonzero.
-To configure this node, use the function Lav_iirNodeSetCoefficients."""
+    The only restriction on the filter is that the first element of the denominator must be nonzero.
+    To configure this node, use the function Lav_iirNodeSetCoefficients."""
 
     def __init__(self, simulation, channels):
         super(IirNode, self).__init__(_lav.create_iir_node(simulation, channels))
@@ -3516,8 +3514,8 @@ _types_to_classes[ObjectTypes.iir_node] = IirNode
 
 class GainNode(GenericNode):
     r"""This node is essentially in instantiated generic node, offering only the functionality therein.
-Its purpose is to allow changing the gain or adding offset to a large collection of nodes.
-One possible use is as a simple mixer: point all the nodes to be mixed at the input, set mul, and then point the output at the destination for the mixed audio."""
+    Its purpose is to allow changing the gain or adding offset to a large collection of nodes.
+    One possible use is as a simple mixer: point all the nodes to be mixed at the input, set mul, and then point the output at the destination for the mixed audio."""
 
     def __init__(self, simulation, channels):
         super(GainNode, self).__init__(_lav.create_gain_node(simulation, channels))
@@ -3534,9 +3532,9 @@ _types_to_classes[ObjectTypes.gain_node] = GainNode
 
 class ChannelSplitterNode(GenericNode):
     r"""Libaudioverse inputs and outputs transport multiple channels of audio, which is usually the desired behavior.
-This node, coupled with the :class:`ChannelMergerNode`, allows advanced applications to manipulate the individual audio channels directly.
-The usual workflow is as follows: feed the output of a node through this node,
-modify the channels individually, and then merge them with a :class:`ChannelMergerNode`."""
+    This node, coupled with the :class:`ChannelMergerNode`, allows advanced applications to manipulate the individual audio channels directly.
+    The usual workflow is as follows: feed the output of a node through this node,
+    modify the channels individually, and then merge them with a :class:`ChannelMergerNode`."""
 
     def __init__(self, simulation, channels):
         super(ChannelSplitterNode, self).__init__(
@@ -3555,9 +3553,9 @@ _types_to_classes[ObjectTypes.channel_splitter_node] = ChannelSplitterNode
 
 class ChannelMergerNode(GenericNode):
     r"""Libaudioverse inputs and outputs transport multiple channels of audio, which is usually the desired behavior.
-This node, coupled with the :class:`ChannelSplitterNode` , allows advanced applications to manipulate the individual audio channels directly.
-The usual workflow is as follows: feed the output of a node through a :class:`ChannelSplitterNode`,
-modify the channels individually, and then merge them with this node."""
+    This node, coupled with the :class:`ChannelSplitterNode` , allows advanced applications to manipulate the individual audio channels directly.
+    The usual workflow is as follows: feed the output of a node through a :class:`ChannelSplitterNode`,
+    modify the channels individually, and then merge them with this node."""
 
     def __init__(self, simulation, channels):
         super(ChannelMergerNode, self).__init__(
@@ -3576,7 +3574,7 @@ _types_to_classes[ObjectTypes.channel_merger_node] = ChannelMergerNode
 
 class BufferNode(GenericNode):
     r"""This node plays a buffer.
-The output of this node will have as many channels as the buffer does, so connecting it directly to the simulation will have the desired effect."""
+    The output of this node will have as many channels as the buffer does, so connecting it directly to the simulation will have the desired effect."""
 
     def __init__(self, simulation):
         super(BufferNode, self).__init__(_lav.create_buffer_node(simulation))
@@ -3624,8 +3622,8 @@ The output of this node will have as many channels as the buffer does, so connec
 
 
 
-The currently playing buffer.
-Setting this property will reset position."""
+        The currently playing buffer.
+        Setting this property will reset position."""
         return self._property_instances[_libaudioverse.Lav_BUFFER_BUFFER]
 
     @buffer.setter
@@ -3636,12 +3634,12 @@ Setting this property will reset position."""
     def ended_count(self):
         """Type: int
 
-This property is read-only.
-Increments every time the buffer reaches it's end.
-If the buffer is not looping, this can be used to determine when the buffer is ended, without using the callback.
-if the buffer is configured to loop, the counter will count up every time the end of a loop is reached.
-Note that this property can technically wrap if your buffer node manages to end 2147483647 times.
-This should be impossible, save for the most long-running applications and shortest meaningful buffers."""
+        This property is read-only.
+        Increments every time the buffer reaches it's end.
+        If the buffer is not looping, this can be used to determine when the buffer is ended, without using the callback.
+        if the buffer is configured to loop, the counter will count up every time the end of a loop is reached.
+        Note that this property can technically wrap if your buffer node manages to end 2147483647 times.
+        This should be impossible, save for the most long-running applications and shortest meaningful buffers."""
         return self._property_instances[_libaudioverse.Lav_BUFFER_ENDED_COUNT]
 
     @property
@@ -3649,8 +3647,8 @@ This should be impossible, save for the most long-running applications and short
         """Type: boolean
 
 
-Default value: False
-If true, this node continues playing the same buffer from the beginning after it reaches the end."""
+        Default value: False
+        If true, this node continues playing the same buffer from the beginning after it reaches the end."""
         return self._property_instances[_libaudioverse.Lav_BUFFER_LOOPING]
 
     @looping.setter
@@ -3661,10 +3659,10 @@ If true, this node continues playing the same buffer from the beginning after it
     def position(self):
         """Type: double
 
-Range: dynamic
-Default value: 0.0
-The position of playback, in seconds.
-The range of this property corresponds to the total duration of the buffer."""
+        Range: dynamic
+        Default value: 0.0
+        The position of playback, in seconds.
+        The range of this property corresponds to the total duration of the buffer."""
         return self._property_instances[_libaudioverse.Lav_BUFFER_POSITION]
 
     @position.setter
@@ -3675,11 +3673,11 @@ The range of this property corresponds to the total duration of the buffer."""
     def rate(self):
         """Type: double
 
-Range: [0, INFINITY]
-Default value: 1.0
-A multiplier that applies to playback rate.
-1.0 is identity.
-Values less than 1.0 cause a decrease in pitch and values greater than 1.0 cause an increase in pitch."""
+        Range: [0, INFINITY]
+        Default value: 1.0
+        A multiplier that applies to playback rate.
+        1.0 is identity.
+        Values less than 1.0 cause a decrease in pitch and values greater than 1.0 cause an increase in pitch."""
         return self._property_instances[_libaudioverse.Lav_BUFFER_RATE]
 
     @rate.setter
@@ -3688,7 +3686,7 @@ Values less than 1.0 cause a decrease in pitch and values greater than 1.0 cause
 
     def get_end_callback(self):
         r"""Get the end callback.
-        
+
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
             cb = self._state["callbacks"].get("end", None)
@@ -3699,8 +3697,8 @@ Values less than 1.0 cause a decrease in pitch and values greater than 1.0 cause
 
     def set_end_callback(self, callback, additional_args=None, additional_kwargs=None):
         r"""Set the end callback.
-        
-Called outside the audio threads every time the buffer reaches the end of the audio data."""
+
+        Called outside the audio threads every time the buffer reaches the end of the audio data."""
         with self._lock:
             if callback is None:
                 # delete the key, clear the callback with Libaudioverse.
@@ -3727,9 +3725,9 @@ _types_to_classes[ObjectTypes.buffer_node] = BufferNode
 class BufferTimelineNode(GenericNode):
     r"""Represents timelines of buffers.
 
-This node provides the ability to schedule buffers to play at any specific time in the future.
-This node supports pitch bending scheduled buffers.
-There is no limit to the number of buffers which may be scheduled at any given time, and polyphony is supported."""
+    This node provides the ability to schedule buffers to play at any specific time in the future.
+    This node supports pitch bending scheduled buffers.
+    There is no limit to the number of buffers which may be scheduled at any given time, and polyphony is supported."""
 
     def __init__(self, simulation, channels):
         super(BufferTimelineNode, self).__init__(
@@ -3744,7 +3742,7 @@ There is no limit to the number of buffers which may be scheduled at any given t
 
     def schedule_buffer(node, buffer, time, pitch_bend):
         r"""Schedule a buffer, optionally with pitch bend.
-The time is relative to now."""
+        The time is relative to now."""
         return _lav.buffer_timeline_node_schedule_buffer(node, buffer, time, pitch_bend)
 
 
@@ -3754,14 +3752,14 @@ _types_to_classes[ObjectTypes.buffer_timeline_node] = BufferTimelineNode
 class RecorderNode(GenericNode):
     r"""Records audio to files.
 
-The usage pattern for this node is simple:
-connect something to the input, call Lav_recorderNodeStartRecording, and ensure that the node is processed.
-In order to avoid potential problems with blocks of silence at the beginning of the recording, this node's default state is playing.
-You should connect the output to something that will demand the recorder node's audio or change the state to always playing, usually after a call to Lav_recorderNodeStartRecording.
-If you don't, no recording will take place.
+    The usage pattern for this node is simple:
+    connect something to the input, call Lav_recorderNodeStartRecording, and ensure that the node is processed.
+    In order to avoid potential problems with blocks of silence at the beginning of the recording, this node's default state is playing.
+    You should connect the output to something that will demand the recorder node's audio or change the state to always playing, usually after a call to Lav_recorderNodeStartRecording.
+    If you don't, no recording will take place.
 
-Unlike most other nodes in Libaudioverse, it is important that you call Lav_recorderNodeStopRecording when done recording.
-Failure to do so may lead to any of a number of surprising results."""
+    Unlike most other nodes in Libaudioverse, it is important that you call Lav_recorderNodeStopRecording when done recording.
+    Failure to do so may lead to any of a number of surprising results."""
 
     def __init__(self, simulation, channels):
         super(RecorderNode, self).__init__(
@@ -3776,16 +3774,16 @@ Failure to do so may lead to any of a number of surprising results."""
 
     def start_recording(node, path):
         r"""Begin recording to the specified files.
-The sample rate is the same as that of the simulation.
-The channel count is the same as this node was initialized with.
-The format of the file is determined from the extension: this function recognizes ".wav" and ".ogg" on all platforms."""
+        The sample rate is the same as that of the simulation.
+        The channel count is the same as this node was initialized with.
+        The format of the file is determined from the extension: this function recognizes ".wav" and ".ogg" on all platforms."""
         return _lav.recorder_node_start_recording(node, path)
 
     def stop_recording(node):
         r"""Stops recording.
 
-Be sure to call this function.
-Failure to do so may lead to any of a number of undesirable problems."""
+        Be sure to call this function.
+        Failure to do so may lead to any of a number of undesirable problems."""
         return _lav.recorder_node_stop_recording(node)
 
 
@@ -3795,7 +3793,7 @@ _types_to_classes[ObjectTypes.recorder_node] = RecorderNode
 class ConvolverNode(GenericNode):
     r"""A simple convolver.
 
-This implements convolution directly, without use of the FFT."""
+    This implements convolution directly, without use of the FFT."""
 
     def __init__(self, simulation, channels):
         super(ConvolverNode, self).__init__(
@@ -3823,9 +3821,9 @@ This implements convolution directly, without use of the FFT."""
     def impulse_response(self):
         """Type: float_array
 
-Range: [-INFINITY, INFINITY]
-Default value: [1.0]
-The impulse response to convolve the input with."""
+        Range: [-INFINITY, INFINITY]
+        Default value: [1.0]
+        The impulse response to convolve the input with."""
         return self._property_instances[_libaudioverse.Lav_CONVOLVER_IMPULSE_RESPONSE]
 
     @impulse_response.setter
@@ -3839,13 +3837,13 @@ _types_to_classes[ObjectTypes.convolver_node] = ConvolverNode
 class FftConvolverNode(GenericNode):
     r"""A convolver for long impulse responses.
 
-This convolver uses the overlap-add convolution algorithm.
-It is slower than the :class:`ConvolverNode` for small impulse responses.
+    This convolver uses the overlap-add convolution algorithm.
+    It is slower than the :class:`ConvolverNode` for small impulse responses.
 
-The difference between this node and the :class:`ConvolverNode` is the complexity of the algorithm.
-This node is capable of handling impulses longer than a second, a case for which the :class:`ConvolverNode` will fail to run in realtime.
+    The difference between this node and the :class:`ConvolverNode` is the complexity of the algorithm.
+    This node is capable of handling impulses longer than a second, a case for which the :class:`ConvolverNode` will fail to run in realtime.
 
-Furthermore, as the most common operation for this node is reverb, it is possible to set each channel's response separately."""
+    Furthermore, as the most common operation for this node is reverb, it is possible to set each channel's response separately."""
 
     def __init__(self, simulation, channels):
         super(FftConvolverNode, self).__init__(
@@ -3875,16 +3873,16 @@ _types_to_classes[ObjectTypes.fft_convolver_node] = FftConvolverNode
 class ThreeBandEqNode(GenericNode):
     r"""A three band equalizer.
 
-This node consists of a peaking filter and a highshelf filter in series, such that the frequency spectrum may be equalized in three, configurable bands.
+    This node consists of a peaking filter and a highshelf filter in series, such that the frequency spectrum may be equalized in three, configurable bands.
 
-The lowest of these bands begins at ``lowband_frequency`` and continues down to ``0 hz``.
-The highest is from ``highband_frequency`` and continues until nyquist.
-The middle is the remaining space between the low and high band.
-If the high band begins below the low band, behavior is undefined, but will almost certainly not do what you want.
-Libaudioverse does not check for this case.
+    The lowest of these bands begins at ``lowband_frequency`` and continues down to ``0 hz``.
+    The highest is from ``highband_frequency`` and continues until nyquist.
+    The middle is the remaining space between the low and high band.
+    If the high band begins below the low band, behavior is undefined, but will almost certainly not do what you want.
+    Libaudioverse does not check for this case.
 
-The slopes that this node institutes are not perfect and cannot increase effectively beyond a certain point.
-This is the least expensive of the Libaudioverse equalizers, and is sufficient for many simpler applications."""
+    The slopes that this node institutes are not perfect and cannot increase effectively beyond a certain point.
+    This is the least expensive of the Libaudioverse equalizers, and is sufficient for many simpler applications."""
 
     def __init__(self, simulation, channels):
         super(ThreeBandEqNode, self).__init__(
@@ -3945,9 +3943,9 @@ This is the least expensive of the Libaudioverse equalizers, and is sufficient f
     def highband_dbgain(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 0.0
-The gain to apply to the highest frequency band as decibals."""
+        Range: [-INFINITY, INFINITY]
+        Default value: 0.0
+        The gain to apply to the highest frequency band as decibals."""
         return self._property_instances[
             _libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_DBGAIN
         ]
@@ -3960,9 +3958,9 @@ The gain to apply to the highest frequency band as decibals."""
     def highband_frequency(self):
         """Type: float
 
-Range: dynamic
-Default value: 1000.0
-The frequency that divides the middle band from the high band."""
+        Range: dynamic
+        Default value: 1000.0
+        The frequency that divides the middle band from the high band."""
         return self._property_instances[
             _libaudioverse.Lav_THREE_BAND_EQ_HIGHBAND_FREQUENCY
         ]
@@ -3975,9 +3973,9 @@ The frequency that divides the middle band from the high band."""
     def lowband_dbgain(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 0.0
-The gain of the lowest frequency band as decibals."""
+        Range: [-INFINITY, INFINITY]
+        Default value: 0.0
+        The gain of the lowest frequency band as decibals."""
         return self._property_instances[_libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_DBGAIN]
 
     @lowband_dbgain.setter
@@ -3988,11 +3986,11 @@ The gain of the lowest frequency band as decibals."""
     def lowband_frequency(self):
         """Type: float
 
-Range: dynamic
-Default value: 300.0
-The frequency that divides the low and middle bands.
+        Range: dynamic
+        Default value: 300.0
+        The frequency that divides the low and middle bands.
 
-This ranges from 0 to nyquist."""
+        This ranges from 0 to nyquist."""
         return self._property_instances[
             _libaudioverse.Lav_THREE_BAND_EQ_LOWBAND_FREQUENCY
         ]
@@ -4005,9 +4003,9 @@ This ranges from 0 to nyquist."""
     def midband_dbgain(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 0.0
-The gain to apply to the middle band of the equalizer."""
+        Range: [-INFINITY, INFINITY]
+        Default value: 0.0
+        The gain to apply to the middle band of the equalizer."""
         return self._property_instances[_libaudioverse.Lav_THREE_BAND_EQ_MIDBAND_DBGAIN]
 
     @midband_dbgain.setter
@@ -4020,10 +4018,10 @@ _types_to_classes[ObjectTypes.three_band_eq_node] = ThreeBandEqNode
 
 class FilteredDelayNode(GenericNode):
     r"""This node consists of a delay line with a biquad filter attached.
-The output of the delay line is filtered.
-The difference between this node and a delay line and filter pair is that this node will use the filtered output for the feedback.
+    The output of the delay line is filtered.
+    The difference between this node and a delay line and filter pair is that this node will use the filtered output for the feedback.
 
-This node is equivalent to the delay line in the Karplus-strong algorithm."""
+    This node is equivalent to the delay line in the Karplus-strong algorithm."""
 
     def __init__(self, simulation, max_delay, channels):
         super(FilteredDelayNode, self).__init__(
@@ -4106,10 +4104,10 @@ This node is equivalent to the delay line in the Karplus-strong algorithm."""
     def dbgain(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 0.0
-This property is a the gain in decibals to be used with the peaking and shelving filters.
-It measures the gain that these filters apply to the part of the signal they boost."""
+        Range: [-INFINITY, INFINITY]
+        Default value: 0.0
+        This property is a the gain in decibals to be used with the peaking and shelving filters.
+        It measures the gain that these filters apply to the part of the signal they boost."""
         return self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_DBGAIN]
 
     @dbgain.setter
@@ -4120,10 +4118,10 @@ It measures the gain that these filters apply to the part of the signal they boo
     def delay(self):
         """Type: float
 
-Range: dynamic
-Default value: 0.0
-The delay of the delay line in seconds.
-The range of this property depends on the maxDelay parameter to the constructor."""
+        Range: dynamic
+        Default value: 0.0
+        The delay of the delay line in seconds.
+        The range of this property depends on the maxDelay parameter to the constructor."""
         return self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_DELAY]
 
     @delay.setter
@@ -4134,18 +4132,18 @@ The range of this property depends on the maxDelay parameter to the constructor.
     def delay_max(self):
         """Type: float
 
-This property is read-only.
-The max delay as set at the node's creation time."""
+        This property is read-only.
+        The max delay as set at the node's creation time."""
         return self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_DELAY_MAX]
 
     @property
     def feedback(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 0.0
-The feedback coefficient.
-The output of the filter is fed back into the delay line, multiplied by this coefficient."""
+        Range: [-INFINITY, INFINITY]
+        Default value: 0.0
+        The feedback coefficient.
+        The output of the filter is fed back into the delay line, multiplied by this coefficient."""
         return self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_FEEDBACK]
 
     @feedback.setter
@@ -4156,10 +4154,10 @@ The output of the filter is fed back into the delay line, multiplied by this coe
     def filter_type(self):
         """Type: int
 
-Range: :any:`BiquadTypes`
-Default value: :any:`BiquadTypes.lowpass`
-The type of the filter.
-This determines the interpretations of the other properties on this node."""
+        Range: :any:`BiquadTypes`
+        Default value: :any:`BiquadTypes.lowpass`
+        The type of the filter.
+        This determines the interpretations of the other properties on this node."""
         return self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_FILTER_TYPE]
 
     @filter_type.setter
@@ -4170,10 +4168,10 @@ This determines the interpretations of the other properties on this node."""
     def frequency(self):
         """Type: float
 
-Range: [0, INFINITY]
-Default value: 2000.0
-This is the frequency of interest.
-What specifically this means depends on the selected filter type; for example, it is the cutoff frequency for lowpass and highpass."""
+        Range: [0, INFINITY]
+        Default value: 2000.0
+        This is the frequency of interest.
+        What specifically this means depends on the selected filter type; for example, it is the cutoff frequency for lowpass and highpass."""
         return self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_FREQUENCY]
 
     @frequency.setter
@@ -4184,11 +4182,11 @@ What specifically this means depends on the selected filter type; for example, i
     def interpolation_time(self):
         """Type: float
 
-Range: [0.001, INFINITY]
-Default value: 0.001
-When the delay property is changed, the delay line crossfades between the old position and the new one.
-This property sets how long this crossfade will take.
-Note that for this node, it is impossible to get rid of the crossfade completely."""
+        Range: [0.001, INFINITY]
+        Default value: 0.001
+        When the delay property is changed, the delay line crossfades between the old position and the new one.
+        This property sets how long this crossfade will take.
+        Note that for this node, it is impossible to get rid of the crossfade completely."""
         return self._property_instances[
             _libaudioverse.Lav_FILTERED_DELAY_INTERPOLATION_TIME
         ]
@@ -4201,21 +4199,21 @@ Note that for this node, it is impossible to get rid of the crossfade completely
     def q(self):
         """Type: float
 
-Range: [0.001, INFINITY]
-Default value: 0.5
-Q is a mathematically complex parameter, a full description of which is beyond the scope of this manual.
-For lowpass, bandpass, and high pass filters, Q can be interpreted as a measure of resonation.
-For Q<=0.5, the filter is said to be damped:
-it will cut frequencies.
-For Q>0.5, however, some frequencies are likely to be boosted.
+        Range: [0.001, INFINITY]
+        Default value: 0.5
+        Q is a mathematically complex parameter, a full description of which is beyond the scope of this manual.
+        For lowpass, bandpass, and high pass filters, Q can be interpreted as a measure of resonation.
+        For Q<=0.5, the filter is said to be damped:
+        it will cut frequencies.
+        For Q>0.5, however, some frequencies are likely to be boosted.
 
-Q controls the bandwidth for the bandpass and peaking filter types
-as well as the slope for the shelving EQ.
+        Q controls the bandwidth for the bandpass and peaking filter types
+        as well as the slope for the shelving EQ.
 
-For everything except the peaking filter, this property follows the normal definition of Q in the electrical engineering literature.
-For more specifics, see the Audio EQ Cookbook.
-It is found here:
-http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt"""
+        For everything except the peaking filter, this property follows the normal definition of Q in the electrical engineering literature.
+        For more specifics, see the Audio EQ Cookbook.
+        It is found here:
+        http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt"""
         return self._property_instances[_libaudioverse.Lav_FILTERED_DELAY_Q]
 
     @q.setter
@@ -4228,14 +4226,14 @@ _types_to_classes[ObjectTypes.filtered_delay_node] = FilteredDelayNode
 
 class CrossfaderNode(GenericNode):
     r"""A crossfader is a node  which allows for selection of exactly one input.
-The selection can be changed by crossfading, a technique whereby the currently selected input is slowly faded out and the new one faded in.
+    The selection can be changed by crossfading, a technique whereby the currently selected input is slowly faded out and the new one faded in.
 
-By using crossfades of no duration, this node can also be made to function as a switch or selector, selecting an input from among the connected nodes.
-This particular case is optimized, and special support is implemented via allowing you to write directly to the ``current_input`` property.
+    By using crossfades of no duration, this node can also be made to function as a switch or selector, selecting an input from among the connected nodes.
+    This particular case is optimized, and special support is implemented via allowing you to write directly to the ``current_input`` property.
 
-This crossfader has a configurable number of inputs.
-All inputs and the single output have the same channel count.
-These are both configurable via parameters to the constructor."""
+    This crossfader has a configurable number of inputs.
+    All inputs and the single output have the same channel count.
+    These are both configurable via parameters to the constructor."""
 
     def __init__(self, simulation, channels, inputs):
         super(CrossfaderNode, self).__init__(
@@ -4277,12 +4275,12 @@ These are both configurable via parameters to the constructor."""
     def current_input(self):
         """Type: int
 
-Range: dynamic
-Default value: 0
-The currently active input.
+        Range: dynamic
+        Default value: 0
+        The currently active input.
 
-Writing to this property is equivalent to crossfading with a time of 0.
-Note that the output is a combination of the current and target inputs while crossfading."""
+        Writing to this property is equivalent to crossfading with a time of 0.
+        Note that the output is a combination of the current and target inputs while crossfading."""
         return self._property_instances[_libaudioverse.Lav_CROSSFADER_CURRENT_INPUT]
 
     @current_input.setter
@@ -4294,8 +4292,8 @@ Note that the output is a combination of the current and target inputs while cro
         """Type: boolean
 
 
-Default value: False
-True if we are crossfading, otherwise false."""
+        Default value: False
+        True if we are crossfading, otherwise false."""
         return self._property_instances[_libaudioverse.Lav_CROSSFADER_IS_CROSSFADING]
 
     @is_crossfading.setter
@@ -4306,24 +4304,24 @@ True if we are crossfading, otherwise false."""
     def target_input(self):
         """Type: int
 
-This property is read-only.
-The input which the current crossfade is headed for.
+        This property is read-only.
+        The input which the current crossfade is headed for.
 
-When not crossfading, this property is meaningless."""
+        When not crossfading, this property is meaningless."""
         return self._property_instances[_libaudioverse.Lav_CROSSFADER_TARGET_INPUT]
 
     def crossfade(node, duration, input):
         r"""Begin a crossfade.
 
-if a crossfade is currently inn progress, it finishes immediately and fires the event.
+        if a crossfade is currently inn progress, it finishes immediately and fires the event.
 
-Using a duration of 0 is an instantaneous crossfade, equivalent to writing directly to the current_input property.
-Crossfades of duration 0 do not fire the finished event."""
+        Using a duration of 0 is an instantaneous crossfade, equivalent to writing directly to the current_input property.
+        Crossfades of duration 0 do not fire the finished event."""
         return _lav.crossfader_node_crossfade(node, duration, input)
 
     def get_finished_callback(self):
         r"""Get the finished callback.
-        
+
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
             cb = self._state["callbacks"].get("finished", None)
@@ -4336,8 +4334,8 @@ Crossfades of duration 0 do not fire the finished event."""
         self, callback, additional_args=None, additional_kwargs=None
     ):
         r"""Set the finished callback.
-        
-Called outside the audio thread when the currently scheduled crossfade finishes."""
+
+        Called outside the audio thread when the currently scheduled crossfade finishes."""
         with self._lock:
             if callback is None:
                 # delete the key, clear the callback with Libaudioverse.
@@ -4364,16 +4362,17 @@ _types_to_classes[ObjectTypes.crossfader_node] = CrossfaderNode
 
 
 class OnePoleFilterNode(GenericNode):
-    r"""A one-pole filter section, implementing the transfer function :math:`H(Z) = rac{1}{1+A_0 Z^{-1} }`
+    r"""A one-pole filter section, implementing the transfer function :math:`H(Z) =
+    rac{1}{1+A_0 Z^{-1} }`
 
-This filter is capable of implementing either a lowpass or highpass filter and is extremmely cheep.
-The produced filter rolls off at about 6 DB per octave.
+    This filter is capable of implementing either a lowpass or highpass filter and is extremmely cheep.
+    The produced filter rolls off at about 6 DB per octave.
 
-The default filter configuration is a lowpass at 500 HZ.
-The type of the filter is controlled via the ``is_highpass`` property.
-If said property is true, the filter becomes a highpass.
+    The default filter configuration is a lowpass at 500 HZ.
+    The type of the filter is controlled via the ``is_highpass`` property.
+    If said property is true, the filter becomes a highpass.
 
-Note that this filter can be swept with a-rate accuracy."""
+    Note that this filter can be swept with a-rate accuracy."""
 
     def __init__(self, simulation, channels):
         super(OnePoleFilterNode, self).__init__(
@@ -4407,11 +4406,11 @@ Note that this filter can be swept with a-rate accuracy."""
     def frequency(self):
         """Type: float
 
-Range: dynamic
-Default value: 500.0
-The -3 DB frequency of the filter.
+        Range: dynamic
+        Default value: 500.0
+        The -3 DB frequency of the filter.
 
-The range of this property is from 0 to half the sampling rate."""
+        The range of this property is from 0 to half the sampling rate."""
         return self._property_instances[_libaudioverse.Lav_ONE_POLE_FILTER_FREQUENCY]
 
     @frequency.setter
@@ -4423,10 +4422,10 @@ The range of this property is from 0 to half the sampling rate."""
         """Type: boolean
 
 
-Default value: False
-True if the filter is a highpass.
+        Default value: False
+        True if the filter is a highpass.
 
-If this property is false, the filter is a lowpass."""
+        If this property is false, the filter is a lowpass."""
         return self._property_instances[_libaudioverse.Lav_ONE_POLE_FILTER_IS_HIGHPASS]
 
     @is_highpass.setter
@@ -4440,13 +4439,13 @@ _types_to_classes[ObjectTypes.one_pole_filter_node] = OnePoleFilterNode
 class FirstOrderFilterNode(GenericNode):
     r"""A first order filter section, implementing the transfer function :math:`H(Z) = \frac{B_0 + B_1 Z^{-1} }{1+A_0 Z^{-1} }`
 
-This filter is not your friend unless you know DSP or have a specific goal in mind.
-Most applications will want  a :class:`BiquadNode` or a :class:`OnePoleFilterNode` instead.
+    This filter is not your friend unless you know DSP or have a specific goal in mind.
+    Most applications will want  a :class:`BiquadNode` or a :class:`OnePoleFilterNode` instead.
 
-This filter is not controlled through frequency specifications.
-Instead, the position of the pole and the zero on the real axis are individually controllable with a-rate properties.
-Some helper functions exist to position them for common configurations, but other filter types do most of it better.
-The major advantage for this filter type is that it is incredibly inexpensive as compared to the :class:`IirNode` and supports automation of the pole and zero's position."""
+    This filter is not controlled through frequency specifications.
+    Instead, the position of the pole and the zero on the real axis are individually controllable with a-rate properties.
+    Some helper functions exist to position them for common configurations, but other filter types do most of it better.
+    The major advantage for this filter type is that it is incredibly inexpensive as compared to the :class:`IirNode` and supports automation of the pole and zero's position."""
 
     def __init__(self, simulation, channels):
         super(FirstOrderFilterNode, self).__init__(
@@ -4480,12 +4479,12 @@ The major advantage for this filter type is that it is incredibly inexpensive as
     def pole(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 0.0
-The position of the pole on the real axis.
+        Range: [-INFINITY, INFINITY]
+        Default value: 0.0
+        The position of the pole on the real axis.
 
-The pole may be positioned anywhere, but stable filters  usually keep all poles inside the unit circle.
-For a stable filter, the value of this property should usually between -1 and 1."""
+        The pole may be positioned anywhere, but stable filters  usually keep all poles inside the unit circle.
+        For a stable filter, the value of this property should usually between -1 and 1."""
         return self._property_instances[_libaudioverse.Lav_FIRST_ORDER_FILTER_POLE]
 
     @pole.setter
@@ -4496,9 +4495,9 @@ For a stable filter, the value of this property should usually between -1 and 1.
     def zero(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 0.0
-The position of the zero on the real axis."""
+        Range: [-INFINITY, INFINITY]
+        Default value: 0.0
+        The position of the zero on the real axis."""
         return self._property_instances[_libaudioverse.Lav_FIRST_ORDER_FILTER_ZERO]
 
     @zero.setter
@@ -4507,18 +4506,18 @@ The position of the zero on the real axis."""
 
     def configure_allpass(node, frequency):
         r"""Configure this node as an allpass.
-You specify the :math:`\frac{\pi}{2}` frequency.
-You get a filter with a phase of :math:`\pi` at DC and 0 at Nyquist."""
+        You specify the :math:`\frac{\pi}{2}` frequency.
+        You get a filter with a phase of :math:`\pi` at DC and 0 at Nyquist."""
         return _lav.first_order_filter_node_configure_allpass(node, frequency)
 
     def configure_highpass(node, frequency):
         r"""Configure the filter as a highpass with a roll-off of ``6 DB`` per octave.
-This is identical to the :class:`OnePoleFilterNode` highpass configuration."""
+        This is identical to the :class:`OnePoleFilterNode` highpass configuration."""
         return _lav.first_order_filter_node_configure_highpass(node, frequency)
 
     def configure_lowpass(node, frequency):
         r"""Configure the filter as a first-order Butterworth lowpass.
-This is equivalent to the :class:`OnePoleFilterNode` lowpass configuration."""
+        This is equivalent to the :class:`OnePoleFilterNode` lowpass configuration."""
         return _lav.first_order_filter_node_configure_lowpass(node, frequency)
 
 
@@ -4528,7 +4527,7 @@ _types_to_classes[ObjectTypes.first_order_filter_node] = FirstOrderFilterNode
 class AllpassNode(GenericNode):
     r"""Implements a first-order allpass filter whose transfer function is :math:`\frac{c+Z^{-d} }{1 + cZ^{-d} }` where ``c`` is the coefficient and ``d`` the delay in samples.
 
-This filter is useful in various reverb designs."""
+    This filter is useful in various reverb designs."""
 
     def __init__(self, simulation, channels, max_delay):
         super(AllpassNode, self).__init__(
@@ -4578,11 +4577,11 @@ This filter is useful in various reverb designs."""
     def coefficient(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
+        Range: [-INFINITY, INFINITY]
 
-The coefficient of the allpass filter's transfer function.
+        The coefficient of the allpass filter's transfer function.
 
-For those not familiar with digital signal processing, this controls how quickly the repeating echoes created by this filter decay."""
+        For those not familiar with digital signal processing, this controls how quickly the repeating echoes created by this filter decay."""
         return self._property_instances[_libaudioverse.Lav_ALLPASS_COEFFICIENT]
 
     @coefficient.setter
@@ -4593,20 +4592,20 @@ For those not familiar with digital signal processing, this controls how quickly
     def delay_max(self):
         """Type: int
 
-This property is read-only.
-The max delay as set at the node's creation time."""
+        This property is read-only.
+        The max delay as set at the node's creation time."""
         return self._property_instances[_libaudioverse.Lav_ALLPASS_DELAY_SAMPLES_MAX]
 
     @property
     def delay_samples(self):
         """Type: int
 
-Range: dynamic
-Default value: 1
-The delay of the delay line in samples.
-The range of this property depends on the maxDelay parameter to the constructor.
+        Range: dynamic
+        Default value: 1
+        The delay of the delay line in samples.
+        The range of this property depends on the maxDelay parameter to the constructor.
 
-Note that values less than 1 sample still introduce delay."""
+        Note that values less than 1 sample still introduce delay."""
         return self._property_instances[_libaudioverse.Lav_ALLPASS_DELAY_SAMPLES]
 
     @delay_samples.setter
@@ -4617,11 +4616,11 @@ Note that values less than 1 sample still introduce delay."""
     def interpolation_time(self):
         """Type: float
 
-Range: [0.001, INFINITY]
-Default value: 0.001
-When the delay_samples property is changed, the delay line crossfades between the old position and the new one.
-Essentially, this property sets how long it will take the allpass filter to settle after a delay change.
-Note that for this node, it is impossible to get rid of the crossfade completely."""
+        Range: [0.001, INFINITY]
+        Default value: 0.001
+        When the delay_samples property is changed, the delay line crossfades between the old position and the new one.
+        Essentially, this property sets how long it will take the allpass filter to settle after a delay change.
+        Note that for this node, it is impossible to get rid of the crossfade completely."""
         return self._property_instances[_libaudioverse.Lav_ALLPASS_INTERPOLATION_TIME]
 
     @interpolation_time.setter
@@ -4634,29 +4633,29 @@ _types_to_classes[ObjectTypes.allpass_node] = AllpassNode
 
 class NestedAllpassNetworkNode(GenericNode):
     r"""
-This node is deprecated.
-A more capable node along the same lines is planned, at which point this one will disappear.
+    This node is deprecated.
+    A more capable node along the same lines is planned, at which point this one will disappear.
 
-This node implements nested first-order allpass filters.
+    This node implements nested first-order allpass filters.
 
-In order to specify how this nesting works, one must call the various control functions.
-This node's operation is somewhat analogous to old-style OpenGL programming: there is an implicit context that is manipulated via calling functions, as opposed to a set of properties to be set.
+    In order to specify how this nesting works, one must call the various control functions.
+    This node's operation is somewhat analogous to old-style OpenGL programming: there is an implicit context that is manipulated via calling functions, as opposed to a set of properties to be set.
 
-Filters may be appended in series.
-At any time, however, it is possible to append a nested allpass filter.
-When a nested allpass filter is appended, any new filters are appended to the end of the nested allpass's delay line; call the function Lav_nestedAllpassNodeEndNesting to end nesting and return to the previous level.
-Multiple levels of nesting are supported.
+    Filters may be appended in series.
+    At any time, however, it is possible to append a nested allpass filter.
+    When a nested allpass filter is appended, any new filters are appended to the end of the nested allpass's delay line; call the function Lav_nestedAllpassNodeEndNesting to end nesting and return to the previous level.
+    Multiple levels of nesting are supported.
 
-In order to read this node's output, be sure to call Lav_nestedAllpassNetworkNodeAppendReader; any audio that heads through this special no-op filter will be read and placed in this node's output buffers.
+    In order to read this node's output, be sure to call Lav_nestedAllpassNetworkNodeAppendReader; any audio that heads through this special no-op filter will be read and placed in this node's output buffers.
 
-In order to finalize the construction of a network, call Lav_nestedAllpassNetworkNodeCompile.
-This function takes all previously issued commands, wraps them up, and uses them to replace the current network.
-After a call to this function, all subsequent commands are building a new network whose changes will not  be heard until this function is called.
+    In order to finalize the construction of a network, call Lav_nestedAllpassNetworkNodeCompile.
+    This function takes all previously issued commands, wraps them up, and uses them to replace the current network.
+    After a call to this function, all subsequent commands are building a new network whose changes will not  be heard until this function is called.
 
-The default configuration of this node is silence.  To return to this configuration at any time, call Lav_nestedAllpassNetworkNodeCompile without issuing any commands first.
+    The default configuration of this node is silence.  To return to this configuration at any time, call Lav_nestedAllpassNetworkNodeCompile without issuing any commands first.
 
-Note that this node is extremely slow as compared to other Libaudioverse nodes.
-The primary use of this node is for experimentation purposes and the development of faster Libaudioverse nodes."""
+    Note that this node is extremely slow as compared to other Libaudioverse nodes.
+    The primary use of this node is for experimentation purposes and the development of faster Libaudioverse nodes."""
 
     def __init__(self, simulation, channels):
         super(NestedAllpassNetworkNode, self).__init__(
@@ -4675,7 +4674,7 @@ The primary use of this node is for experimentation purposes and the development
 
     def append_biquad(node, type, frequency, db_gain, q):
         r"""Append a biquad filter.
-This is the same as the :class:`BiquadNode`."""
+        This is the same as the :class:`BiquadNode`."""
         return _lav.nested_allpass_network_node_append_biquad(
             node, type, frequency, db_gain, q
         )
@@ -4688,12 +4687,12 @@ This is the same as the :class:`BiquadNode`."""
 
     def append_reader(node, mul):
         r"""The output will include audio from wherever this is appended.
-You need to call this function at least once, or your configured filter will be silent."""
+        You need to call this function at least once, or your configured filter will be silent."""
         return _lav.nested_allpass_network_node_append_reader(node, mul)
 
     def begin_nesting(node, delay, coefficient):
         r"""Append a first-order direct form II allpass to the current network, and move our focus inside it.
-All appended filters will be appended to the allpass's internal delay line until such time as you call Lav_nestedAllpassNetworkNodeEndNesting."""
+        All appended filters will be appended to the allpass's internal delay line until such time as you call Lav_nestedAllpassNetworkNodeEndNesting."""
         return _lav.nested_allpass_network_node_begin_nesting(node, delay, coefficient)
 
     def compile(node):
@@ -4702,8 +4701,8 @@ All appended filters will be appended to the allpass's internal delay line until
 
     def end_nesting(node):
         r"""End the current nesting.
-This moves the focus to the end of the allpass filter which we are currently nesting inside of.
-Behavior is undefined if this function is called without an enclosing allpass filter, but will probably crash the application."""
+        This moves the focus to the end of the allpass filter which we are currently nesting inside of.
+        Behavior is undefined if this function is called without an enclosing allpass filter, but will probably crash the application."""
         return _lav.nested_allpass_network_node_end_nesting(node)
 
 
@@ -4713,9 +4712,9 @@ _types_to_classes[ObjectTypes.nested_allpass_network_node] = NestedAllpassNetwor
 class FdnReverbNode(GenericNode):
     r"""An 8 delay line FDN reverberator, based off a householder reflection.
 
-This reverb takes as its input and outputs ats its output quadraphonic audio.
-Panning effects will still be observed at the output with some bias.
-If a stereo signal is fed into the reverb and the reverb is likewise connected to a stereo output, the input signal's volume will effectively be halved."""
+    This reverb takes as its input and outputs ats its output quadraphonic audio.
+    Panning effects will still be observed at the output with some bias.
+    If a stereo signal is fed into the reverb and the reverb is likewise connected to a stereo output, the input signal's volume will effectively be halved."""
 
     def __init__(self, simulation):
         super(FdnReverbNode, self).__init__(_lav.create_fdn_reverb_node(simulation))
@@ -4769,10 +4768,10 @@ If a stereo signal is fed into the reverb and the reverb is likewise connected t
     def cutoff_frequency(self):
         """Type: float
 
-Range: dynamic
-Default value: 5000
-Controls the frequencies of lowpass filters on the feedback path of the reverb.
-Lowering this property leads to softer and less harsh reverb."""
+        Range: dynamic
+        Default value: 5000
+        Controls the frequencies of lowpass filters on the feedback path of the reverb.
+        Lowering this property leads to softer and less harsh reverb."""
         return self._property_instances[_libaudioverse.Lav_FDN_REVERB_CUTOFF_FREQUENCY]
 
     @cutoff_frequency.setter
@@ -4783,11 +4782,11 @@ Lowering this property leads to softer and less harsh reverb."""
     def delay_modulation_depth(self):
         """Type: float
 
-Range: [0.0, 1.0]
-Default value: 0.0
-Controls how deep the modulation of the delay lines is.
-Increasing this property slightly makes the late reverb sound less metallic, while extremely high values add chorus-like effects.
-This property acts as a multiplier, and the correspondance between it and physical units is intentionally left unspecified."""
+        Range: [0.0, 1.0]
+        Default value: 0.0
+        Controls how deep the modulation of the delay lines is.
+        Increasing this property slightly makes the late reverb sound less metallic, while extremely high values add chorus-like effects.
+        This property acts as a multiplier, and the correspondance between it and physical units is intentionally left unspecified."""
         return self._property_instances[
             _libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_DEPTH
         ]
@@ -4800,9 +4799,9 @@ This property acts as a multiplier, and the correspondance between it and physic
     def delay_modulation_frequency(self):
         """Type: float
 
-Range: [0.0, 500.0]
-Default value: 10.0
-Controls how fast the internal delay lines modulate."""
+        Range: [0.0, 500.0]
+        Default value: 10.0
+        Controls how fast the internal delay lines modulate."""
         return self._property_instances[
             _libaudioverse.Lav_FDN_REVERB_DELAY_MODULATION_FREQUENCY
         ]
@@ -4815,10 +4814,10 @@ Controls how fast the internal delay lines modulate."""
     def density(self):
         """Type: float
 
-Range: [0.0, 1.0]
-Default value: 0.5
-Controls the density of the reverb.
-Extremely low values sound "grainy"; extremely high values tend to resonate."""
+        Range: [0.0, 1.0]
+        Default value: 0.5
+        Controls the density of the reverb.
+        Extremely low values sound "grainy"; extremely high values tend to resonate."""
         return self._property_instances[_libaudioverse.Lav_FDN_REVERB_DENSITY]
 
     @density.setter
@@ -4829,9 +4828,9 @@ Extremely low values sound "grainy"; extremely high values tend to resonate."""
     def t60(self):
         """Type: float
 
-Range: [0.0, INFINITY]
-Default value: 1.0
-The ``t60`` is the time it takes the reverb to decay by 60 decibals."""
+        Range: [0.0, INFINITY]
+        Default value: 1.0
+        The ``t60`` is the time it takes the reverb to decay by 60 decibals."""
         return self._property_instances[_libaudioverse.Lav_FDN_REVERB_T60]
 
     @t60.setter
@@ -4896,9 +4895,9 @@ class BlitNode(GenericNode):
     def frequency(self):
         """Type: float
 
-Range: [0, INFINITY]
-Default value: 440.0
-The frequency of the impulse train in HZ."""
+        Range: [0, INFINITY]
+        Default value: 440.0
+        The frequency of the impulse train in HZ."""
         return self._property_instances[_libaudioverse.Lav_OSCILLATOR_FREQUENCY]
 
     @frequency.setter
@@ -4909,11 +4908,11 @@ The frequency of the impulse train in HZ."""
     def frequency_multiplier(self):
         """Type: float
 
-Range: [-INFINITY, INFINITY]
-Default value: 1.0
-An additional multiplicative factor applied to the frequency of the oscillator.
+        Range: [-INFINITY, INFINITY]
+        Default value: 1.0
+        An additional multiplicative factor applied to the frequency of the oscillator.
 
-This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
+        This is useful for creating instruments, as the notes of the standard musical scale fall on frequency multiples of a reference pitch, rather than a linear increase."""
         return self._property_instances[
             _libaudioverse.Lav_OSCILLATOR_FREQUENCY_MULTIPLIER
         ]
@@ -4926,10 +4925,10 @@ This is useful for creating instruments, as the notes of the standard musical sc
     def harmonics(self):
         """Type: int
 
-Range: [0, MAX_INT]
-Default value: 0
-The number of harmonics to include.
-0 requests automatic adjustment.  When 0, the algorithm this node represents will include as many harmonics as it can without aliasing."""
+        Range: [0, MAX_INT]
+        Default value: 0
+        The number of harmonics to include.
+        0 requests automatic adjustment.  When 0, the algorithm this node represents will include as many harmonics as it can without aliasing."""
         return self._property_instances[_libaudioverse.Lav_BLIT_HARMONICS]
 
     @harmonics.setter
@@ -4940,10 +4939,10 @@ The number of harmonics to include.
     def phase(self):
         """Type: float
 
-Range: [0.0, 1.0]
-Default value: 0.0
-The phase of the impulse train.
-This is measured in periods, not in radians."""
+        Range: [0.0, 1.0]
+        Default value: 0.0
+        The phase of the impulse train.
+        This is measured in periods, not in radians."""
         return self._property_instances[_libaudioverse.Lav_OSCILLATOR_PHASE]
 
     @phase.setter
@@ -4955,10 +4954,10 @@ This is measured in periods, not in radians."""
         """Type: boolean
 
 
-Default value: True
-If false, the produced BLIT will have an integral of 1 over every period.
-If true, the produced blit will be normalized to be between 1 and -1, and suitable for audio.
-The default is true."""
+        Default value: True
+        If false, the produced BLIT will have an integral of 1 over every period.
+        If true, the produced blit will be normalized to be between 1 and -1, and suitable for audio.
+        The default is true."""
         return self._property_instances[_libaudioverse.Lav_BLIT_SHOULD_NORMALIZE]
 
     @should_normalize.setter
@@ -4971,9 +4970,9 @@ _types_to_classes[ObjectTypes.blit_node] = BlitNode
 
 class DcBlockerNode(GenericNode):
     r"""A DC blocker.
-This is a first-order filter, the best possible within numerical limits.
-It consists of a zero at DC, and a pole as close to DC as we can put it.
-For any sampling rate, this node is the best first-order section for DC removal possible."""
+    This is a first-order filter, the best possible within numerical limits.
+    It consists of a zero at DC, and a pole as close to DC as we can put it.
+    For any sampling rate, this node is the best first-order section for DC removal possible."""
 
     def __init__(self, simulation, channels):
         super(DcBlockerNode, self).__init__(
@@ -4992,9 +4991,9 @@ _types_to_classes[ObjectTypes.dc_blocker_node] = DcBlockerNode
 
 class LeakyIntegratorNode(GenericNode):
     r"""A leaky integrator.
-Leaky integrators integrate their input signals, while leaking over time.
-Introducing the leak allows for avoiding DC offset problems.
-If you feed this node a signal that is zero, it will slowly decrease the output in accordance with the Lav_LEAKY_INTEGRATOR_LEAKYNESS property."""
+    Leaky integrators integrate their input signals, while leaking over time.
+    Introducing the leak allows for avoiding DC offset problems.
+    If you feed this node a signal that is zero, it will slowly decrease the output in accordance with the Lav_LEAKY_INTEGRATOR_LEAKYNESS property."""
 
     def __init__(self, simulation, channels):
         super(LeakyIntegratorNode, self).__init__(
@@ -5020,11 +5019,11 @@ If you feed this node a signal that is zero, it will slowly decrease the output 
     def leakyness(self):
         """Type: double
 
-Range: [0.0, 1.0]
-Default value: 1.0
-The leakyness (or time constant) of the integrator.
+        Range: [0.0, 1.0]
+        Default value: 1.0
+        The leakyness (or time constant) of the integrator.
 
-If you feed the leaky integrator a constant signal of 0, then this property's value is the percent decrease as observed after 1 second."""
+        If you feed the leaky integrator a constant signal of 0, then this property's value is the percent decrease as observed after 1 second."""
         return self._property_instances[_libaudioverse.Lav_LEAKY_INTEGRATOR_LEAKYNESS]
 
     @leakyness.setter
@@ -5038,12 +5037,12 @@ _types_to_classes[ObjectTypes.leaky_integrator_node] = LeakyIntegratorNode
 class FileStreamerNode(GenericNode):
     r"""Streams a file, which must be specified to the constructor and cannot be changed thereafter.
 
-This node is a stopgap solution, and should be considered temporary.
-It will likely remain for backward compatibility.
-Libaudioverse plans to eventually offer a more generic streaming node that also supports web addresses; such a node will have a completely different, less buffer-like interface.
+    This node is a stopgap solution, and should be considered temporary.
+    It will likely remain for backward compatibility.
+    Libaudioverse plans to eventually offer a more generic streaming node that also supports web addresses; such a node will have a completely different, less buffer-like interface.
 
-In order to stream a file, it must be passed through a resampler.
-Consequentlty, the position property is slightly inaccurate and the ended property and callback are slightly delayed."""
+    In order to stream a file, it must be passed through a resampler.
+    Consequentlty, the position property is slightly inaccurate and the ended property and callback are slightly delayed."""
 
     def __init__(self, simulation, path):
         super(FileStreamerNode, self).__init__(
@@ -5085,9 +5084,9 @@ Consequentlty, the position property is slightly inaccurate and the ended proper
     def ended(self):
         """Type: boolean
 
-This property is read-only.
-Switches from false to true once the stream has ended completely and gone silent.
-This property will never go true unless looping is false."""
+        This property is read-only.
+        Switches from false to true once the stream has ended completely and gone silent.
+        This property will never go true unless looping is false."""
         return self._property_instances[_libaudioverse.Lav_FILE_STREAMER_ENDED]
 
     @property
@@ -5095,10 +5094,10 @@ This property will never go true unless looping is false."""
         """Type: boolean
 
 
-Default value: False
-If true, this node repeats the file from the beginning once it reaches the end.
-Note that setting looping means that ended will never go true.
-If ended is already true, it may take until the end of the next processing block for ended to properly go false once more."""
+        Default value: False
+        If true, this node repeats the file from the beginning once it reaches the end.
+        Note that setting looping means that ended will never go true.
+        If ended is already true, it may take until the end of the next processing block for ended to properly go false once more."""
         return self._property_instances[_libaudioverse.Lav_FILE_STREAMER_LOOPING]
 
     @looping.setter
@@ -5109,11 +5108,11 @@ If ended is already true, it may take until the end of the next processing block
     def position(self):
         """Type: double
 
-Range: dynamic
-Default value: 0.0
-The position of playback, in seconds.
-The range of this property corresponds to the total duration of the file.
-Note that this property may be slightly inaccurate because this node has to pass data through a resampler."""
+        Range: dynamic
+        Default value: 0.0
+        The position of playback, in seconds.
+        The range of this property corresponds to the total duration of the file.
+        Note that this property may be slightly inaccurate because this node has to pass data through a resampler."""
         return self._property_instances[_libaudioverse.Lav_FILE_STREAMER_POSITION]
 
     @position.setter
@@ -5122,7 +5121,7 @@ Note that this property may be slightly inaccurate because this node has to pass
 
     def get_end_callback(self):
         r"""Get the end callback.
-        
+
         This is a feature of the Python bindings and is not available in the C API.  See the setter for specific documentation on this callback."""
         with self._lock:
             cb = self._state["callbacks"].get("end", None)
@@ -5133,9 +5132,9 @@ Note that this property may be slightly inaccurate because this node has to pass
 
     def set_end_callback(self, callback, additional_args=None, additional_kwargs=None):
         r"""Set the end callback.
-        
-Called outside the audio threads after the stream has both reached its end and gone silent.
-When called, ended will be set to true,."""
+
+        Called outside the audio threads after the stream has both reached its end and gone silent.
+        When called, ended will be set to true,."""
         with self._lock:
             if callback is None:
                 # delete the key, clear the callback with Libaudioverse.

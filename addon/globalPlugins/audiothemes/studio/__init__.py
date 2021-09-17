@@ -14,6 +14,7 @@ from ..handler import AudioTheme, AudioThemesHandler, audiotheme_changed
 from .themes_blender import BaseDialog, ThemeBlenderDialog
 
 import addonHandler
+
 addonHandler.initTranslation()
 
 
@@ -97,7 +98,6 @@ class AudioThemeSelectorDialog(BaseDialog):
 
 
 class AudioThemesStudioStartupDialog(BaseDialog):
-
     def __init__(self, plugin, *args, **kwargs):
         self.plugin = plugin
         super().__init__(*args, **kwargs)

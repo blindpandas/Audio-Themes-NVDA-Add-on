@@ -7,8 +7,8 @@ import os
 from threading import Thread
 from typing import Generic, TypeVar
 
-class unsync_meta(type):
 
+class unsync_meta(type):
     def _init_loop(cls):
         cls._loop = asyncio.new_event_loop()
         cls._thread = Thread(target=cls._thread_target, args=(cls._loop,), daemon=True)
@@ -16,19 +16,19 @@ class unsync_meta(type):
 
     @property
     def loop(cls):
-        if getattr(cls, '_loop', None) is None:
+        if getattr(cls, "_loop", None) is None:
             unsync_meta._init_loop(cls)
         return cls._loop
 
     @property
     def thread(cls):
-        if getattr(cls, '_thread', None) is None:
+        if getattr(cls, "_thread", None) is None:
             unsync_meta._init_loop(cls)
         return cls._thread
 
     @property
     def process_executor(cls):
-        if getattr(cls, '_process_executor', None) is None:
+        if getattr(cls, "_process_executor", None) is None:
             cls._process_executor = concurrent.futures.ProcessPoolExecutor()
         return cls._process_executor
 
@@ -55,7 +55,7 @@ class unsync(object, metaclass=unsync_meta):
 
     @property
     def cpu_bound(self):
-        return 'cpu_bound' in self.kwargs and self.kwargs['cpu_bound']
+        return "cpu_bound" in self.kwargs and self.kwargs["cpu_bound"]
 
     def _set_func(self, func):
         assert _isfunction(func)
@@ -71,12 +71,19 @@ class unsync(object, metaclass=unsync_meta):
             return self
         if inspect.iscoroutinefunction(self.func):
             if self.cpu_bound:
-                raise TypeError('The CPU bound unsync function %s may not be async or a coroutine' % self.func.__name__)
+                raise TypeError(
+                    "The CPU bound unsync function %s may not be async or a coroutine"
+                    % self.func.__name__
+                )
             future = self.func(*args, **kwargs)
         else:
             if self.cpu_bound:
                 future = unsync.process_executor.submit(
-                    _multiprocess_target, (self.func.__module__, self.func.__name__), *args, **kwargs)
+                    _multiprocess_target,
+                    (self.func.__module__, self.func.__name__),
+                    *args,
+                    **kwargs
+                )
             else:
                 future = unsync.thread_executor.submit(self.func, *args, **kwargs)
         return Unfuture(future)
@@ -98,7 +105,7 @@ def _multiprocess_target(func_name, *args, **kwargs):
     return unsync.unsync_functions[func_name](*args, **kwargs)
 
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class Unfuture(Generic[T]):
@@ -122,11 +129,15 @@ class Unfuture(Generic[T]):
         if isinstance(future, concurrent.futures.Future):
             self.concurrent_future = future
             self.future = asyncio.Future(loop=unsync.loop)
-            self.future._loop.call_soon_threadsafe(callback, self.concurrent_future, self.future)
+            self.future._loop.call_soon_threadsafe(
+                callback, self.concurrent_future, self.future
+            )
         else:
             self.future = future or asyncio.Future(loop=unsync.loop)
             self.concurrent_future = concurrent.futures.Future()
-            self.future._loop.call_soon_threadsafe(callback, self.future, self.concurrent_future)
+            self.future._loop.call_soon_threadsafe(
+                callback, self.future, self.concurrent_future
+            )
 
     def __iter__(self):
         return self.future.__iter__()
@@ -138,8 +149,13 @@ class Unfuture(Generic[T]):
         if self.future.done():
             return self.future.result()
         # Don't allow waiting in the unsync.thread loop since it will deadlock
-        if threading.current_thread() == unsync.thread and not self.concurrent_future.done():
-            raise asyncio.InvalidStateError("Calling result() in an unsync method is not allowed")
+        if (
+            threading.current_thread() == unsync.thread
+            and not self.concurrent_future.done()
+        ):
+            raise asyncio.InvalidStateError(
+                "Calling result() in an unsync method is not allowed"
+            )
         # Wait on the concurrent Future outside unsync.thread
         return self.concurrent_future.result(*args, **kwargs)
 
@@ -147,13 +163,14 @@ class Unfuture(Generic[T]):
         return self.future.done() or self.concurrent_future.done()
 
     def set_result(self, value):
-        return self.future._loop.call_soon_threadsafe(lambda: self.future.set_result(value))
+        return self.future._loop.call_soon_threadsafe(
+            lambda: self.future.set_result(value)
+        )
 
     @unsync
     async def then(self, continuation):
         await self
         result = continuation(self)
-        if hasattr(result, '__await__'):
+        if hasattr(result, "__await__"):
             return await result
         return result
-

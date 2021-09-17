@@ -42,10 +42,12 @@ PLUGIN_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
 LIB_DIRECTORY = os.path.join(PLUGIN_DIRECTORY, "lib")
 sys.path.insert(0, LIB_DIRECTORY)
 import unsync
+
 sys.path.remove(LIB_DIRECTORY)
 
 
 import addonHandler
+
 addonHandler.initTranslation()
 
 
@@ -99,13 +101,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
     def audio_themes_speech_speakTextInfo(self, info, *args, **kwargs):
         current_tree_interceptor = api.getFocusObject().treeInterceptor
-        if (current_tree_interceptor is None)  or not isinstance(current_tree_interceptor, browseMode.BrowseModeDocumentTreeInterceptor):
+        if (current_tree_interceptor is None) or not isinstance(
+            current_tree_interceptor, browseMode.BrowseModeDocumentTreeInterceptor
+        ):
             return self.original_speech_speakTextInfo(info, *args, **kwargs)
         obj = info.NVDAObjectAtStart
         if obj.role is controlTypes.ROLE_TABLE:
             tones.beep(100, 100)
         gui.cinfo = obj
-        if obj.role  is controlTypes.ROLE_REDUNDANTOBJECT:
+        if obj.role is controlTypes.ROLE_REDUNDANTOBJECT:
             obj = obj.parent
         self.playObject(obj)
         return self.original_speech_speakTextInfo(info, *args, **kwargs)
