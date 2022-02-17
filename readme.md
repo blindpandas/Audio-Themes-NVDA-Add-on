@@ -2,7 +2,7 @@
 
 I'll update this add-on as my time permits. If anyone wants to contribute fixes, they can send pull requests.
 
-If anyone wants to financially sponsor the development of this add-on, they can contact me at the email listed in the addon's info.
+If anyone wants to financially sponsor the development of this add-on, they can contact me at ibnomer2011@hotmail.com
 
 Best
 
