@@ -1,9 +1,13 @@
 # IMPORTANT: Development Status
 
 I'll update this add-on as my time permits. If anyone wants to contribute fixes, they can send pull requests.
+
 If anyone wants to financially sponsor the development of this add-on, they can contact me at the email listed in the addon's info.
+
 Best
+
 Musharraf
+
 
 
 # Audio Themes Add-on For NVDA
