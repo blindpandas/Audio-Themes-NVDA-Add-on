@@ -1,3 +1,11 @@
+# IMPORTANT: Development Status
+
+I'll update this add-on as my time permits. If anyone wants to contribute fixes, they can send pull requests.
+If anyone wants to financially sponsor the development of this add-on, they can contact me at the email listed in the addon's info.
+Best
+Musharraf
+
+
 # Audio Themes Add-on For NVDA
 This add-on creates a virtual audio display that plays sounds when focusing or navigating objects (such as buttons, links etc...) the audio will be played in a location that corresponds to the object's location in the visual display. The add-on also enables you to activate, install, remove, edit, create, and distribute audio theme packages.
 
