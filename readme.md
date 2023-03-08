@@ -1,3 +1,6 @@
+# Release status
+Audio Themes add-on is maintained and available to use with NVDA 2022.1 and higher
+
 # IMPORTANT: Development Status
 
 I'll update this add-on as my time permits. If anyone wants to contribute fixes, they can send pull requests.

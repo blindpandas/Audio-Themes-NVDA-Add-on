@@ -1,3 +1,7 @@
+## Version 7.0
+
+
+
 ## Version 6.0
 
 The add-on has been rewritten from scratch to improve performance and provide better compatibility with modern\ NVDA versions. Major highlights include:
